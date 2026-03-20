@@ -375,6 +375,14 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
             {data.content.facultyList.map((faculty: any, i: number) => (
               <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 flex flex-col md:flex-row gap-6">
                 <div className="md:w-1/3 shrink-0 md:border-r border-white/10 md:pr-6">
+                  {faculty.image && (
+                    <img
+                      src={faculty.image}
+                      alt={faculty.name}
+                      className="w-full h-48 object-cover rounded-lg border border-white/10 mb-4"
+                      loading={i > 2 ? "lazy" : "eager"}
+                    />
+                  )}
                   <h3 className="text-xl font-bold text-white mb-1">{faculty.name}</h3>
                   <p className="text-cyan-300 font-medium text-sm mb-4">{faculty.role}</p>
                   

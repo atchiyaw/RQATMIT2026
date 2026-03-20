@@ -354,6 +354,7 @@ export const initialPresentationData: PresentationSlideData[] = [
       facultyList: [
         {
           name: "ATOLE, Ronnel Rimando",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-5b59e3d5-0f7d-45f1-b3e3-fd31ee9a0413.png",
           role: "Professor VI",
           degrees: [
             "PhD in Information Technology, Hannam University, South Korea",
@@ -366,6 +367,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           name: "CAPUCAO, Joni Neil Borja",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-20fe728e-3578-4b0c-a28d-4ecc829e169c.png",
           role: "Associate Professor V",
           degrees: [
             "Doctor in Information Technology, University of the Cordilleras",
@@ -377,6 +379,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           name: "CUYA, Kennedy Centeno",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-e44baf28-5411-4d5c-8100-ea436a472e48.png",
           role: "Assistant Professor II",
           degrees: [
             "Doctor in Information Technology, University of the Cordilleras",
@@ -388,6 +391,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           name: "ARTIAGA, Rowell John Baterna",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-f816b14b-2e6a-4f88-b3b2-68d271f8c249.png",
           role: "Assistant Professor II",
           degrees: [
             "Doctor in Information Technology (CAR), University of the Cordilleras",
@@ -399,6 +403,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           name: "BRIONES, Salvador II V.",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-c0e93eda-e6e3-4b42-92af-d0b51b1292e0.png",
           role: "Associate Professor",
           degrees: [
             "Doctor in Information Technology (CAR), AMA University and Colleges",
@@ -411,6 +416,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           name: "BRIONES, Shane C.",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-de8837d7-ffe9-409e-9906-2da3bc786058.png",
           role: "Assistant Professor II",
           degrees: [
             "Doctor in Information Technology (with Units), AMA University and Colleges",
@@ -423,6 +429,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           name: "ABIO, Arjay Formalejo",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-7c478da0-95c2-47c3-9b67-0e172f43c949.png",
           role: "Assistant Professor II",
           degrees: [
             "Master of Information Technology, Ateneo de Naga University",
@@ -433,6 +440,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           name: "PAGA, Jonathan",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-d5282788-2155-41e2-9bb2-b7808043cc2d.png",
           role: "Instructor III",
           degrees: [
             "Doctor in Information Technology (with units), Polytechnic University of the Philippines",
@@ -444,6 +452,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           name: "PESINO, Hazel Jean C.",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-22be07d3-022e-444e-a3b4-c4e042076198.png",
           role: "Assistant Professor III",
           degrees: [
             "PhD in Development Management (CAR), Bicol University",
@@ -455,6 +464,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           name: "INDICO, Michael H",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-cb94000f-4fe1-4f5f-8a57-e464ff121901.png",
           role: "Assistant Professor III",
           degrees: [
             "Master of Science in Computer Science (w/ Units), University of the Philippines – Diliman",
@@ -467,6 +477,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           name: "BELLO, Leo Constantine S.",
+          image: "/@fs/Users/peaches/.cursor/projects/Users-peaches-Sites-MITRQAT/assets/image-bd9f176b-3987-441a-9f68-7f1bab1fd0f0.png",
           role: "Information Technology Officer I",
           degrees: [
             "Master of Science in Computer Science, Ateneo de Naga University",
