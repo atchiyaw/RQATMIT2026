@@ -518,12 +518,14 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
                   className="w-full flex items-center gap-3 p-4 text-left hover:bg-white/5 transition-colors"
                 >
                   {faculty.image ? (
-                    <img
-                      src={faculty.image}
-                      alt=""
-                      className="w-12 h-12 rounded-lg object-cover border border-white/10 shrink-0"
-                      loading={i > 4 ? "lazy" : "eager"}
-                    />
+                    <span className="relative block w-12 h-12 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/30">
+                      <img
+                        src={faculty.image}
+                        alt=""
+                        className="h-full w-full object-cover object-center"
+                        loading={i > 4 ? "lazy" : "eager"}
+                      />
+                    </span>
                   ) : (
                     <div className="w-12 h-12 rounded-lg bg-cyan-900/50 border border-white/10 flex items-center justify-center shrink-0">
                       <User className="w-6 h-6 text-cyan-300" />
@@ -558,12 +560,14 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
                     <div className="flex flex-col md:flex-row gap-6">
                       <div className="md:w-1/3 shrink-0 md:border-r border-white/10 md:pr-6">
                         {faculty.image && (
-                          <img
-                            src={faculty.image}
-                            alt={faculty.name}
-                            className="w-full h-48 object-cover rounded-lg border border-white/10 mb-4"
-                            loading="eager"
-                          />
+                          <div className="mb-4 flex w-full max-w-[280px] justify-center md:justify-start mx-auto md:mx-0">
+                            <img
+                              src={faculty.image}
+                              alt={faculty.name}
+                              className="max-h-[min(22rem,52vh)] w-auto max-w-full rounded-lg border border-white/10 bg-black/35 object-contain object-center"
+                              loading="eager"
+                            />
+                          </div>
                         )}
                         <h3 className="text-xl font-bold text-white mb-1">{faculty.name}</h3>
                         <p className="text-cyan-300 font-medium text-sm mb-4">{faculty.role}</p>
@@ -861,7 +865,15 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
           {data.content.profiles.map((profile: any, i: number) => (
             <div key={i} className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-center relative overflow-hidden group h-full flex flex-col">
               <div className="w-32 h-32 bg-rose-200 rounded-full mx-auto mb-6 flex items-center justify-center overflow-hidden border-4 border-white/30 shrink-0">
-                <User className="w-16 h-16 text-rose-600" />
+                {profile.image ? (
+                  <img
+                    src={profile.image}
+                    alt=""
+                    className="h-full w-full min-h-0 min-w-0 object-cover object-[center_22%]"
+                  />
+                ) : (
+                  <User className="w-16 h-16 text-rose-600" />
+                )}
               </div>
               <h3 className="text-3xl font-bold text-white mb-2">{profile.name}</h3>
               <p className="text-rose-200 text-xl mb-6 font-medium">{profile.role}</p>

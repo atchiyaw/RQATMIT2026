@@ -34,10 +34,36 @@ function facultyCredentialsPlugin(): Plugin {
   };
 }
 
+/** Serve `Faculty Photo/` at `/faculty-photos/*` and copy into `dist` on build. */
+function facultyPhotosPlugin(): Plugin {
+  const photosRoot = path.resolve(__dirname, 'Faculty Photo');
+  let outDir = 'dist';
+
+  return {
+    name: 'faculty-photos-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(photosRoot)) return;
+      server.middlewares.use(
+        '/faculty-photos',
+        express.static(photosRoot, {index: false, fallthrough: true}),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(photosRoot)) return;
+      const dest = path.join(outDir, 'faculty-photos');
+      fs.mkdirSync(path.dirname(dest), {recursive: true});
+      fs.cpSync(photosRoot, dest, {recursive: true});
+    },
+  };
+}
+
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    plugins: [react(), tailwindcss(), facultyCredentialsPlugin()],
+    plugins: [react(), tailwindcss(), facultyCredentialsPlugin(), facultyPhotosPlugin()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },
