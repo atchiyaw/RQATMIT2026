@@ -60,10 +60,42 @@ function facultyPhotosPlugin(): Plugin {
   };
 }
 
+/** Serve `Level of Accreditation/` at `/level-of-accreditation/*` and copy into `dist` on build. */
+function levelOfAccreditationPlugin(): Plugin {
+  const rootDir = path.resolve(__dirname, 'Level of Accreditation');
+  let outDir = 'dist';
+
+  return {
+    name: 'level-of-accreditation-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(rootDir)) return;
+      server.middlewares.use(
+        '/level-of-accreditation',
+        express.static(rootDir, {index: false, fallthrough: true}),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(rootDir)) return;
+      const dest = path.join(outDir, 'level-of-accreditation');
+      fs.mkdirSync(path.dirname(dest), {recursive: true});
+      fs.cpSync(rootDir, dest, {recursive: true});
+    },
+  };
+}
+
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    plugins: [react(), tailwindcss(), facultyCredentialsPlugin(), facultyPhotosPlugin()],
+    plugins: [
+      react(),
+      tailwindcss(),
+      facultyCredentialsPlugin(),
+      facultyPhotosPlugin(),
+      levelOfAccreditationPlugin(),
+    ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },

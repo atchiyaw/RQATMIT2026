@@ -207,14 +207,29 @@ export const initialPresentationData: PresentationSlideData[] = [
     content: {
       sections: [
         {
-          title: "Program Authority",
-          description: "The Bachelor of Science in Information Technology (BSIT) program was awarded a Certificate of Program Compliance (COPC) issued by the Commission on Higher Education (CHED) Regional Office V. This certification confirms the program’s legitimacy, regulatory compliance, and readiness for formal accreditation assessment.",
-          image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=800"
+          title: "COPC from CHED for the BSIT Program",
+          description:
+            "The Bachelor of Science in Information Technology (BSIT) program holds a Certificate of Program Compliance (COPC) issued by the Commission on Higher Education (CHED) Regional Office V. This certification confirms the program’s legitimacy, regulatory compliance, and readiness for formal accreditation assessment.",
+          documentFile: "COPC of BSIT Program.pdf"
         },
         {
-          title: "Accreditation",
-          description: "The Bachelor of Science in Information Technology (BSIT) program has successfully met the accreditation requirements as evidenced by the AACCUP Technical Review and Recommended Board Action, which granted the program Level IV Re-Accredited Status. The review confirms that the program achieved a Grand Mean rating of 4.57, satisfying the minimum criteria for Level IV accreditation and complying with all mandatory recommendations. The Level IV re-accreditation, effective from August 16, 2025 to August 15, 2030, affirms the program’s sustained excellence, maturity, and adherence to national quality assurance standards, thereby qualifying it for continued recognition and advancement.",
-          image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=800"
+          title: "BSIT Level IV Accreditation",
+          description:
+            "The BSIT program has met accreditation requirements under AACCUP Technical Review and Recommended Board Action, granting Level IV Re-Accredited Status. The review confirms a Grand Mean rating of 4.57, satisfying Level IV criteria and mandatory recommendations. Re-accreditation is effective August 16, 2025 to August 15, 2030, affirming sustained excellence and national quality assurance alignment.",
+          documentFile: "BSIT Level IV Accreditation.pdf"
+        },
+        {
+          title: "Institutional Accreditation Level III",
+          description:
+            "Partido State University maintains Institutional Accreditation at Level III through AACCUP, reflecting sound governance, quality management, and continuous improvement across programs and services. The technical review and board action document the institution’s capacity to deliver outcomes aligned with recognized standards.",
+          documentFile:
+            "Institutional Accreditation_AACCUP Technical Review and Recommended Board Action (2025) (C).pdf"
+        },
+        {
+          title: "ISO 9001:2015 Certification",
+          description:
+            "The university operates a certified Quality Management System aligned with ISO 9001:2015, demonstrating systematic processes for meeting stakeholder and regulatory requirements and driving continual improvement in service delivery.",
+          documentFile: "PSU ISO 9001_2015 Certificate July 2024-July 2027.pdf"
         }
       ]
     }

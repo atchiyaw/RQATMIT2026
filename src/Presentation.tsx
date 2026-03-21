@@ -14,6 +14,7 @@ import {
   type CredentialNode,
 } from './generated/facultyCredentialsManifest';
 import {credentialFileUrl, credentialPreviewKind} from './facultyCredentialUrls';
+import {accreditationDocUrl} from './accreditationUrls';
 
 const getIconComponent = (iconName: string) => {
   const icons: Record<string, any> = {
@@ -430,6 +431,63 @@ function CredentialPreviewModal({
   );
 }
 
+/** Level of Accreditation / QA: four cards with PDF preview from `Level of Accreditation/`. */
+function Slide3AccreditationContent({ data }: { data: PresentationSlideData }) {
+  const [preview, setPreview] = useState<CredentialPreviewState>(null);
+  const sections = data.content.sections ?? [];
+
+  useEffect(() => {
+    if (!preview) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPreview(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [preview]);
+
+  return (
+    <div className="relative flex h-full min-h-0 flex-col">
+      <div className="grid min-h-0 flex-1 grid-cols-1 content-start gap-4 overflow-y-auto pr-2 custom-scrollbar md:grid-cols-2 md:gap-5 lg:gap-6">
+        {sections.map((section: any, i: number) => {
+          const url = accreditationDocUrl(section.documentFile);
+          return (
+            <div
+              key={i}
+              className="flex min-h-[260px] flex-col rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-md"
+            >
+              <div className="mb-3 flex items-start gap-3">
+                <Award className="mt-0.5 h-8 w-8 shrink-0 text-amber-300" />
+                <h3 className="text-lg font-bold leading-snug text-white sm:text-xl">{section.title}</h3>
+              </div>
+              <p className="mb-5 flex-1 text-sm leading-relaxed text-amber-50/95">{section.description}</p>
+              <div className="mt-auto flex flex-wrap gap-2 border-t border-white/10 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setPreview({ url, title: section.title, kind: 'pdf' })}
+                  className="inline-flex items-center gap-2 rounded-lg border border-amber-400/40 bg-amber-500/25 px-4 py-2 text-sm font-semibold text-amber-100 transition-colors hover:bg-amber-500/35"
+                >
+                  <FileText className="h-4 w-4" />
+                  Preview
+                </button>
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Open document
+                </a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <CredentialPreviewModal preview={preview} onClose={() => setPreview(null)} />
+    </div>
+  );
+}
+
 /** Faculty Profile slide: sidebar stats + research card; scrollable accordion list. */
 function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -834,29 +892,7 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
         </div>
       );
     } else if (data.id === 3) {
-      content = (
-        <div className="flex flex-col h-full gap-6 overflow-y-auto pr-2 custom-scrollbar">
-          {data.content.sections.map((section: any, i: number) => (
-            <div key={i} className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 flex flex-col md:flex-row gap-8 items-center">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-4">
-                  <Award className="w-8 h-8 text-amber-300" />
-                  <h3 className="text-3xl font-bold text-white tracking-tight">{section.title}</h3>
-                </div>
-                <p className="text-lg text-amber-50 leading-relaxed">
-                  {section.description}
-                </p>
-              </div>
-              <div className="w-full md:w-1/3 shrink-0">
-                <div className="relative rounded-xl overflow-hidden border-2 border-white/20 shadow-2xl aspect-[3/4] md:aspect-auto md:h-64">
-                  <img src={section.image} alt={section.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      );
+      content = <Slide3AccreditationContent data={data} />;
     } else if (data.id === 4) {
       content = <Slide4Content data={data.content} />;
     } else if (data.id === 5) {
