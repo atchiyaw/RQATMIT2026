@@ -15,6 +15,13 @@ import {
 } from './generated/facultyCredentialsManifest';
 import {credentialFileUrl, credentialPreviewKind} from './facultyCredentialUrls';
 import {accreditationDocUrl} from './accreditationUrls';
+import {
+  libraryDocumentTree,
+  type LibraryNode,
+  type LibraryFileNode,
+  type LibraryDirNode,
+} from './generated/libraryManifest';
+import {libraryFileUrl} from './libraryUrls';
 
 const getIconComponent = (iconName: string) => {
   const icons: Record<string, any> = {
@@ -488,6 +495,189 @@ function Slide3AccreditationContent({ data }: { data: PresentationSlideData }) {
   );
 }
 
+function LibraryFileTree({
+  nodes,
+  onPreview,
+  depth = 0,
+}: {
+  nodes: LibraryNode[];
+  onPreview: (s: NonNullable<CredentialPreviewState>) => void;
+  depth?: number;
+}) {
+  return (
+    <ul
+      className={
+        depth > 0
+          ? 'ml-2 mt-1 space-y-0.5 border-l border-white/10 pl-2 sm:ml-3 sm:pl-3'
+          : 'space-y-0.5'
+      }
+    >
+      {nodes.map((node, idx) => (
+        <li key={`${depth}-${idx}-${node.name}`}>
+          {node.type === 'dir' ? (
+            <details className="group min-w-0">
+              <summary className="flex cursor-pointer list-none items-center gap-2 py-1 text-sm text-sky-200 hover:text-white [&::-webkit-details-marker]:hidden">
+                <FolderOpen className="h-4 w-4 shrink-0 text-sky-400/90" aria-hidden />
+                <span className="truncate font-medium">{node.name}</span>
+              </summary>
+              <LibraryFileTree nodes={node.children} onPreview={onPreview} depth={depth + 1} />
+            </details>
+          ) : (
+            <div className="flex flex-wrap items-start gap-x-2 gap-y-1 py-1 pl-0.5">
+              <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-400/80" aria-hidden />
+              <span className="min-w-[8rem] flex-1 break-words text-xs text-sky-50/95">{node.name}</span>
+              <div className="flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const url = libraryFileUrl(node.relPath);
+                    const kind = credentialPreviewKind(node.name);
+                    onPreview({ url, title: node.name, kind });
+                  }}
+                  className="text-xs font-semibold text-sky-300 underline decoration-sky-500/40 hover:text-white"
+                >
+                  Preview
+                </button>
+                <a
+                  href={libraryFileUrl(node.relPath)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-semibold text-sky-200/90 hover:text-white"
+                >
+                  Open
+                </a>
+              </div>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Library Resources: Reference Books hero + insight cards (left); documents + inline PDF preview (right). */
+function Slide8LibraryContent({ data }: { data: PresentationSlideData }) {
+  const [preview, setPreview] = useState<CredentialPreviewState>(null);
+  const c = data.content;
+  const { children } = libraryDocumentTree;
+  const rootFiles = children.filter((n): n is LibraryFileNode => n.type === 'file');
+  const rootDirs = children.filter((n): n is LibraryDirNode => n.type === 'dir');
+
+  useEffect(() => {
+    if (!preview) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPreview(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [preview]);
+
+  return (
+    <div className="relative flex h-full min-h-0 flex-col gap-4 lg:flex-row lg:gap-5">
+      <aside className="flex shrink-0 flex-col gap-4 lg:max-h-full lg:w-80 lg:overflow-y-auto lg:pr-1 xl:w-96 custom-scrollbar">
+        <div className="rounded-2xl border border-white/20 bg-white/10 p-5 text-left backdrop-blur-md">
+          <BookMarked className="mb-3 h-12 w-12 text-sky-300" />
+          <h2 className="mb-2 text-xl font-bold leading-tight text-white xl:text-2xl">{c.mainTitle}</h2>
+          <p className="text-sm leading-relaxed text-sky-100">{c.mainDesc}</p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1">
+          {c.resources.map((item: any, i: number) => {
+            const ItemIcon = getIconComponent(item.icon);
+            return (
+              <div
+                key={i}
+                className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md sm:p-5"
+              >
+                <ItemIcon className="mb-3 h-9 w-9 text-sky-400" />
+                <h4 className="mb-2 text-base font-bold leading-snug text-white">{item.title}</h4>
+                <p className="text-xs leading-relaxed text-sky-100/95 sm:text-sm">{item.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+      </aside>
+
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
+        <h3 className="flex shrink-0 items-center gap-2 text-lg font-bold text-white">
+          <FolderOpen className="h-6 w-6 text-sky-300" />
+          Library documents
+        </h3>
+
+        <div className="flex min-h-0 flex-1 flex-col gap-4 xl:flex-row xl:gap-5">
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar xl:max-w-[min(100%,28rem)] xl:flex-initial">
+            {rootFiles.length > 0 && (
+              <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5">
+                <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-sky-200">
+                  Program materials
+                </h4>
+                <p className="mb-3 text-xs text-sky-200/80">
+                  MIT graduate program title listings (copyright variants) supporting curriculum and accreditation
+                  evidence.
+                </p>
+                <LibraryFileTree nodes={rootFiles} onPreview={setPreview} />
+              </div>
+            )}
+            {rootDirs.map((dir, i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5"
+              >
+                <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-sky-200">{dir.name}</h4>
+                <LibraryFileTree nodes={dir.children} onPreview={setPreview} />
+              </div>
+            ))}
+          </div>
+
+          <div className="flex min-h-[min(50vh,420px)] min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-white/20 bg-black/35 xl:min-h-0">
+            <div className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-2">
+              <span className="truncate text-xs font-semibold text-sky-200">
+                {preview?.title ?? 'Document preview'}
+              </span>
+              <div className="flex shrink-0 items-center gap-2">
+                {preview && (
+                  <>
+                    <a
+                      href={preview.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-semibold text-sky-300 hover:text-white"
+                    >
+                      Open in new tab
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setPreview(null)}
+                      className="rounded-lg bg-white/10 px-2 py-1 text-xs font-semibold text-white hover:bg-white/20"
+                    >
+                      Clear
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="relative min-h-0 flex-1 bg-slate-950/80">
+              {preview?.kind === 'pdf' ? (
+                <iframe
+                  title={preview.title}
+                  src={preview.url}
+                  className="h-full min-h-[min(50vh,380px)] w-full border-0 bg-white xl:min-h-[320px]"
+                />
+              ) : (
+                <div className="flex h-full min-h-[200px] flex-col items-center justify-center gap-2 p-6 text-center text-sm text-sky-300/75">
+                  <FileText className="h-10 w-10 opacity-40" />
+                  <p>Select a PDF and click Preview to view it here.</p>
+                  <p className="text-xs text-sky-400/60">Escape clears the preview.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Faculty Profile slide: sidebar stats + research card; scrollable accordion list. */
 function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -866,27 +1056,56 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
               <FileText className="w-8 h-8 text-emerald-300" />
               Course Descriptions
             </h3>
-            <div className="space-y-4">
-              {data.content.courseDescriptions.map((course: any, i: number) => (
-                <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                  <div className="flex flex-wrap justify-between items-start gap-2 mb-3 border-b border-white/10 pb-2">
-                    <div>
-                      <span className="font-mono text-emerald-300 font-bold mr-2">{course.code}</span>
-                      <span className="text-lg font-bold text-white">{course.name}</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <span className="bg-emerald-500/20 px-2 py-1 rounded text-[10px] font-bold text-emerald-200 border border-emerald-500/30 uppercase">Credit: {course.credit}</span>
-                      <span className="bg-emerald-500/20 px-2 py-1 rounded text-[10px] font-bold text-emerald-200 border border-emerald-500/30 uppercase">Hours: {course.hours}</span>
+            <div className="space-y-10">
+              {(() => {
+                const descriptions = data.content.courseDescriptions as any[];
+                const byCode = new Map(descriptions.map((c) => [c.code, c]));
+                const groups: { category: string; codes: string[] }[] = [
+                  { category: "Bridging Courses", codes: ["MITB01", "MITB02", "MITB03"] },
+                  { category: "Core Courses", codes: ["MIT101", "MIT102", "MIT103", "MIT104"] },
+                  { category: "Major Courses", codes: ["MIT201", "MIT203", "MIT204", "MIT205"] },
+                  { category: "Cognate Course", codes: ["MIT202", "MIT301"] },
+                  { category: "Graduate Project (Capstone)", codes: ["MIT401", "MIT402"] },
+                ];
+                return groups.map((group, gi) => (
+                  <div key={gi} className="space-y-4">
+                    <h4 className="text-base font-bold text-emerald-200 uppercase tracking-wider border-b border-emerald-400/25 pb-2">
+                      {group.category}
+                    </h4>
+                    <div className="space-y-4">
+                      {group.codes.map((code, ci) => {
+                        const course = byCode.get(code);
+                        if (!course) return null;
+                        return (
+                          <div
+                            key={`${code}-${ci}`}
+                            className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20"
+                          >
+                            <div className="flex flex-wrap justify-between items-start gap-2 mb-3 border-b border-white/10 pb-2">
+                              <div>
+                                <span className="font-mono text-emerald-300 font-bold mr-2">{course.code}</span>
+                                <span className="text-lg font-bold text-white">{course.name}</span>
+                              </div>
+                              <div className="flex gap-2">
+                                <span className="bg-emerald-500/20 px-2 py-1 rounded text-[10px] font-bold text-emerald-200 border border-emerald-500/30 uppercase">
+                                  Credit: {course.credit}
+                                </span>
+                                <span className="bg-emerald-500/20 px-2 py-1 rounded text-[10px] font-bold text-emerald-200 border border-emerald-500/30 uppercase">
+                                  Hours: {course.hours}
+                                </span>
+                              </div>
+                            </div>
+                            <p className="text-emerald-50 text-sm leading-relaxed mb-3">{course.description}</p>
+                            <div className="text-[10px] text-emerald-300/70 font-bold uppercase tracking-wider">
+                              Prerequisite: {course.prerequisite}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-                  <p className="text-emerald-50 text-sm leading-relaxed mb-3">
-                    {course.description}
-                  </p>
-                  <div className="text-[10px] text-emerald-300/70 font-bold uppercase tracking-wider">
-                    Prerequisite: {course.prerequisite}
-                  </div>
-                </div>
-              ))}
+                ));
+              })()}
             </div>
           </div>
         </div>
@@ -1003,29 +1222,7 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
         </div>
       );
     } else if (data.id === 8) {
-      content = (
-        <div className="flex flex-col h-full gap-6">
-          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-10 border border-white/20 text-center">
-            <Library className="w-20 h-20 text-sky-300 mx-auto mb-6" />
-            <h2 className="text-4xl font-bold text-white mb-4">{data.content.mainTitle}</h2>
-            <p className="text-xl text-sky-100 max-w-2xl mx-auto">
-              {data.content.mainDesc}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1">
-            {data.content.resources.map((item: any, i: number) => {
-              const ItemIcon = getIconComponent(item.icon);
-              return (
-                <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                  <ItemIcon className="w-10 h-10 text-sky-400 mb-4" />
-                  <h4 className="text-xl font-bold text-white mb-2">{item.title}</h4>
-                  <p className="text-sky-100">{item.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      );
+      content = <Slide8LibraryContent data={data} />;
     } else if (data.id === 9) {
       content = (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">

@@ -6,7 +6,8 @@
   "scripts": {
     "generate:credentials": "node scripts/generate-faculty-credentials-manifest.mjs",
     "generate:photos": "node scripts/generate-faculty-photo-manifest.mjs",
-    "prebuild": "npm run generate:credentials && npm run generate:photos",
+    "generate:library": "node scripts/generate-library-manifest.mjs",
+    "prebuild": "npm run generate:credentials && npm run generate:photos && npm run generate:library",
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",

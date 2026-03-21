@@ -86,6 +86,32 @@ function levelOfAccreditationPlugin(): Plugin {
   };
 }
 
+/** Serve `Library/` at `/library-materials/*` and copy into `dist` on build. */
+function libraryMaterialsPlugin(): Plugin {
+  const libraryRoot = path.resolve(__dirname, 'Library');
+  let outDir = 'dist';
+
+  return {
+    name: 'library-materials-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(libraryRoot)) return;
+      server.middlewares.use(
+        '/library-materials',
+        express.static(libraryRoot, {index: false, fallthrough: true}),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(libraryRoot)) return;
+      const dest = path.join(outDir, 'library-materials');
+      fs.mkdirSync(path.dirname(dest), {recursive: true});
+      fs.cpSync(libraryRoot, dest, {recursive: true});
+    },
+  };
+}
+
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
@@ -95,6 +121,7 @@ export default defineConfig(({mode}) => {
       facultyCredentialsPlugin(),
       facultyPhotosPlugin(),
       levelOfAccreditationPlugin(),
+      libraryMaterialsPlugin(),
     ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),

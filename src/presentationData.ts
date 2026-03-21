@@ -51,15 +51,25 @@ export const initialPresentationData: PresentationSlideData[] = [
           { label: "Total", units: "30", isTotal: true }
         ],
         proposed: [
+          { label: "Bridging Courses", units: "(9)" },
           { label: "Core Courses", units: "12" },
           { label: "Major Courses", units: "12" },
           { label: "Cognate Course", units: "6" },
-          { label: "Comprehensive Exam", units: "-" },
+          { label: "Comprehensive Exam", units: "(0)" },
           { label: "Graduate Project (Capstone)", units: "6" },
           { label: "Total", units: "36", isTotal: true }
         ]
       },
       programOfStudy: [
+        {
+          category: "Bridging Courses",
+          units: 9,
+          courses: [
+            { code: "MITB01", title: "Object-Oriented Programming" },
+            { code: "MITB02", title: "Data Structure" },
+            { code: "MITB03", title: "Trends in IT" }
+          ]
+        },
         {
           category: "Core Subjects",
           units: 12,
@@ -98,6 +108,33 @@ export const initialPresentationData: PresentationSlideData[] = [
         }
       ],
       courseDescriptions: [
+        {
+          code: "MITB01",
+          name: "Object-Oriented Programming",
+          description:
+            "This bridging course develops proficiency in object-oriented analysis, design, and programming. Topics include classes, objects, encapsulation, inheritance, polymorphism, and common design patterns applied to software problem solving. Laboratory work reinforces concepts through implementation exercises.",
+          credit: "3 units",
+          hours: "3 Lecture Hours / Week",
+          prerequisite: "None"
+        },
+        {
+          code: "MITB02",
+          name: "Data Structure",
+          description:
+            "This bridging course covers fundamental and intermediate data structures and their algorithms, including lists, stacks, queues, trees, graphs, and hashing. Emphasis is placed on complexity analysis, selection of appropriate structures for problem domains, and implementation considerations for IT applications.",
+          credit: "3 units",
+          hours: "3 Lecture Hours / Week",
+          prerequisite: "None"
+        },
+        {
+          code: "MITB03",
+          name: "Trends in IT",
+          description:
+            "This bridging course surveys contemporary developments in information technology, including emerging tools, platforms, and practices across computing, networking, data, and security. Students explore how current trends shape organizations and graduate-level study in IT.",
+          credit: "3 units",
+          hours: "3 Lecture Hours / Week",
+          prerequisite: "None"
+        },
         {
           code: "MIT101",
           name: "Advanced Database Systems",
@@ -816,12 +853,25 @@ export const initialPresentationData: PresentationSlideData[] = [
     icon: "Library",
     color: "from-sky-600 to-blue-900",
     content: {
-      mainTitle: "Modern Learning Commons",
-      mainDesc: "A state-of-the-art facility providing comprehensive access to physical and digital resources supporting the IT curriculum.",
+      mainTitle: "Reference Books",
+      mainDesc:
+        "Updated list of reference books per course, with a minimum of 5 recent titles per subject area.",
       resources: [
-        { icon: "BookMarked", title: "Reference Books", desc: "Updated list of reference books per course, with a minimum of 5 recent titles per subject area." },
-        { icon: "FileText", title: "Refereed Journals", desc: "Active subscriptions to top-tier IT and Computer Science refereed journals." },
-        { icon: "Monitor", title: "Digital Databases", desc: "24/7 access to electronic databases of international and reputable journals (e.g., IEEE, ACM)." }
+        {
+          icon: "FileText",
+          title: "Refereed Journals",
+          desc: "Active subscriptions to top-tier IT and Computer Science refereed journals."
+        },
+        {
+          icon: "BarChart",
+          title: "Budget and fiscal planning",
+          desc: "Documented PPMP cycles and annual operating budgets (e.g., FY 2017–2021 through current planning) show structured procurement and spending oversight for library operations."
+        },
+        {
+          icon: "Users",
+          title: "Staff development and training",
+          desc: "Staff development program materials, webinar matrices, and budgeted training plans demonstrate investment in librarian skills and service quality aligned with graduate program support."
+        }
       ]
     }
   },
