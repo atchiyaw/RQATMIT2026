@@ -536,6 +536,14 @@ export const initialPresentationData: PresentationSlideData[] = [
         { value: "3 (27%)", label: "Holding PhD or Doctorate Degree" },
         { value: "4 (36%)", label: "Pursuing PhD in IT" }
       ],
+      researchPublicationAnalysis: {
+        title: "Research publication engagement",
+        statValue: "100%",
+        statLabel: "of full-time faculty engaged in research & publication",
+        statDetail: "11 / 11 faculty with documented scholarly profiles",
+        body:
+          "Documented outputs include peer-reviewed articles, conference proceedings, and indexed work verifiable through Google Scholar, Scopus, ResearchGate, and related platforms. This universal participation reflects a culture of continuous inquiry, supports graduate-level thesis and capstone supervision, and aligns the program with CHED expectations for research-capable faculty in graduate IT education."
+      },
       facultyList: [
         {
           name: "ATOLE, Ronnel Rimando",

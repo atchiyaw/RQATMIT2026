@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  X, ChevronLeft, ChevronRight,
+  X, ChevronLeft, ChevronRight, ChevronDown,
   BookOpen, GraduationCap, Award, Target, User, Users, 
   Microscope, Library, Monitor, ClipboardCheck, Handshake,
   CheckCircle, FileText, BarChart, Settings, Layout,
@@ -282,6 +282,211 @@ const Slide4Content = ({ data }: { data: any }) => {
   );
 };
 
+/** Faculty Profile slide: sidebar stats + research card; scrollable accordion list. */
+function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const c = data.content;
+  const facultyList = c.facultyList ?? [];
+
+  return (
+    <div className="flex flex-col lg:flex-row gap-6 h-full min-h-0">
+      <aside className="w-full lg:w-80 xl:w-96 shrink-0 flex flex-col gap-4 lg:max-h-full lg:overflow-y-auto lg:pr-1 custom-scrollbar">
+        <div className="grid grid-cols-1 gap-4">
+          {c.stats?.map((stat: any, i: number) => (
+            <div
+              key={i}
+              className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 text-center flex flex-col justify-center"
+            >
+              <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
+              <div className="text-cyan-200 uppercase tracking-wider text-xs font-bold">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+        {c.researchPublicationAnalysis && (
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+              <div className="shrink-0 p-3 rounded-xl bg-cyan-500/20 border border-cyan-400/30 mx-auto sm:mx-0">
+                <Microscope className="w-8 h-8 text-cyan-300" />
+              </div>
+              <div className="min-w-0 flex-1 text-center sm:text-left">
+                <h3 className="text-lg font-bold text-white mb-3 tracking-tight">
+                  {c.researchPublicationAnalysis.title}
+                </h3>
+                {(c.researchPublicationAnalysis.statValue != null ||
+                  c.researchPublicationAnalysis.statLabel) && (
+                  <div className="mb-4 rounded-xl bg-black/25 border border-white/10 p-4 text-center sm:text-left">
+                    {c.researchPublicationAnalysis.statValue != null && (
+                      <div className="text-4xl font-bold text-white mb-1 tabular-nums">
+                        {c.researchPublicationAnalysis.statValue}
+                      </div>
+                    )}
+                    {c.researchPublicationAnalysis.statLabel && (
+                      <div className="text-cyan-200 uppercase tracking-wider text-xs font-bold leading-snug">
+                        {c.researchPublicationAnalysis.statLabel}
+                      </div>
+                    )}
+                    {c.researchPublicationAnalysis.statDetail && (
+                      <div className="text-cyan-100/80 text-xs mt-2 font-medium">
+                        {c.researchPublicationAnalysis.statDetail}
+                      </div>
+                    )}
+                  </div>
+                )}
+                <p className="text-cyan-50/95 text-sm leading-relaxed">{c.researchPublicationAnalysis.body}</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </aside>
+
+      <div className="flex-1 flex flex-col min-h-0 min-w-0">
+        <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-3 min-h-0">
+          {facultyList.map((faculty: any, i: number) => {
+            const open = expandedIndex === i;
+            const panelId = `faculty-panel-${i}`;
+            return (
+              <div
+                key={i}
+                className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden"
+              >
+                <button
+                  type="button"
+                  id={`faculty-trigger-${i}`}
+                  aria-expanded={open}
+                  aria-controls={panelId}
+                  onClick={() => setExpandedIndex(open ? null : i)}
+                  className="w-full flex items-center gap-3 p-4 text-left hover:bg-white/5 transition-colors"
+                >
+                  {faculty.image ? (
+                    <img
+                      src={faculty.image}
+                      alt=""
+                      className="w-12 h-12 rounded-lg object-cover border border-white/10 shrink-0"
+                      loading={i > 4 ? "lazy" : "eager"}
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-lg bg-cyan-900/50 border border-white/10 flex items-center justify-center shrink-0">
+                      <User className="w-6 h-6 text-cyan-300" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-bold text-white text-sm sm:text-base truncate">{faculty.name}</div>
+                    <div className="text-cyan-300 text-xs truncate">{faculty.role}</div>
+                    <div className="text-cyan-100/80 text-xs mt-0.5">
+                      Published papers: <span className="font-mono font-bold text-white">{faculty.papers}</span>
+                    </div>
+                  </div>
+                  <ChevronDown
+                    className={`w-5 h-5 text-cyan-300 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+                    aria-hidden
+                  />
+                </button>
+                {open && (
+                  <div
+                    id={panelId}
+                    role="region"
+                    aria-labelledby={`faculty-trigger-${i}`}
+                    className="border-t border-white/10 p-4 sm:p-6"
+                  >
+                    <div className="flex flex-col md:flex-row gap-6">
+                      <div className="md:w-1/3 shrink-0 md:border-r border-white/10 md:pr-6">
+                        {faculty.image && (
+                          <img
+                            src={faculty.image}
+                            alt={faculty.name}
+                            className="w-full h-48 object-cover rounded-lg border border-white/10 mb-4"
+                            loading="eager"
+                          />
+                        )}
+                        <h3 className="text-xl font-bold text-white mb-1">{faculty.name}</h3>
+                        <p className="text-cyan-300 font-medium text-sm mb-4">{faculty.role}</p>
+                        <div className="bg-black/20 rounded-lg p-3 border border-white/5 inline-block w-full md:w-auto">
+                          <div className="text-xs text-cyan-100/70 uppercase tracking-wider mb-1">Published Papers</div>
+                          <div className="text-2xl font-bold text-white">{faculty.papers}</div>
+                        </div>
+                      </div>
+                      <div className="flex-1 space-y-4">
+                        <div>
+                          <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-2">
+                            Educational Background
+                          </h4>
+                          <ul className="space-y-2">
+                            {faculty.degrees.map((degree: string, j: number) => (
+                              <li key={j} className="text-cyan-50 text-sm flex items-start gap-2">
+                                <GraduationCap className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                                <span>{degree}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-1">Specialization</h4>
+                          <p className="text-cyan-50 text-sm">{faculty.specialization}</p>
+                        </div>
+                        {faculty.researchValidation &&
+                          (faculty.researchValidation.links?.length > 0 ||
+                            faculty.researchValidation.publishedCount != null ||
+                            faculty.researchValidation.scopusIndexedCount != null ||
+                            faculty.researchValidation.citations != null) && (
+                            <div className="rounded-xl border border-cyan-500/20 bg-black/25 p-4">
+                              <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <BarChart className="w-4 h-4 text-cyan-400 shrink-0" />
+                                Published research validation
+                              </h4>
+                              {faculty.researchValidation.links?.length > 0 && (
+                                <ul className="space-y-2 mb-4">
+                                  {faculty.researchValidation.links.map(
+                                    (link: { label: string; url: string }, li: number) => (
+                                      <li key={li}>
+                                        <a
+                                          href={link.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="inline-flex items-center gap-2 text-sm text-cyan-100 hover:text-white underline decoration-cyan-500/50 hover:decoration-white transition-colors"
+                                        >
+                                          <ExternalLink className="w-3.5 h-3.5 shrink-0 opacity-80" />
+                                          {link.label}
+                                        </a>
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
+                              )}
+                              <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-cyan-100/90">
+                                {faculty.researchValidation.publishedCount != null && (
+                                  <span>
+                                    <strong className="text-cyan-300">Published research:</strong>{" "}
+                                    {faculty.researchValidation.publishedCount}
+                                  </span>
+                                )}
+                                {faculty.researchValidation.scopusIndexedCount != null && (
+                                  <span>
+                                    <strong className="text-cyan-300">Scopus-indexed:</strong>{" "}
+                                    {faculty.researchValidation.scopusIndexedCount}
+                                  </span>
+                                )}
+                                {faculty.researchValidation.citations != null && (
+                                  <span>
+                                    <strong className="text-cyan-300">Citations:</strong>{" "}
+                                    {faculty.researchValidation.citations}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const getSlides = (slidesData: PresentationSlideData[]) => {
   return slidesData.map(data => {
     const Icon = getIconComponent(data.icon);
@@ -504,108 +709,7 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
         </div>
       );
     } else if (data.id === 6) {
-      content = (
-        <div className="flex flex-col h-full gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 shrink-0">
-            {data.content.stats.map((stat: any, i: number) => (
-              <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 text-center flex flex-col justify-center">
-                <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="text-cyan-200 uppercase tracking-wider text-xs font-bold">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-          <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4">
-            {data.content.facultyList.map((faculty: any, i: number) => (
-              <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 flex flex-col md:flex-row gap-6">
-                <div className="md:w-1/3 shrink-0 md:border-r border-white/10 md:pr-6">
-                  {faculty.image && (
-                    <img
-                      src={faculty.image}
-                      alt={faculty.name}
-                      className="w-full h-48 object-cover rounded-lg border border-white/10 mb-4"
-                      loading={i > 2 ? "lazy" : "eager"}
-                    />
-                  )}
-                  <h3 className="text-xl font-bold text-white mb-1">{faculty.name}</h3>
-                  <p className="text-cyan-300 font-medium text-sm mb-4">{faculty.role}</p>
-                  
-                  <div className="bg-black/20 rounded-lg p-3 border border-white/5 inline-block w-full md:w-auto">
-                    <div className="text-xs text-cyan-100/70 uppercase tracking-wider mb-1">Published Papers</div>
-                    <div className="text-2xl font-bold text-white">{faculty.papers}</div>
-                  </div>
-                </div>
-                <div className="flex-1 space-y-4">
-                  <div>
-                    <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-2">Educational Background</h4>
-                    <ul className="space-y-2">
-                      {faculty.degrees.map((degree: string, j: number) => (
-                        <li key={j} className="text-cyan-50 text-sm flex items-start gap-2">
-                          <GraduationCap className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                          <span>{degree}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-1">Specialization</h4>
-                    <p className="text-cyan-50 text-sm">{faculty.specialization}</p>
-                  </div>
-                  {faculty.researchValidation && (
-                    (faculty.researchValidation.links?.length > 0 ||
-                      faculty.researchValidation.publishedCount != null ||
-                      faculty.researchValidation.scopusIndexedCount != null ||
-                      faculty.researchValidation.citations != null) && (
-                      <div className="rounded-xl border border-cyan-500/20 bg-black/25 p-4">
-                        <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <BarChart className="w-4 h-4 text-cyan-400 shrink-0" />
-                          Published research validation
-                        </h4>
-                        {faculty.researchValidation.links?.length > 0 && (
-                          <ul className="space-y-2 mb-4">
-                            {faculty.researchValidation.links.map((link: { label: string; url: string }, li: number) => (
-                              <li key={li}>
-                                <a
-                                  href={link.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-2 text-sm text-cyan-100 hover:text-white underline decoration-cyan-500/50 hover:decoration-white transition-colors"
-                                >
-                                  <ExternalLink className="w-3.5 h-3.5 shrink-0 opacity-80" />
-                                  {link.label}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                        <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-cyan-100/90">
-                          {faculty.researchValidation.publishedCount != null && (
-                            <span>
-                              <strong className="text-cyan-300">Published research:</strong>{" "}
-                              {faculty.researchValidation.publishedCount}
-                            </span>
-                          )}
-                          {faculty.researchValidation.scopusIndexedCount != null && (
-                            <span>
-                              <strong className="text-cyan-300">Scopus-indexed:</strong>{" "}
-                              {faculty.researchValidation.scopusIndexedCount}
-                            </span>
-                          )}
-                          {faculty.researchValidation.citations != null && (
-                            <span>
-                              <strong className="text-cyan-300">Citations:</strong>{" "}
-                              {faculty.researchValidation.citations}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
+      content = <Slide6FacultyContent data={data} />;
     } else if (data.id === 7) {
       content = (
         <div className="flex flex-col h-full gap-6">
