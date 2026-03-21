@@ -300,6 +300,191 @@ export const initialPresentationData: PresentationSlideData[] = [
         description: "Total number of complete syllabus as to the total number of courses in the MIT.",
         completed: 12,
         total: 12
+      },
+      pqLearningOutcomes: {
+        intro:
+          "The MIT Program at Partido State University aligns with Level 7 of the Philippine Qualifications Framework (PQF) as mandated in CMO No. 15, s. 2019, which specifies that graduate programs must demonstrate:",
+        sections: [
+          {
+            heading: "ADVANCED KNOWLEDGE AND SKILLS IN INFORMATION TECHNOLOGY",
+            outcomes: [
+              {
+                id: "PO1",
+                description:
+                  "Apply advanced IT concepts, frameworks, and methodologies to design innovative, secure, and scalable technological solutions that address complex organizational and societal problems.",
+                indicators: [
+                  "a.1 Design and implement enterprise-level IT architectures integrating emerging technologies (AI, IoT, cloud, automation).",
+                  "a.2 Develop and optimize large-scale databases and data-driven applications supporting analytics and decision-making.",
+                  "a.3 Apply advanced software engineering practices (microservices, DevOps, CI/CD) to build scalable systems.",
+                  "a.4 Prototype innovative IT products or services that address societal priorities such as digital transformation, e-governance, smart cities, and sustainability.",
+                  "a.5 Apply cybersecurity principles and governance frameworks to protect digital assets and ensure system resilience."
+                ]
+              },
+              {
+                id: "PO2",
+                description:
+                  "Demonstrate mastery of specialized IT domains—including systems design, data analytics, cybersecurity, and IT management—through interdisciplinary and industry-aligned approaches.",
+                indicators: [
+                  "b.1 Conduct advanced data analytics using statistical and algorithmic techniques to generate actionable insights.",
+                  "b.2 Evaluate and implement secure network and cloud infrastructure solutions.",
+                  "b.3 Create enterprise information systems aligned with strategic organizational requirements.",
+                  "b.4 Integrate principles from management, computing, and design to build user-centered IT solutions."
+                ]
+              }
+            ]
+          },
+          {
+            heading: "SELF-DIRECTED RESEARCH",
+            outcomes: [
+              {
+                id: "PO3",
+                description:
+                  "Independently conceptualize, design, and conduct high-quality IT research or capstone projects that contribute to innovation, digital transformation, and knowledge creation.",
+                indicators: [
+                  "c.1 Formulate research problems addressing gaps in IT practice or theory.",
+                  "c.2 Apply quantitative, qualitative, mixed-methods, or design science research approaches aligned with IT standards.",
+                  "c.3 Produce publishable research output compliant with ethical standards, data protection laws (e.g., Data Privacy Act), and professional guidelines.",
+                  "c.4 Develop research-based IT solutions validated through experimentation, prototyping, simulation, or usability testing."
+                ]
+              },
+              {
+                id: "PO4",
+                description:
+                  "Critically evaluate existing IT literature, technologies, and practices to propose improvements, emerging trends, or novel approaches.",
+                indicators: [
+                  "d.1 Conduct systematic analysis of current IT research to identify trends, limitations, and opportunities.",
+                  "d.2 Apply critical and analytical thinking to evaluate competing technologies, methodologies, and evidence to inform IT decision-making and innovation."
+                ]
+              }
+            ]
+          },
+          {
+            heading: "LIFELONG LEARNING WITH A HIGH DEGREE OF INDEPENDENCE",
+            outcomes: [
+              {
+                id: "PO5",
+                description:
+                  "Demonstrate a high degree of independence, adaptability, and reflective practice in managing continuous professional development aligned with global IT advancements.",
+                indicators: [
+                  "e.1 Pursue advanced certifications, micro-credentials, or graduate-level training aligned with career goals and industry demand.",
+                  "e.2 Engage in reflective practice and self-assessment to update technical and professional competencies continuously.",
+                  "e.3 Monitor global IT trends, standards, and best practices to sustain relevance in a rapidly evolving field."
+                ]
+              },
+              {
+                id: "PO6",
+                description:
+                  "Collaborate effectively with interdisciplinary or multidisciplinary teams in designing, evaluating, and delivering IT solutions.",
+                indicators: [
+                  "f.1 Facilitate communication and coordination across diverse roles (e.g., business, engineering, design, policy) in IT initiatives.",
+                  "f.2 Contribute technical leadership and shared accountability in team-based design, implementation, and evaluation of IT solutions.",
+                  "f.3 Apply conflict resolution, negotiation, and stakeholder management skills in multidisciplinary IT contexts."
+                ]
+              }
+            ]
+          },
+          {
+            heading:
+              "APPLICATION OF ADVANCED KNOWLEDGE AND SKILLS IN RESEARCH, PROFESSIONAL PRACTICE, OR CREATIVE WORK",
+            outcomes: [
+              {
+                id: "PO7",
+                description:
+                  "Translate advanced IT knowledge and research into effective strategies, solutions, technologies, and digital innovations that support organizational goals and societal development.",
+                indicators: [
+                  "g.1 Design and deploy IT strategies and innovations that address documented organizational or community needs.",
+                  "g.2 Integrate research findings and evidence-based methods into the development of digital products, services, or processes.",
+                  "g.3 Assess impact and sustainability of IT interventions on organizations and society."
+                ]
+              },
+              {
+                id: "PO8",
+                description:
+                  "Lead and implement IT projects and innovations that align technological, ethical, and societal considerations.",
+                indicators: [
+                  "h.1 Plan and govern IT projects using appropriate methodologies while addressing risk, security, and compliance.",
+                  "h.2 Uphold ethical principles, professional codes, and legal requirements in the delivery of IT innovations."
+                ]
+              },
+              {
+                id: "PO9",
+                description:
+                  "Apply advanced IT skills in professional and creative work, producing original, innovative, and impactful IT solutions.",
+                indicators: [
+                  "i.1 Deliver original or substantially improved IT artifacts (systems, research outputs, creative works) that meet professional quality standards.",
+                  "i.2 Demonstrate innovation and impact through adoption, evaluation, or recognition in professional or academic contexts."
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      pqCurriculumMap: {
+        title: "Curriculum Map",
+        description: "Course alignment to Program Outcomes PO1–PO9 (PQF Learning Outcomes).",
+        legend: "Legend: I = Introduced, R = Reinforced/Developed, M = Mastery/Assessed",
+        courses: [
+          {
+            code: "MIT101",
+            title: "Advanced Database Systems",
+            po: ["I/R", "R", "", "I", "", "", "", "I", "R"]
+          },
+          {
+            code: "MIT102",
+            title: "Advanced Operating Systems & Networking",
+            po: ["R", "R", "", "", "", "", "I", "R", "I"]
+          },
+          {
+            code: "MIT103",
+            title: "Advanced System Design & Implementation",
+            po: ["R", "R", "", "I", "", "R", "I", "I", "R"]
+          },
+          {
+            code: "MIT104",
+            title: "IT Research Methods (Methods of Research)",
+            po: ["", "", "I/R", "R", "", "", "", "R", ""]
+          },
+          {
+            code: "MIT201",
+            title: "Technology & Project Management",
+            po: ["I", "I", "", "", "R", "R", "R", "", ""]
+          },
+          {
+            code: "MIT202",
+            title: "Human-Computer Interaction",
+            po: ["I", "R", "", "I", "", "", "I", "R", "R"]
+          },
+          {
+            code: "MIT203",
+            title: "ICT Information Security Administration",
+            po: ["R", "R", "", "", "", "", "I", "M", "I"]
+          },
+          {
+            code: "MIT204",
+            title: "Management Information Systems",
+            po: ["I", "R", "", "R", "", "", "R", "I", ""]
+          },
+          {
+            code: "MIT205",
+            title: "Web Engineering",
+            po: ["R", "R", "", "", "", "I", "R", "I", "R"]
+          },
+          {
+            code: "MIT301",
+            title: "Introduction to Data Analytics",
+            po: ["I", "R", "", "", "", "", "R", "", "I"]
+          },
+          {
+            code: "MIT401",
+            title: "Graduate Project 1",
+            po: ["R", "R", "R", "R", "I", "R", "R", "R", "R"]
+          },
+          {
+            code: "MIT402",
+            title: "Graduate Project 2",
+            po: ["M", "M", "M", "M", "R", "M", "M", "M", "M"]
+          }
+        ]
       }
     }
   },
@@ -363,7 +548,16 @@ export const initialPresentationData: PresentationSlideData[] = [
             "Bachelor of Law, University of Northeastern Philippines"
           ],
           specialization: "Information Technology, Computer Science, Law",
-          papers: 17
+          papers: 13,
+          researchValidation: {
+            publishedCount: 13,
+            scopusIndexedCount: 3,
+            citations: 172,
+            links: [
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Ronnel-Atole" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57202837821" }
+            ]
+          }
         },
         {
           name: "CAPUCAO, Joni Neil Borja",
@@ -375,7 +569,16 @@ export const initialPresentationData: PresentationSlideData[] = [
             "Bachelor of Science in Mathematics, Ateneo de Naga University"
           ],
           specialization: "Information Technology, Multimedia and Object-Oriented Technology Applications, Mathematics",
-          papers: 5
+          papers: 5,
+          researchValidation: {
+            publishedCount: 5,
+            scopusIndexedCount: 3,
+            citations: 27,
+            links: [
+              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=Z-2_t-4AAAAJ" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57205364469" }
+            ]
+          }
         },
         {
           name: "CUYA, Kennedy Centeno",
@@ -387,7 +590,17 @@ export const initialPresentationData: PresentationSlideData[] = [
             "Bachelor of Science in Information Technology, Partido State University"
           ],
           specialization: "Information Technology, Systems Development",
-          papers: 4
+          papers: 4,
+          researchValidation: {
+            publishedCount: 4,
+            scopusIndexedCount: 4,
+            citations: 15,
+            links: [
+              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=fYAYF5wAAAAJ" },
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Kennedy-Cuya" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57217137218" }
+            ]
+          }
         },
         {
           name: "ARTIAGA, Rowell John Baterna",
@@ -399,7 +612,17 @@ export const initialPresentationData: PresentationSlideData[] = [
             "Bachelor of Science in Information Technology, Partido State University"
           ],
           specialization: "Information Technology, Systems Development",
-          papers: 7
+          papers: 10,
+          researchValidation: {
+            publishedCount: 10,
+            scopusIndexedCount: 2,
+            citations: 27,
+            links: [
+              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=hji5ef8AAAAJ" },
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Rowell-John-Artiaga" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57226867468" }
+            ]
+          }
         },
         {
           name: "BRIONES, Salvador II V.",
@@ -412,7 +635,17 @@ export const initialPresentationData: PresentationSlideData[] = [
             "Bachelor of Science in Information Technology, Partido State University"
           ],
           specialization: "Information Technology, Web Design and Development, Mathematics Education",
-          papers: 0
+          papers: 11,
+          researchValidation: {
+            publishedCount: 11,
+            scopusIndexedCount: 2,
+            citations: 12,
+            links: [
+              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=duE-_EIAAAAJ" },
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Salvador-Briones-Ii" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57543025000" }
+            ]
+          }
         },
         {
           name: "BRIONES, Shane C.",
@@ -425,7 +658,16 @@ export const initialPresentationData: PresentationSlideData[] = [
             "Bachelor of Science in Computer Science, Ateneo de Naga University"
           ],
           specialization: "Information Technology, Web Design and Development, Mathematics Education, Computer Science",
-          papers: 0
+          papers: 5,
+          researchValidation: {
+            publishedCount: 5,
+            scopusIndexedCount: 1,
+            citations: 4,
+            links: [
+              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=0Cw1MWAAAAAJ" },
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Shane-Briones" }
+            ]
+          }
         },
         {
           name: "ABIO, Arjay Formalejo",
@@ -460,7 +702,12 @@ export const initialPresentationData: PresentationSlideData[] = [
             "Bachelor of Science in Computer Science, Lower Isarog Foundation Exponent, Inc."
           ],
           specialization: "Development Management, Information Technology, Computer Science",
-          papers: 0
+          papers: 3,
+          researchValidation: {
+            publishedCount: 3,
+            citations: 4,
+            links: [{ label: "ResearchGate", url: "https://www.researchgate.net/profile/Hazel-Jean-Pesino-2" }]
+          }
         },
         {
           name: "INDICO, Michael H",
@@ -473,7 +720,14 @@ export const initialPresentationData: PresentationSlideData[] = [
             "Bachelor of Science in Computer Engineering, Aquinas University"
           ],
           specialization: "Computer Science, Computer Engineering, Management",
-          papers: 0
+          papers: 2,
+          researchValidation: {
+            publishedCount: 2,
+            citations: 13,
+            links: [
+              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=wtDLOOUAAAAJ" }
+            ]
+          }
         },
         {
           name: "BELLO, Leo Constantine S.",
@@ -484,7 +738,16 @@ export const initialPresentationData: PresentationSlideData[] = [
             "Bachelor of Science in Information Technology, AMA Computer College"
           ],
           specialization: "Graphics and Computer Vision, Information Technology",
-          papers: 0
+          papers: 8,
+          researchValidation: {
+            publishedCount: 8,
+            scopusIndexedCount: 2,
+            citations: 18,
+            links: [
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Leo-Constantine-Bello" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57226863870" }
+            ]
+          }
         }
       ]
     }

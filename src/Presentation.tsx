@@ -17,12 +17,23 @@ const getIconComponent = (iconName: string) => {
   return icons[iconName] || Target;
 };
 
+/** Purple boxed chip for PQF curriculum map levels (I, R, M, I/R). */
+function PqfMapBadge({ code }: { code: string }) {
+  const t = code.trim();
+  if (!t) return null;
+  return (
+    <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md bg-violet-600 border border-violet-400/50 text-[10px] sm:text-xs font-mono font-bold text-white shadow-sm min-h-[1.375rem]">
+      {t}
+    </span>
+  );
+}
+
 const Slide4Content = ({ data }: { data: any }) => {
-  const [activeTab, setActiveTab] = useState<'outcomes' | 'map' | 'syllabus'>('outcomes');
+  const [activeTab, setActiveTab] = useState<'outcomes' | 'pqf' | 'map' | 'pqmap' | 'syllabus'>('outcomes');
 
   return (
     <div className="flex flex-col h-full gap-4">
-      <div className="flex gap-2 border-b border-white/20 pb-2">
+      <div className="flex flex-wrap gap-2 border-b border-white/20 pb-2">
         <button
           onClick={() => setActiveTab('outcomes')}
           className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'outcomes' ? 'bg-white/20 text-white' : 'text-purple-200 hover:bg-white/10'}`}
@@ -30,10 +41,22 @@ const Slide4Content = ({ data }: { data: any }) => {
           Learning Outcomes
         </button>
         <button
+          onClick={() => setActiveTab('pqf')}
+          className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'pqf' ? 'bg-white/20 text-white' : 'text-purple-200 hover:bg-white/10'}`}
+        >
+          PQF Learning Outcomes
+        </button>
+        <button
           onClick={() => setActiveTab('map')}
           className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'map' ? 'bg-white/20 text-white' : 'text-purple-200 hover:bg-white/10'}`}
         >
           Curriculum Map
+        </button>
+        <button
+          onClick={() => setActiveTab('pqmap')}
+          className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'pqmap' ? 'bg-white/20 text-white' : 'text-purple-200 hover:bg-white/10'}`}
+        >
+          PQF Curriculum Map
         </button>
         <button
           onClick={() => setActiveTab('syllabus')}
@@ -62,6 +85,55 @@ const Slide4Content = ({ data }: { data: any }) => {
                     <div key={j} className="flex items-start gap-2 text-sm text-purple-100">
                       <CheckCircle className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
                       <span>{indicator}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'pqf' && (
+          <div className="space-y-8">
+            {data.pqLearningOutcomes?.intro && (
+              <p className="text-purple-50 text-base leading-relaxed bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                {data.pqLearningOutcomes.intro}
+              </p>
+            )}
+            {data.pqLearningOutcomes?.sections?.map((section: any, si: number) => (
+              <div key={si} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                <h4 className="text-sm font-bold text-purple-300 uppercase tracking-wider mb-4 border-b border-white/15 pb-3">
+                  {section.heading}
+                </h4>
+                <div className="space-y-6">
+                  {section.outcomes?.map((po: any, pi: number) => (
+                    <div
+                      key={pi}
+                      className="rounded-xl border border-white/15 bg-black/10 p-4 sm:p-5 space-y-4"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+                        <div className="shrink-0 px-3 py-1 rounded-lg bg-purple-500/30 border border-purple-400/40 text-sm font-bold text-white font-mono w-fit">
+                          {po.id}
+                        </div>
+                        <p className="text-purple-50 text-sm sm:text-base leading-relaxed flex-1 font-medium">
+                          {po.description}
+                        </p>
+                      </div>
+                      {po.indicators && po.indicators.length > 0 && (
+                        <div className="sm:pl-0 border-t border-white/10 pt-4 space-y-2">
+                          <h5 className="text-xs font-bold text-purple-300 uppercase tracking-wider">
+                            Performance Indicators
+                          </h5>
+                          <ul className="space-y-2">
+                            {po.indicators.map((line: string, ii: number) => (
+                              <li key={ii} className="flex items-start gap-2 text-sm text-purple-100">
+                                <CheckCircle className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+                                <span>{line}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -100,6 +172,77 @@ const Slide4Content = ({ data }: { data: any }) => {
                       </td>
                     </tr>
                   ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'pqmap' && (
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+            <h3 className="text-2xl font-bold text-white mb-1">{data.pqCurriculumMap?.title ?? "Curriculum Map"}</h3>
+            {data.pqCurriculumMap?.description && (
+              <p className="text-purple-200 text-sm mb-3">{data.pqCurriculumMap.description}</p>
+            )}
+            <div className="mb-4 px-3 py-3 rounded-lg bg-black/25 border border-white/10">
+              <p className="text-[10px] sm:text-xs font-bold text-purple-300 uppercase tracking-wider mb-3">
+                Legend
+              </p>
+              <div className="flex flex-wrap gap-x-5 gap-y-3 items-center">
+                {[
+                  { code: 'I', label: 'Introduced' },
+                  { code: 'R', label: 'Reinforced/Developed' },
+                  { code: 'M', label: 'Mastery/Assessed' },
+                  { code: 'I/R', label: 'Introduced & Reinforced' }
+                ].map((item) => (
+                  <div key={item.code} className="flex items-center gap-2 min-w-0">
+                    <PqfMapBadge code={item.code} />
+                    <span className="text-purple-100/95 text-xs sm:text-sm leading-tight">= {item.label}</span>
+                  </div>
+                ))}
+              </div>
+              {data.pqCurriculumMap?.legend && (
+                <p className="mt-3 pt-3 border-t border-white/10 text-purple-200/70 text-[10px] sm:text-xs">
+                  {data.pqCurriculumMap.legend}
+                </p>
+              )}
+            </div>
+            <div className="overflow-x-auto -mx-1">
+              <table className="w-full text-left border-collapse text-sm min-w-[56rem]">
+                <thead>
+                  <tr className="border-b border-white/20">
+                    <th className="py-2 px-2 text-purple-300 font-bold whitespace-nowrap">Course Code</th>
+                    <th className="py-2 px-2 text-purple-300 font-bold min-w-[11rem]">Course Title</th>
+                    {Array.from({ length: 9 }, (_, i) => (
+                      <th key={i} className="py-2 px-1 text-center text-purple-300 font-bold w-11">
+                        PO{i + 1}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.pqCurriculumMap?.courses?.map((course: any, i: number) => {
+                    const cells = Array.isArray(course.po) ? course.po : [];
+                    const padded = [...cells];
+                    while (padded.length < 9) padded.push("");
+                    return (
+                      <tr key={i} className="border-b border-white/10 hover:bg-white/5 transition-colors">
+                        <td className="py-2 px-2 font-mono text-white font-bold whitespace-nowrap">{course.code}</td>
+                        <td className="py-2 px-2 text-purple-50 text-xs sm:text-sm">{course.title}</td>
+                        {padded.slice(0, 9).map((cell: string, j: number) => (
+                          <td key={j} className="py-2 px-1 text-center align-middle">
+                            {cell?.trim() ? (
+                              <div className="flex justify-center">
+                                <PqfMapBadge code={cell} />
+                              </div>
+                            ) : (
+                              <span className="text-purple-400/50 text-xs">—</span>
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -407,6 +550,56 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
                     <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-1">Specialization</h4>
                     <p className="text-cyan-50 text-sm">{faculty.specialization}</p>
                   </div>
+                  {faculty.researchValidation && (
+                    (faculty.researchValidation.links?.length > 0 ||
+                      faculty.researchValidation.publishedCount != null ||
+                      faculty.researchValidation.scopusIndexedCount != null ||
+                      faculty.researchValidation.citations != null) && (
+                      <div className="rounded-xl border border-cyan-500/20 bg-black/25 p-4">
+                        <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-3 flex items-center gap-2">
+                          <BarChart className="w-4 h-4 text-cyan-400 shrink-0" />
+                          Published research validation
+                        </h4>
+                        {faculty.researchValidation.links?.length > 0 && (
+                          <ul className="space-y-2 mb-4">
+                            {faculty.researchValidation.links.map((link: { label: string; url: string }, li: number) => (
+                              <li key={li}>
+                                <a
+                                  href={link.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 text-sm text-cyan-100 hover:text-white underline decoration-cyan-500/50 hover:decoration-white transition-colors"
+                                >
+                                  <ExternalLink className="w-3.5 h-3.5 shrink-0 opacity-80" />
+                                  {link.label}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-cyan-100/90">
+                          {faculty.researchValidation.publishedCount != null && (
+                            <span>
+                              <strong className="text-cyan-300">Published research:</strong>{" "}
+                              {faculty.researchValidation.publishedCount}
+                            </span>
+                          )}
+                          {faculty.researchValidation.scopusIndexedCount != null && (
+                            <span>
+                              <strong className="text-cyan-300">Scopus-indexed:</strong>{" "}
+                              {faculty.researchValidation.scopusIndexedCount}
+                            </span>
+                          )}
+                          {faculty.researchValidation.citations != null && (
+                            <span>
+                              <strong className="text-cyan-300">Citations:</strong>{" "}
+                              {faculty.researchValidation.citations}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             ))}
