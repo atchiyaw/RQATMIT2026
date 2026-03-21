@@ -905,21 +905,48 @@ export const initialPresentationData: PresentationSlideData[] = [
     icon: "ClipboardCheck",
     color: "from-pink-600 to-rose-900",
     content: {
-      admissionTitle: "Admission Policy",
-      admissionList: [
-        "Passing score in University Entrance Exam",
-        "High School GWA of 85% or better",
-        "Interview with the Department Chair",
-        "Medical clearance"
+      policyTitle: "MIT Admission and Retention Policy",
+      policySubtitle:
+        "Partido State University — Master in Information Technology. Summarized from the official policy document (Sections I–VI and Annex A).",
+      policyPdfUrl: "/docs/mit-admission-retention-policy.pdf",
+      cards: [
+        {
+          title: "Eligibility & bridging",
+          icon: "User",
+          desc: "Applicants normally hold a bachelor’s in IT, Computer Science, Information Systems, or a closely allied program. IT professionals may qualify upon evidence of readiness for graduate study. Non-IT/non-allied degrees may be conditionally admitted subject to mid-year bridging before regular MIT coursework.",
+        },
+        {
+          title: "Admission process",
+          icon: "ClipboardCheck",
+          desc: "The department evaluates undergraduate preparation and/or professional experience for program fit and bridging needs. Screening is led by the Department Chair or Graduate Program Coordinator. New students register through the University system, pay fees, and validate subjects with the Registrar. First enrollment typically carries 3–9 units per semester.",
+        },
+        {
+          title: "Documentary requirements",
+          icon: "FileText",
+          desc: "Submit a completed application form and CV, two recommendation letters, a short concept note on IT interests or capstone direction, ID photos, PSA birth (and marriage if applicable), official transcript, and transfer credentials for transferees. Non-IT applicants sign agreement to complete bridging before regular courses.",
+        },
+        {
+          title: "Standing, load & attendance",
+          icon: "CheckCircle",
+          desc: "A passing master’s grade is 2.0 (87); lower grades require repeat if the program requires it. Absences beyond 20% of contact hours result in being dropped with a grade of 5.0. Incomplete grades must be cleared within one semester. Regular load is 3–9 units; prerequisites must be completed before advanced courses.",
+        },
+        {
+          title: "CE, residency & capstone",
+          icon: "Award",
+          desc: "The Comprehensive Examination is required unless exempted by publication rules; passing is 2.0 (87), with two attempts then a 3-unit refresher. Maximum residency is five years for the master’s (LOA excluded). MIT is non-thesis: 36 units including 6 units of Graduate Project (Capstone 1 & 2), plus two refereed publications before graduation.",
+        },
+        {
+          title: "LOA, transfer & conduct",
+          icon: "Handshake",
+          desc: "Leave of absence may be granted up to one academic year; readmission follows evaluation and Dean approval. Up to 50% of program units may be credited if equivalent and graded at least 1.5, applied in the first semester. Academic honesty and professional conduct follow University policy; major violations may lead to dismissal.",
+        },
+        {
+          title: "Bridging program (non-IT)",
+          icon: "BookOpen",
+          desc: "Conditional admission requires completion of a mid-year Bridging Program (9 units) before the first regular semester. Bridging subjects run in the mid-year term; after passing, students enter regular MIT courses under standard load and prerequisite rules.",
+        },
       ],
-      retentionTitle: "Retention Policy",
-      retentionList: [
-        "Maintain a GWA of 2.5 or better",
-        "No failing grades in major IT subjects",
-        "Maximum residency rule applies",
-        "Strict adherence to student code of conduct"
-      ]
-    }
+    },
   },
   {
     id: 11,

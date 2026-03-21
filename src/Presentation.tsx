@@ -495,15 +495,7 @@ function Slide3AccreditationContent({ data }: { data: PresentationSlideData }) {
   );
 }
 
-function LibraryFileTree({
-  nodes,
-  onPreview,
-  depth = 0,
-}: {
-  nodes: LibraryNode[];
-  onPreview: (s: NonNullable<CredentialPreviewState>) => void;
-  depth?: number;
-}) {
+function LibraryFileTree({ nodes, depth = 0 }: { nodes: LibraryNode[]; depth?: number }) {
   return (
     <ul
       className={
@@ -520,33 +512,21 @@ function LibraryFileTree({
                 <FolderOpen className="h-4 w-4 shrink-0 text-sky-400/90" aria-hidden />
                 <span className="truncate font-medium">{node.name}</span>
               </summary>
-              <LibraryFileTree nodes={node.children} onPreview={onPreview} depth={depth + 1} />
+              <LibraryFileTree nodes={node.children} depth={depth + 1} />
             </details>
           ) : (
             <div className="flex flex-wrap items-start gap-x-2 gap-y-1 py-1 pl-0.5">
               <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-400/80" aria-hidden />
               <span className="min-w-[8rem] flex-1 break-words text-xs text-sky-50/95">{node.name}</span>
-              <div className="flex shrink-0 items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const url = libraryFileUrl(node.relPath);
-                    const kind = credentialPreviewKind(node.name);
-                    onPreview({ url, title: node.name, kind });
-                  }}
-                  className="text-xs font-semibold text-sky-300 underline decoration-sky-500/40 hover:text-white"
-                >
-                  Preview
-                </button>
-                <a
-                  href={libraryFileUrl(node.relPath)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-semibold text-sky-200/90 hover:text-white"
-                >
-                  Open
-                </a>
-              </div>
+              <a
+                href={libraryFileUrl(node.relPath)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-sky-300 hover:text-white"
+              >
+                <ExternalLink className="h-3 w-3 opacity-80" />
+                Open
+              </a>
             </div>
           )}
         </li>
@@ -555,22 +535,12 @@ function LibraryFileTree({
   );
 }
 
-/** Library Resources: Reference Books hero + insight cards (left); documents + inline PDF preview (right). */
+/** Library Resources: Reference Books hero + cards (left); library documents list with Open links (right). */
 function Slide8LibraryContent({ data }: { data: PresentationSlideData }) {
-  const [preview, setPreview] = useState<CredentialPreviewState>(null);
   const c = data.content;
   const { children } = libraryDocumentTree;
   const rootFiles = children.filter((n): n is LibraryFileNode => n.type === 'file');
   const rootDirs = children.filter((n): n is LibraryDirNode => n.type === 'dir');
-
-  useEffect(() => {
-    if (!preview) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setPreview(null);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [preview]);
 
   return (
     <div className="relative flex h-full min-h-0 flex-col gap-4 lg:flex-row lg:gap-5">
@@ -604,76 +574,105 @@ function Slide8LibraryContent({ data }: { data: PresentationSlideData }) {
           Library documents
         </h3>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-4 xl:flex-row xl:gap-5">
-          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar xl:max-w-[min(100%,28rem)] xl:flex-initial">
-            {rootFiles.length > 0 && (
-              <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5">
-                <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-sky-200">
-                  Program materials
-                </h4>
-                <p className="mb-3 text-xs text-sky-200/80">
-                  MIT graduate program title listings (copyright variants) supporting curriculum and accreditation
-                  evidence.
-                </p>
-                <LibraryFileTree nodes={rootFiles} onPreview={setPreview} />
-              </div>
-            )}
-            {rootDirs.map((dir, i) => (
-              <div
-                key={i}
-                className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5"
-              >
-                <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-sky-200">{dir.name}</h4>
-                <LibraryFileTree nodes={dir.children} onPreview={setPreview} />
-              </div>
-            ))}
-          </div>
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+          {rootFiles.length > 0 && (
+            <div className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5">
+              <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-sky-200">
+                Program materials
+              </h4>
+              <p className="mb-3 text-xs text-sky-200/80">
+                MIT graduate program title listings (copyright variants) supporting curriculum and accreditation
+                evidence.
+              </p>
+              <LibraryFileTree nodes={rootFiles} />
+            </div>
+          )}
+          {rootDirs.map((dir, i) => (
+            <div
+              key={i}
+              className="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5"
+            >
+              <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-sky-200">{dir.name}</h4>
+              <LibraryFileTree nodes={dir.children} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
-          <div className="flex min-h-[min(50vh,420px)] min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-white/20 bg-black/35 xl:min-h-0">
-            <div className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-2">
-              <span className="truncate text-xs font-semibold text-sky-200">
-                {preview?.title ?? 'Document preview'}
-              </span>
-              <div className="flex shrink-0 items-center gap-2">
-                {preview && (
-                  <>
-                    <a
-                      href={preview.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-semibold text-sky-300 hover:text-white"
-                    >
-                      Open in new tab
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => setPreview(null)}
-                      className="rounded-lg bg-white/10 px-2 py-1 text-xs font-semibold text-white hover:bg-white/20"
-                    >
-                      Clear
-                    </button>
-                  </>
-                )}
-              </div>
+/** Admission & Retention: policy summary cards + full PDF preview/open. */
+function Slide10AdmissionPolicyContent({ data }: { data: PresentationSlideData }) {
+  const [preview, setPreview] = useState<CredentialPreviewState>(null);
+  const c = data.content;
+  const pdfUrl = c.policyPdfUrl as string;
+  const pdfTitle = c.policyTitle as string;
+  const cards = (c.cards ?? []) as Array<{ title: string; desc: string; icon: string }>;
+
+  useEffect(() => {
+    if (!preview) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPreview(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [preview]);
+
+  return (
+    <div className="relative flex h-full min-h-0 flex-col gap-4">
+      <div className="shrink-0 rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md md:p-6">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div className="flex min-w-0 items-start gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-pink-500/25">
+              <ClipboardCheck className="h-7 w-7 text-pink-300" aria-hidden />
             </div>
-            <div className="relative min-h-0 flex-1 bg-slate-950/80">
-              {preview?.kind === 'pdf' ? (
-                <iframe
-                  title={preview.title}
-                  src={preview.url}
-                  className="h-full min-h-[min(50vh,380px)] w-full border-0 bg-white xl:min-h-[320px]"
-                />
-              ) : (
-                <div className="flex h-full min-h-[200px] flex-col items-center justify-center gap-2 p-6 text-center text-sm text-sky-300/75">
-                  <FileText className="h-10 w-10 opacity-40" />
-                  <p>Select a PDF and click Preview to view it here.</p>
-                  <p className="text-xs text-sky-400/60">Escape clears the preview.</p>
-                </div>
-              )}
+            <div className="min-w-0">
+              <h2 className="text-xl font-bold leading-tight text-white md:text-2xl">{c.policyTitle}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-pink-100/95">{c.policySubtitle}</p>
             </div>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-2 md:justify-end">
+            <button
+              type="button"
+              onClick={() => setPreview({ url: pdfUrl, title: pdfTitle, kind: 'pdf' })}
+              className="inline-flex items-center gap-2 rounded-xl border border-pink-400/40 bg-pink-500/25 px-4 py-2.5 text-sm font-semibold text-pink-100 transition-colors hover:bg-pink-500/35"
+            >
+              <FileText className="h-4 w-4" />
+              Preview policy
+            </button>
+            <a
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/15"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Open PDF
+            </a>
           </div>
         </div>
       </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {cards.map((item, i) => {
+            const ItemIcon = getIconComponent(item.icon);
+            return (
+              <div
+                key={i}
+                className="flex min-h-[200px] flex-col rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md"
+              >
+                <ItemIcon className="mb-3 h-8 w-8 shrink-0 text-pink-300" aria-hidden />
+                <h3 className="mb-2 text-base font-bold leading-snug text-white">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-pink-100/90">{item.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <CredentialPreviewModal preview={preview} onClose={() => setPreview(null)} />
     </div>
   );
 }
@@ -1250,34 +1249,7 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
         </div>
       );
     } else if (data.id === 10) {
-      content = (
-        <div className="flex items-center justify-center h-full">
-          <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white/10 backdrop-blur-md rounded-3xl p-10 border border-white/20">
-              <div className="w-16 h-16 bg-pink-500/20 rounded-2xl flex items-center justify-center mb-6">
-                <User className="w-8 h-8 text-pink-300" />
-              </div>
-              <h3 className="text-3xl font-bold text-white mb-4">{data.content.admissionTitle}</h3>
-              <ul className="space-y-3 text-pink-100">
-                {data.content.admissionList.map((item: string, i: number) => (
-                  <li key={i}>• {item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-3xl p-10 border border-white/20">
-              <div className="w-16 h-16 bg-pink-500/20 rounded-2xl flex items-center justify-center mb-6">
-                <Award className="w-8 h-8 text-pink-300" />
-              </div>
-              <h3 className="text-3xl font-bold text-white mb-4">{data.content.retentionTitle}</h3>
-              <ul className="space-y-3 text-pink-100">
-                {data.content.retentionList.map((item: string, i: number) => (
-                  <li key={i}>• {item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      );
+      content = <Slide10AdmissionPolicyContent data={data} />;
     } else if (data.id === 11) {
       content = (
         <div className="flex flex-col h-full gap-8">
