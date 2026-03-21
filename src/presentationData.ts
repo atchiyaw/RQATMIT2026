@@ -553,11 +553,12 @@ export const initialPresentationData: PresentationSlideData[] = [
         {
           name: "Engr. Emelina R. Padayao",
           role: "Dean, College of Engineering and Computational Sciences",
-          education: "Master of Science in Civil Engineering at Spain University",
-          experience: [
-            "20 years in service",
-            "College Dean since 2024"
+          education: [
+            "Master of Engineering major in Civil Engineering, MAPUA Institute of Technology",
+            "PhD in Environmental Engineering, UP Diliman, Philippines",
+            "Dissertation at Universitat Rovira i Virgili, Spain"
           ],
+          experience: ["16 years in service", "College Dean since 2022"],
           specialization: ""
         },
         {
