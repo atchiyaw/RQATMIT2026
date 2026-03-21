@@ -539,6 +539,11 @@ export const initialPresentationData: PresentationSlideData[] = [
             po: ["M", "M", "M", "M", "R", "M", "M", "M", "M"]
           }
         ]
+      },
+      flexibleLearning: {
+        title: "Learning continuity plan for flexible learning",
+        description:
+          "Official PSU documents on flexible learning as a mode of instruction—including graduate guidelines, implementing rules, work instructions, and acknowledgements—supporting continuity of learning and OBE-aligned delivery.",
       }
     }
   },

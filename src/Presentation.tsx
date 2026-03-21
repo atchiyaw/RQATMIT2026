@@ -26,6 +26,15 @@ import {researchFileUrl} from './researchUrls';
 import {gpmoFileUrl} from './gpmoUrls';
 import {researchDocumentTree, type ResearchDirNode} from './generated/researchManifest';
 import {gpmoDocumentTree} from './generated/gpmoManifest';
+import {flexibleLearningDocumentTree} from './generated/flexibleLearningManifest';
+import {flexibleLearningFileUrl} from './flexibleLearningUrls';
+
+type CredentialPreviewState = { url: string; title: string; kind: 'pdf' | 'image' | 'other' } | null;
+
+/** Shared tree shape for static evidence manifests (Research, GPMO, Flexible Learning). */
+type EvidenceTreeNode =
+  | { type: 'file'; name: string; relPath: string }
+  | { type: 'dir'; name: string; children: EvidenceTreeNode[] };
 
 const getIconComponent = (iconName: string) => {
   const icons: Record<string, any> = {
@@ -47,7 +56,21 @@ function PqfMapBadge({ code }: { code: string }) {
 }
 
 const Slide4Content = ({ data }: { data: any }) => {
-  const [activeTab, setActiveTab] = useState<'outcomes' | 'pqf' | 'map' | 'pqmap' | 'syllabus'>('outcomes');
+  const [activeTab, setActiveTab] = useState<
+    'outcomes' | 'pqf' | 'map' | 'pqmap' | 'syllabus' | 'flexible'
+  >('outcomes');
+  const [flexiblePreview, setFlexiblePreview] = useState<CredentialPreviewState>(null);
+
+  useEffect(() => {
+    if (!flexiblePreview) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setFlexiblePreview(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [flexiblePreview]);
+
+  const flexNodes = flexibleLearningDocumentTree.children as EvidenceTreeNode[];
 
   return (
     <div className="flex flex-col h-full gap-4">
@@ -81,6 +104,12 @@ const Slide4Content = ({ data }: { data: any }) => {
           className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'syllabus' ? 'bg-white/20 text-white' : 'text-purple-200 hover:bg-white/10'}`}
         >
           Syllabus & Plan
+        </button>
+        <button
+          onClick={() => setActiveTab('flexible')}
+          className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'flexible' ? 'bg-white/20 text-white' : 'text-purple-200 hover:bg-white/10'}`}
+        >
+          Learning continuity (flexible learning)
         </button>
       </div>
 
@@ -295,12 +324,41 @@ const Slide4Content = ({ data }: { data: any }) => {
             </div>
           </div>
         )}
+
+        {activeTab === 'flexible' && (
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md md:p-6">
+              <div className="mb-2 flex items-center gap-2">
+                <Layout className="h-6 w-6 text-violet-300" aria-hidden />
+                <h3 className="text-xl font-bold text-white md:text-2xl">
+                  {data.flexibleLearning?.title ?? 'Learning continuity plan for flexible learning'}
+                </h3>
+              </div>
+              <p className="text-sm leading-relaxed text-purple-100/95 md:text-base">
+                {data.flexibleLearning?.description}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-violet-500/25 bg-black/20 p-4 backdrop-blur-md md:p-5">
+              <h4 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-violet-200">
+                <FolderOpen className="h-4 w-4" aria-hidden />
+                Evidence documents
+              </h4>
+              {flexNodes.length === 0 ? (
+                <p className="text-sm text-violet-200/70">No files in Flexible Learning folder.</p>
+              ) : (
+                <div className="max-h-[min(55vh,520px)] overflow-y-auto pr-2 custom-scrollbar">
+                  <FlexibleLearningFileTree nodes={flexNodes} onPreview={setFlexiblePreview} />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
+
+      <CredentialPreviewModal preview={flexiblePreview} onClose={() => setFlexiblePreview(null)} />
     </div>
   );
 };
-
-type CredentialPreviewState = { url: string; title: string; kind: 'pdf' | 'image' | 'other' } | null;
 
 function FacultyCredentialTree({
   nodes,
@@ -499,11 +557,6 @@ function Slide3AccreditationContent({ data }: { data: PresentationSlideData }) {
   );
 }
 
-/** Shared tree shape for Research/ and GPMO/ manifests (same JSON structure). */
-type EvidenceTreeNode =
-  | { type: 'file'; name: string; relPath: string }
-  | { type: 'dir'; name: string; children: EvidenceTreeNode[] };
-
 function EvidenceFileTree({
   nodes,
   fileUrl,
@@ -559,6 +612,73 @@ function EvidenceFileTree({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-xs font-semibold text-fuchsia-200/90 hover:text-white"
+                >
+                  <ExternalLink className="h-3 w-3 opacity-80" />
+                  Open
+                </a>
+              </div>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** OBE slide: files from `Flexible Learning/` (continuity / flexible learning evidence). */
+function FlexibleLearningFileTree({
+  nodes,
+  onPreview,
+  depth = 0,
+}: {
+  nodes: EvidenceTreeNode[];
+  onPreview: (s: NonNullable<CredentialPreviewState>) => void;
+  depth?: number;
+}) {
+  const fileUrl = (relPath: string) => flexibleLearningFileUrl(relPath);
+  return (
+    <ul
+      className={
+        depth > 0
+          ? 'ml-2 mt-1 space-y-0.5 border-l border-violet-500/25 pl-2 sm:ml-3 sm:pl-3'
+          : 'space-y-0.5'
+      }
+    >
+      {nodes.map((node, idx) => (
+        <li key={`${depth}-${idx}-${node.name}`}>
+          {node.type === 'dir' ? (
+            <details className="group min-w-0">
+              <summary className="flex cursor-pointer list-none items-center gap-2 py-1 text-sm text-violet-200 hover:text-white [&::-webkit-details-marker]:hidden">
+                <FolderOpen className="h-4 w-4 shrink-0 text-violet-400/90" aria-hidden />
+                <span className="truncate font-medium">{node.name}</span>
+              </summary>
+              <FlexibleLearningFileTree
+                nodes={node.children}
+                onPreview={onPreview}
+                depth={depth + 1}
+              />
+            </details>
+          ) : (
+            <div className="flex flex-wrap items-start gap-x-2 gap-y-1 py-1 pl-0.5">
+              <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-400/80" aria-hidden />
+              <span className="min-w-[8rem] flex-1 break-words text-xs text-violet-50/95">{node.name}</span>
+              <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const url = fileUrl(node.relPath);
+                    const kind = credentialPreviewKind(node.name);
+                    onPreview({ url, title: node.name, kind });
+                  }}
+                  className="text-xs font-semibold text-violet-300 underline decoration-violet-500/40 hover:text-white"
+                >
+                  Preview
+                </button>
+                <a
+                  href={fileUrl(node.relPath)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-violet-200/90 hover:text-white"
                 >
                   <ExternalLink className="h-3 w-3 opacity-80" />
                   Open

@@ -164,6 +164,32 @@ function gpmoMaterialsPlugin(): Plugin {
   };
 }
 
+/** Serve `Flexible Learning/` at `/flexible-learning-materials/*` and copy into `dist` on build. */
+function flexibleLearningMaterialsPlugin(): Plugin {
+  const flexibleRoot = path.resolve(__dirname, 'Flexible Learning');
+  let outDir = 'dist';
+
+  return {
+    name: 'flexible-learning-materials-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(flexibleRoot)) return;
+      server.middlewares.use(
+        '/flexible-learning-materials',
+        express.static(flexibleRoot, {index: false, fallthrough: true}),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(flexibleRoot)) return;
+      const dest = path.join(outDir, 'flexible-learning-materials');
+      fs.mkdirSync(path.dirname(dest), {recursive: true});
+      fs.cpSync(flexibleRoot, dest, {recursive: true});
+    },
+  };
+}
+
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
@@ -176,6 +202,7 @@ export default defineConfig(({mode}) => {
       libraryMaterialsPlugin(),
       researchMaterialsPlugin(),
       gpmoMaterialsPlugin(),
+      flexibleLearningMaterialsPlugin(),
     ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
