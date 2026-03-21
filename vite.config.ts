@@ -1,12 +1,43 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
+import express from 'express';
+import fs from 'node:fs';
 import path from 'path';
-import {defineConfig, loadEnv} from 'vite';
+import {fileURLToPath} from 'node:url';
+import {defineConfig, loadEnv, type Plugin} from 'vite';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/** Serve `Faculty Credentials/` at `/faculty-credentials/*` (dev) and copy into `dist` on build. */
+function facultyCredentialsPlugin(): Plugin {
+  const credentialsRoot = path.resolve(__dirname, 'Faculty Credentials');
+  let outDir = 'dist';
+
+  return {
+    name: 'faculty-credentials-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(credentialsRoot)) return;
+      server.middlewares.use(
+        '/faculty-credentials',
+        express.static(credentialsRoot, {index: false, fallthrough: true}),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(credentialsRoot)) return;
+      const dest = path.join(outDir, 'faculty-credentials');
+      fs.mkdirSync(path.dirname(dest), {recursive: true});
+      fs.cpSync(credentialsRoot, dest, {recursive: true});
+    },
+  };
+}
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), facultyCredentialsPlugin()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },

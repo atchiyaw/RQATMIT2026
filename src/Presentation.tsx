@@ -5,9 +5,15 @@ import {
   BookOpen, GraduationCap, Award, Target, User, Users, 
   Microscope, Library, Monitor, ClipboardCheck, Handshake,
   CheckCircle, FileText, BarChart, Settings, Layout,
-  Cpu, Globe, BookMarked, UsersRound, Building2, ExternalLink
+  Cpu, Globe, BookMarked, UsersRound, Building2, ExternalLink, FolderOpen
 } from 'lucide-react';
 import { PresentationSlideData } from './presentationData';
+import {
+  facultyCredentialsManifest,
+  facultyCredentialsFileCounts,
+  type CredentialNode,
+} from './generated/facultyCredentialsManifest';
+import {credentialFileUrl, credentialPreviewKind} from './facultyCredentialUrls';
 
 const getIconComponent = (iconName: string) => {
   const icons: Record<string, any> = {
@@ -282,11 +288,163 @@ const Slide4Content = ({ data }: { data: any }) => {
   );
 };
 
+type CredentialPreviewState = { url: string; title: string; kind: 'pdf' | 'image' | 'other' } | null;
+
+function FacultyCredentialTree({
+  nodes,
+  facultyName,
+  onPreview,
+  depth = 0,
+}: {
+  nodes: CredentialNode[];
+  facultyName: string;
+  onPreview: (s: NonNullable<CredentialPreviewState>) => void;
+  depth?: number;
+}) {
+  return (
+    <ul className={depth > 0 ? 'ml-2 sm:ml-3 border-l border-white/10 pl-2 sm:pl-3 space-y-0.5 mt-1' : 'space-y-0.5'}>
+      {nodes.map((node, idx) => (
+        <li key={`${depth}-${idx}-${node.name}`}>
+          {node.type === 'dir' ? (
+            <details className="group min-w-0">
+              <summary className="cursor-pointer list-none flex items-center gap-2 py-1 text-sm text-cyan-200 hover:text-white [&::-webkit-details-marker]:hidden">
+                <FolderOpen className="w-4 h-4 shrink-0 text-cyan-400/90" aria-hidden />
+                <span className="font-medium truncate">{node.name}</span>
+              </summary>
+              <FacultyCredentialTree
+                nodes={node.children}
+                facultyName={facultyName}
+                onPreview={onPreview}
+                depth={depth + 1}
+              />
+            </details>
+          ) : (
+            <div className="flex flex-wrap items-start gap-x-2 gap-y-1 py-1 pl-0.5">
+              <FileText className="w-3.5 h-3.5 text-cyan-400/80 shrink-0 mt-0.5" aria-hidden />
+              <span className="text-xs text-cyan-50/95 flex-1 min-w-[8rem] break-words">{node.name}</span>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const url = credentialFileUrl(facultyName, node.relPath);
+                    const kind = credentialPreviewKind(node.name);
+                    onPreview({ url, title: node.name, kind });
+                  }}
+                  className="text-xs font-semibold text-cyan-300 hover:text-white underline decoration-cyan-500/40"
+                >
+                  Preview
+                </button>
+                <a
+                  href={credentialFileUrl(facultyName, node.relPath)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-semibold text-cyan-200/90 hover:text-white"
+                >
+                  Open
+                </a>
+              </div>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function CredentialPreviewModal({
+  preview,
+  onClose,
+}: {
+  preview: CredentialPreviewState;
+  onClose: () => void;
+}) {
+  if (!preview) return null;
+  return (
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="credential-preview-title"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl border border-white/20 bg-slate-950 shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/10 bg-black/40 shrink-0">
+          <h2 id="credential-preview-title" className="text-sm font-bold text-white truncate pr-2">
+            {preview.title}
+          </h2>
+          <div className="flex items-center gap-2 shrink-0">
+            <a
+              href={preview.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-semibold text-cyan-300 hover:text-white"
+            >
+              Open in new tab
+            </a>
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white"
+              aria-label="Close preview"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 min-h-0 overflow-auto p-3 bg-black/30">
+          {preview.kind === 'pdf' && (
+            <iframe title={preview.title} src={preview.url} className="w-full h-[min(70vh,640px)] rounded-lg border border-white/10 bg-white" />
+          )}
+          {preview.kind === 'image' && (
+            <div className="flex justify-center items-start">
+              <img
+                src={preview.url}
+                alt=""
+                className="max-w-full max-h-[min(70vh,640px)] object-contain rounded-lg border border-white/10"
+              />
+            </div>
+          )}
+          {preview.kind === 'other' && (
+            <div className="text-center py-12 px-4 space-y-4">
+              <FileText className="w-14 h-14 mx-auto text-cyan-500/50" />
+              <p className="text-sm text-cyan-100/90">
+                Inline preview is not available for this file type. Open it in a new tab to view or download.
+              </p>
+              <a
+                href={preview.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Open file
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Faculty Profile slide: sidebar stats + research card; scrollable accordion list. */
 function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [credentialPreview, setCredentialPreview] = useState<CredentialPreviewState>(null);
   const c = data.content;
   const facultyList = c.facultyList ?? [];
+
+  useEffect(() => {
+    if (!credentialPreview) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setCredentialPreview(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [credentialPreview]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-full min-h-0">
@@ -344,6 +502,8 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
           {facultyList.map((faculty: any, i: number) => {
             const open = expandedIndex === i;
             const panelId = `faculty-panel-${i}`;
+            const credTree = facultyCredentialsManifest[faculty.name as string];
+            const credCount = facultyCredentialsFileCounts[faculty.name as string] ?? 0;
             return (
               <div
                 key={i}
@@ -372,8 +532,15 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-white text-sm sm:text-base truncate">{faculty.name}</div>
                     <div className="text-cyan-300 text-xs truncate">{faculty.role}</div>
-                    <div className="text-cyan-100/80 text-xs mt-0.5">
-                      Published papers: <span className="font-mono font-bold text-white">{faculty.papers}</span>
+                    <div className="text-cyan-100/80 text-xs mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <span>
+                        Published papers: <span className="font-mono font-bold text-white">{faculty.papers}</span>
+                      </span>
+                      {credCount > 0 && (
+                        <span className="inline-flex items-center rounded-md border border-cyan-400/35 bg-cyan-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-cyan-100">
+                          {credCount} credential{credCount === 1 ? '' : 's'}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <ChevronDown
@@ -474,6 +641,27 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
                               </div>
                             </div>
                           )}
+                        <div className="rounded-xl border border-white/15 bg-black/25 p-4">
+                          <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <FolderOpen className="w-4 h-4 text-cyan-400 shrink-0" />
+                            Credential portfolio
+                          </h4>
+                          {credTree && credTree.children.length > 0 ? (
+                            <div className="max-h-64 overflow-y-auto pr-1 custom-scrollbar text-left">
+                              <FacultyCredentialTree
+                                nodes={credTree.children}
+                                facultyName={faculty.name}
+                                onPreview={setCredentialPreview}
+                              />
+                            </div>
+                          ) : (
+                            <p className="text-xs text-cyan-100/75 leading-relaxed">
+                              No credential files in the repository for this faculty yet. Add a folder under{" "}
+                              <span className="font-mono text-cyan-200">Faculty Credentials/{faculty.name}/</span>{" "}
+                              and run <span className="font-mono text-cyan-200">npm run generate:credentials</span>.
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -483,6 +671,7 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
           })}
         </div>
       </div>
+      <CredentialPreviewModal preview={credentialPreview} onClose={() => setCredentialPreview(null)} />
     </div>
   );
 }
