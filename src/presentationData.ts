@@ -822,29 +822,67 @@ export const initialPresentationData: PresentationSlideData[] = [
     icon: "Microscope",
     color: "from-fuchsia-600 to-purple-900",
     content: {
-      officeTitle: "RCW Office",
-      officeDesc: "Dedicated Research and Creative Works Office supporting faculty and student innovation, guided by strict ethical standards and a comprehensive Graduate Program Manual of Operation.",
-      fundingAmount: "₱12.5M",
-      fundingLabel: "Current Annual Research Funding",
-      fundingList: [
-        "₱5.0M - DOST-PCIEERD Grants",
-        "₱4.5M - CHED Institutional Grants",
-        "₱3.0M - Internal University Funding"
+      introTitle: "RCW evidence repository",
+      introDesc:
+        "Institutional documents organized by theme. Select a category, then use Preview (PDF/images) or Open in a new tab. Files are served from the Research/ and GPMO/ evidence folders.",
+      sections: [
+        {
+          title: "Research and Creative Work Office",
+          shortDesc:
+            "Organizational presence, planning, and conduct of research and creative work—including meetings, office orders, and in-house review—supporting QA evidence for a functioning RCW office.",
+          icon: "Building2",
+          source: "research",
+          folderName: "1 Research and Creative Work Office",
+        },
+        {
+          title: "RCW Policies",
+          shortDesc:
+            "Board resolutions, manuals, and incentive policies governing research, extension, and knowledge management across the university.",
+          icon: "FileText",
+          source: "research",
+          folderName: "2 RCW Policies",
+        },
+        {
+          title: "RCW Agenda",
+          shortDesc:
+            "Agenda and planning documents that align RCW priorities with institutional mandate and development goals.",
+          icon: "Target",
+          source: "research",
+          folderName: "3 RCW Agenda",
+        },
+        {
+          title: "Ethical Standards",
+          shortDesc:
+            "Policies and references on ethical conduct, review, and integrity in research and creative work.",
+          icon: "CheckCircle",
+          source: "research",
+          folderName: "4 Ethical Standards",
+        },
+        {
+          title: "Funding",
+          shortDesc:
+            "Budgets, work and financial plans, and funding-related records for RCW services and research support.",
+          icon: "BarChart",
+          source: "research",
+          folderName: "5 RCW Funding",
+        },
+        {
+          title: "RCW Collaboration, Partnership and Networks",
+          shortDesc:
+            "MOAs, progress reports, endorsements, and partnership documentation demonstrating collaboration with agencies, communities, and other institutions.",
+          icon: "Globe",
+          source: "research",
+          folderName: "6 RCW Collaboration, Partnership or Networks",
+        },
+        {
+          title: "Graduate Program Manual of Operations (GPMO)",
+          shortDesc:
+            "Current GPMO and related handbook materials governing graduate programs—including curriculum, research, and quality assurance provisions referenced in institutional QA.",
+          icon: "BookOpen",
+          source: "gpmo",
+        },
       ],
-      collabTitle: "Collaborations & Partnerships",
-      collabList: [
-        { title: "Academic Institutions", desc: "Joint research programs with top-tier universities in ASEAN and Europe." },
-        { title: "Industry Tech Partners", desc: "R&D collaborations with local tech hubs and multinational IT corporations." },
-        { title: "Government Agencies", desc: "Policy research and technology solutions for LGU and national agencies (DICT, DOST)." }
-      ],
-      componentsTitle: "Key Research Components",
-      componentsList: [
-        { icon: "FileText", label: "Research Policies & Agenda" },
-        { icon: "CheckCircle", label: "Ethics Review Board" },
-        { icon: "Globe", label: "International Networks" },
-        { icon: "BookOpen", label: "Graduate Manual" }
-      ]
-    }
+    },
   },
   {
     id: 8,
@@ -909,6 +947,25 @@ export const initialPresentationData: PresentationSlideData[] = [
       policySubtitle:
         "Partido State University — Master in Information Technology. Summarized from the official policy document (Sections I–VI and Annex A).",
       policyPdfUrl: "/docs/mit-admission-retention-policy.pdf",
+      enrollmentFlows: [
+        {
+          title: "New / First-time Enrollment",
+          icon: "GraduationCap",
+          steps: [
+            "Submit credentials",
+            "Program evaluation",
+            "SIAS registration",
+            "Pay fees",
+            "Validate subjects",
+            "Claim EAF/ID",
+          ],
+        },
+        {
+          title: "Returnees / Old Students",
+          icon: "UsersRound",
+          steps: ["Secure clearances", "Subject loading & validation", "Payment", "EAF/ID"],
+        },
+      ],
       cards: [
         {
           title: "Eligibility & bridging",

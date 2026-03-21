@@ -22,6 +22,10 @@ import {
   type LibraryDirNode,
 } from './generated/libraryManifest';
 import {libraryFileUrl} from './libraryUrls';
+import {researchFileUrl} from './researchUrls';
+import {gpmoFileUrl} from './gpmoUrls';
+import {researchDocumentTree, type ResearchDirNode} from './generated/researchManifest';
+import {gpmoDocumentTree} from './generated/gpmoManifest';
 
 const getIconComponent = (iconName: string) => {
   const icons: Record<string, any> = {
@@ -495,6 +499,193 @@ function Slide3AccreditationContent({ data }: { data: PresentationSlideData }) {
   );
 }
 
+/** Shared tree shape for Research/ and GPMO/ manifests (same JSON structure). */
+type EvidenceTreeNode =
+  | { type: 'file'; name: string; relPath: string }
+  | { type: 'dir'; name: string; children: EvidenceTreeNode[] };
+
+function EvidenceFileTree({
+  nodes,
+  fileUrl,
+  onPreview,
+  depth = 0,
+}: {
+  nodes: EvidenceTreeNode[];
+  fileUrl: (relPath: string) => string;
+  onPreview: (s: NonNullable<CredentialPreviewState>) => void;
+  depth?: number;
+}) {
+  return (
+    <ul
+      className={
+        depth > 0
+          ? 'ml-2 mt-1 space-y-0.5 border-l border-fuchsia-500/20 pl-2 sm:ml-3 sm:pl-3'
+          : 'space-y-0.5'
+      }
+    >
+      {nodes.map((node, idx) => (
+        <li key={`${depth}-${idx}-${node.name}`}>
+          {node.type === 'dir' ? (
+            <details className="group min-w-0">
+              <summary className="flex cursor-pointer list-none items-center gap-2 py-1 text-sm text-fuchsia-200 hover:text-white [&::-webkit-details-marker]:hidden">
+                <FolderOpen className="h-4 w-4 shrink-0 text-fuchsia-400/90" aria-hidden />
+                <span className="truncate font-medium">{node.name}</span>
+              </summary>
+              <EvidenceFileTree
+                nodes={node.children}
+                fileUrl={fileUrl}
+                onPreview={onPreview}
+                depth={depth + 1}
+              />
+            </details>
+          ) : (
+            <div className="flex flex-wrap items-start gap-x-2 gap-y-1 py-1 pl-0.5">
+              <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0 text-fuchsia-400/80" aria-hidden />
+              <span className="min-w-[8rem] flex-1 break-words text-xs text-fuchsia-50/95">{node.name}</span>
+              <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const url = fileUrl(node.relPath);
+                    const kind = credentialPreviewKind(node.name);
+                    onPreview({ url, title: node.name, kind });
+                  }}
+                  className="text-xs font-semibold text-fuchsia-300 underline decoration-fuchsia-500/40 hover:text-white"
+                >
+                  Preview
+                </button>
+                <a
+                  href={fileUrl(node.relPath)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-fuchsia-200/90 hover:text-white"
+                >
+                  <ExternalLink className="h-3 w-3 opacity-80" />
+                  Open
+                </a>
+              </div>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function resolveResearchSectionNodes(
+  source: 'research' | 'gpmo',
+  folderName: string | undefined,
+): EvidenceTreeNode[] {
+  if (source === 'gpmo') {
+    return gpmoDocumentTree.children as EvidenceTreeNode[];
+  }
+  if (!folderName) return [];
+  const hit = researchDocumentTree.children.find(
+    (n): n is ResearchDirNode => n.type === 'dir' && n.name === folderName,
+  );
+  return hit ? (hit.children as EvidenceTreeNode[]) : [];
+}
+
+/** Research & Creative Works: tabbed RCW themes + evidence file tree + PDF preview. */
+function Slide7ResearchContent({ data }: { data: PresentationSlideData }) {
+  const [preview, setPreview] = useState<CredentialPreviewState>(null);
+  const [activeTab, setActiveTab] = useState(0);
+  const c = data.content;
+  const sections = (c.sections ?? []) as Array<{
+    title: string;
+    shortDesc: string;
+    icon: string;
+    source: 'research' | 'gpmo';
+    folderName?: string;
+  }>;
+
+  useEffect(() => {
+    if (!preview) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPreview(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [preview]);
+
+  const safeIndex = Math.min(Math.max(0, activeTab), Math.max(0, sections.length - 1));
+  const section = sections[safeIndex];
+  const nodes = section
+    ? resolveResearchSectionNodes(section.source, section.folderName)
+    : [];
+  const fileUrlFor =
+    section?.source === 'gpmo'
+      ? (relPath: string) => gpmoFileUrl(relPath)
+      : (relPath: string) => researchFileUrl(relPath);
+
+  return (
+    <div className="relative flex h-full min-h-0 flex-col gap-4">
+      <div className="shrink-0 rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md md:p-6">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-fuchsia-500/25">
+            <Microscope className="h-7 w-7 text-fuchsia-300" aria-hidden />
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-xl font-bold leading-tight text-white md:text-2xl">{c.introTitle}</h2>
+            <p className="mt-2 text-sm leading-relaxed text-fuchsia-100/95">{c.introDesc}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 overflow-hidden">
+        <div
+          className="flex shrink-0 flex-wrap gap-2"
+          role="tablist"
+          aria-label="RCW evidence categories"
+        >
+          {sections.map((s, i) => {
+            const TabIcon = getIconComponent(s.icon);
+            const selected = i === safeIndex;
+            return (
+              <button
+                key={i}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                onClick={() => setActiveTab(i)}
+                className={
+                  selected
+                    ? 'inline-flex items-center gap-2 rounded-xl border border-fuchsia-400/50 bg-fuchsia-500/30 px-3 py-2 text-left text-xs font-semibold text-white shadow-sm sm:text-sm'
+                    : 'inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-left text-xs font-medium text-fuchsia-200/90 hover:bg-white/10 sm:text-sm'
+                }
+              >
+                <TabIcon className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+                <span className="max-w-[10rem] truncate sm:max-w-[14rem]">{s.title}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {section && (
+          <div
+            className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5"
+            role="tabpanel"
+          >
+            <div>
+              <h3 className="text-lg font-bold text-white md:text-xl">{section.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-fuchsia-100/90">{section.shortDesc}</p>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+              {nodes.length === 0 ? (
+                <p className="text-sm text-fuchsia-200/70">No files found for this category.</p>
+              ) : (
+                <EvidenceFileTree nodes={nodes} fileUrl={fileUrlFor} onPreview={setPreview} />
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <CredentialPreviewModal preview={preview} onClose={() => setPreview(null)} />
+    </div>
+  );
+}
+
 function LibraryFileTree({ nodes, depth = 0 }: { nodes: LibraryNode[]; depth?: number }) {
   return (
     <ul
@@ -602,6 +793,74 @@ function Slide8LibraryContent({ data }: { data: PresentationSlideData }) {
   );
 }
 
+/** Horizontal / vertical step flow for enrollment (Section VI quick reference). */
+function EnrollmentFlowRow({
+  title,
+  steps,
+  flowIcon: FlowIcon,
+}: {
+  title: string;
+  steps: string[];
+  flowIcon: React.ElementType;
+}) {
+  return (
+    <div className="rounded-2xl border border-pink-400/25 bg-gradient-to-br from-pink-950/40 to-rose-950/30 p-4 shadow-inner md:p-5">
+      <div className="mb-4 flex items-center gap-2 border-b border-white/10 pb-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-pink-500/30">
+          <FlowIcon className="h-5 w-5 text-pink-200" aria-hidden />
+        </div>
+        <h3 className="text-sm font-bold leading-snug text-white sm:text-base">{title}</h3>
+      </div>
+
+      {/* Mobile: vertical stack with down arrows */}
+      <ol className="flex flex-col gap-0 md:hidden" aria-label={title}>
+        {steps.map((step, i) => (
+          <li key={i} className="flex flex-col items-stretch gap-0">
+            <div className="flex items-start gap-3">
+              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-pink-500/40 text-xs font-bold text-white">
+                {i + 1}
+              </span>
+              <span className="min-w-0 flex-1 rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-sm leading-snug text-pink-50">
+                {step}
+              </span>
+            </div>
+            {i < steps.length - 1 && (
+              <div className="ml-3.5 flex h-6 items-center justify-start border-l border-dashed border-pink-400/40 pl-3.5">
+                <ChevronDown className="h-4 w-4 text-pink-300/70" aria-hidden />
+              </div>
+            )}
+          </li>
+        ))}
+      </ol>
+
+      {/* md+: horizontal pipeline with scroll on small widths */}
+      <div className="hidden md:block">
+        <div className="overflow-x-auto pb-1 custom-scrollbar">
+          <ol
+            className="flex min-w-0 flex-nowrap items-stretch gap-2"
+            style={{ width: 'max-content' }}
+            aria-label={title}
+          >
+            {steps.map((step, i) => (
+              <li key={i} className="flex items-center gap-2">
+                {i > 0 && (
+                  <ChevronRight className="h-5 w-5 shrink-0 text-pink-300/60" aria-hidden />
+                )}
+                <span className="inline-flex max-w-[11rem] items-center rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-center text-xs font-medium leading-snug text-pink-50 shadow-sm sm:max-w-[13rem] sm:text-sm">
+                  <span className="mr-2 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-500/45 text-[11px] font-bold text-white">
+                    {i + 1}
+                  </span>
+                  {step}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Admission & Retention: policy summary cards + full PDF preview/open. */
 function Slide10AdmissionPolicyContent({ data }: { data: PresentationSlideData }) {
   const [preview, setPreview] = useState<CredentialPreviewState>(null);
@@ -609,6 +868,11 @@ function Slide10AdmissionPolicyContent({ data }: { data: PresentationSlideData }
   const pdfUrl = c.policyPdfUrl as string;
   const pdfTitle = c.policyTitle as string;
   const cards = (c.cards ?? []) as Array<{ title: string; desc: string; icon: string }>;
+  const enrollmentFlows = (c.enrollmentFlows ?? []) as Array<{
+    title: string;
+    icon: string;
+    steps: string[];
+  }>;
 
   useEffect(() => {
     if (!preview) return;
@@ -653,6 +917,27 @@ function Slide10AdmissionPolicyContent({ data }: { data: PresentationSlideData }
           </div>
         </div>
       </div>
+
+      {enrollmentFlows.length > 0 && (
+        <div className="shrink-0 space-y-3">
+          <div className="flex items-center gap-2 px-0.5">
+            <Layout className="h-5 w-5 text-pink-300/90" aria-hidden />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-pink-200/95">
+              Enrollment &amp; student flow
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {enrollmentFlows.map((flow, idx) => {
+              const FlowIcon = getIconComponent(flow.icon);
+              return (
+                <div key={idx}>
+                  <EnrollmentFlowRow title={flow.title} steps={flow.steps} flowIcon={FlowIcon} />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="min-h-0 flex-1 overflow-y-auto pr-2 custom-scrollbar">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -1166,60 +1451,7 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
     } else if (data.id === 6) {
       content = <Slide6FacultyContent data={data} />;
     } else if (data.id === 7) {
-      content = (
-        <div className="flex flex-col h-full gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 flex flex-col justify-center">
-              <div className="flex items-center gap-4 mb-4">
-                <Microscope className="w-12 h-12 text-fuchsia-300" />
-                <h3 className="text-2xl font-bold text-white">{data.content.officeTitle}</h3>
-              </div>
-              <p className="text-fuchsia-100 text-sm mb-6">
-                {data.content.officeDesc}
-              </p>
-              <div className="bg-black/20 p-4 rounded-xl border border-white/10">
-                <div className="text-fuchsia-200 font-bold mb-2 flex items-center gap-2">
-                  <span className="text-3xl text-white">{data.content.fundingAmount}</span> 
-                  <span className="text-sm leading-tight">{data.content.fundingLabel}</span>
-                </div>
-                <ul className="text-xs text-fuchsia-100/80 space-y-1 mt-2">
-                  {data.content.fundingList.map((item: string, i: number) => (
-                    <li key={i}>• {item}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 flex flex-col justify-center">
-              <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <Users className="w-6 h-6 text-fuchsia-300" />
-                {data.content.collabTitle}
-              </h3>
-              <div className="space-y-3">
-                {data.content.collabList.map((item: any, i: number) => (
-                  <div key={i} className="bg-white/5 p-3 rounded-lg border border-white/10">
-                    <h4 className="text-fuchsia-50 font-semibold text-sm">{item.title}</h4>
-                    <p className="text-fuchsia-200/70 text-xs mt-1">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 flex-1 flex flex-col justify-center">
-            <h3 className="text-xl font-bold text-white mb-4">{data.content.componentsTitle}</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {data.content.componentsList.map((item: any, i: number) => {
-                const ItemIcon = getIconComponent(item.icon);
-                return (
-                  <div key={i} className="flex flex-col items-center text-center gap-2 bg-black/20 p-4 rounded-xl">
-                    <ItemIcon className="w-8 h-8 text-fuchsia-400" />
-                    <span className="text-sm text-fuchsia-50 font-medium">{item.label}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      );
+      content = <Slide7ResearchContent data={data} />;
     } else if (data.id === 8) {
       content = <Slide8LibraryContent data={data} />;
     } else if (data.id === 9) {

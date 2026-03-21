@@ -112,6 +112,58 @@ function libraryMaterialsPlugin(): Plugin {
   };
 }
 
+/** Serve `Research/` at `/research-materials/*` and copy into `dist` on build. */
+function researchMaterialsPlugin(): Plugin {
+  const researchRoot = path.resolve(__dirname, 'Research');
+  let outDir = 'dist';
+
+  return {
+    name: 'research-materials-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(researchRoot)) return;
+      server.middlewares.use(
+        '/research-materials',
+        express.static(researchRoot, {index: false, fallthrough: true}),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(researchRoot)) return;
+      const dest = path.join(outDir, 'research-materials');
+      fs.mkdirSync(path.dirname(dest), {recursive: true});
+      fs.cpSync(researchRoot, dest, {recursive: true});
+    },
+  };
+}
+
+/** Serve `GPMO/` at `/gpmo-materials/*` and copy into `dist` on build. */
+function gpmoMaterialsPlugin(): Plugin {
+  const gpmoRoot = path.resolve(__dirname, 'GPMO');
+  let outDir = 'dist';
+
+  return {
+    name: 'gpmo-materials-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(gpmoRoot)) return;
+      server.middlewares.use(
+        '/gpmo-materials',
+        express.static(gpmoRoot, {index: false, fallthrough: true}),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(gpmoRoot)) return;
+      const dest = path.join(outDir, 'gpmo-materials');
+      fs.mkdirSync(path.dirname(dest), {recursive: true});
+      fs.cpSync(gpmoRoot, dest, {recursive: true});
+    },
+  };
+}
+
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
@@ -122,6 +174,8 @@ export default defineConfig(({mode}) => {
       facultyPhotosPlugin(),
       levelOfAccreditationPlugin(),
       libraryMaterialsPlugin(),
+      researchMaterialsPlugin(),
+      gpmoMaterialsPlugin(),
     ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
