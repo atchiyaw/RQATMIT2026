@@ -112,6 +112,58 @@ function libraryMaterialsPlugin(): Plugin {
   };
 }
 
+/** Serve `Laboratories/` at `/laboratories-materials/*` and copy into `dist` on build. */
+function laboratoriesMaterialsPlugin(): Plugin {
+  const laboratoriesRoot = path.resolve(__dirname, 'Laboratories');
+  let outDir = 'dist';
+
+  return {
+    name: 'laboratories-materials-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(laboratoriesRoot)) return;
+      server.middlewares.use(
+        '/laboratories-materials',
+        express.static(laboratoriesRoot, {index: false, fallthrough: true}),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(laboratoriesRoot)) return;
+      const dest = path.join(outDir, 'laboratories-materials');
+      fs.mkdirSync(path.dirname(dest), {recursive: true});
+      fs.cpSync(laboratoriesRoot, dest, {recursive: true});
+    },
+  };
+}
+
+/** Serve `Industry/` at `/industry-materials/*` and copy into `dist` on build. */
+function industryMaterialsPlugin(): Plugin {
+  const industryRoot = path.resolve(__dirname, 'Industry');
+  let outDir = 'dist';
+
+  return {
+    name: 'industry-materials-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(industryRoot)) return;
+      server.middlewares.use(
+        '/industry-materials',
+        express.static(industryRoot, {index: false, fallthrough: true}),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(industryRoot)) return;
+      const dest = path.join(outDir, 'industry-materials');
+      fs.mkdirSync(path.dirname(dest), {recursive: true});
+      fs.cpSync(industryRoot, dest, {recursive: true});
+    },
+  };
+}
+
 /** Serve `Research/` at `/research-materials/*` and copy into `dist` on build. */
 function researchMaterialsPlugin(): Plugin {
   const researchRoot = path.resolve(__dirname, 'Research');
@@ -200,6 +252,8 @@ export default defineConfig(({mode}) => {
       facultyPhotosPlugin(),
       levelOfAccreditationPlugin(),
       libraryMaterialsPlugin(),
+      laboratoriesMaterialsPlugin(),
+    industryMaterialsPlugin(),
       researchMaterialsPlugin(),
       gpmoMaterialsPlugin(),
       flexibleLearningMaterialsPlugin(),

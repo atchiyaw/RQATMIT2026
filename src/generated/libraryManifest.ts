@@ -60,6 +60,27 @@ export const libraryDocumentTree: LibraryDocumentTree = {
     },
     {
       "type": "dir",
+      "name": "Library Services Subscriptions",
+      "children": [
+        {
+          "type": "file",
+          "name": "LIBRARY SERVICES SUBSCRIPTIONS-2026.pdf",
+          "relPath": "Library Services Subscriptions/LIBRARY SERVICES SUBSCRIPTIONS-2026.pdf"
+        },
+        {
+          "type": "file",
+          "name": "LIBRARY SUBSCRIBED E-RESOURCES & USAGE REPORT (MIT).pdf",
+          "relPath": "Library Services Subscriptions/LIBRARY SUBSCRIBED E-RESOURCES & USAGE REPORT (MIT).pdf"
+        },
+        {
+          "type": "file",
+          "name": "SUBSCRIBER_S-CERTIFICATE.docx",
+          "relPath": "Library Services Subscriptions/SUBSCRIBER_S-CERTIFICATE.docx"
+        }
+      ]
+    },
+    {
+      "type": "dir",
       "name": "Library Staff Development Plan",
       "children": [
         {
@@ -81,8 +102,18 @@ export const libraryDocumentTree: LibraryDocumentTree = {
     },
     {
       "type": "file",
+      "name": "MASTER OF INFORMATION TECHNOLOGY (5 yrs Copyrighted).docx",
+      "relPath": "MASTER OF INFORMATION TECHNOLOGY (5 yrs Copyrighted).docx"
+    },
+    {
+      "type": "file",
       "name": "MASTER OF INFORMATION TECHNOLOGY (5 yrs Copyrighted).pdf",
       "relPath": "MASTER OF INFORMATION TECHNOLOGY (5 yrs Copyrighted).pdf"
+    },
+    {
+      "type": "file",
+      "name": "MASTER OF INFORMATION TECHNOLOGY (Any Copyright).docx",
+      "relPath": "MASTER OF INFORMATION TECHNOLOGY (Any Copyright).docx"
     },
     {
       "type": "file",

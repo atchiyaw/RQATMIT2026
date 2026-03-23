@@ -22,6 +22,10 @@ import {
   type LibraryDirNode,
 } from './generated/libraryManifest';
 import {libraryFileUrl} from './libraryUrls';
+import {laboratoriesDocumentTree} from './generated/laboratoriesManifest';
+import {laboratoriesFileUrl} from './laboratoriesUrls';
+import {industryDocumentTree, type IndustryNode} from './generated/industryManifest';
+import {industryFileUrl} from './industryUrls';
 import {researchFileUrl} from './researchUrls';
 import {gpmoFileUrl} from './gpmoUrls';
 import {researchDocumentTree, type ResearchDirNode} from './generated/researchManifest';
@@ -913,6 +917,142 @@ function Slide8LibraryContent({ data }: { data: PresentationSlideData }) {
   );
 }
 
+function resolveLaboratorySectionNodes(folderName: string | undefined): EvidenceTreeNode[] {
+  if (!folderName) return [];
+  const hit = laboratoriesDocumentTree.children.find(
+    (n): n is { type: 'dir'; name: string; children: EvidenceTreeNode[] } =>
+      n.type === 'dir' && n.name === folderName,
+  );
+  return hit ? hit.children : [];
+}
+
+/** Laboratory & Facilities: tabbed sections from `Laboratories/` with preview/open. */
+function Slide9LaboratoryContent({ data }: { data: PresentationSlideData }) {
+  const [preview, setPreview] = useState<CredentialPreviewState>(null);
+  const [activeTab, setActiveTab] = useState(0);
+  const c = data.content;
+  const sections = [
+    {
+      title: 'Digital Instrumentation Laboratory',
+      shortDesc:
+        'Proposal and requisition evidence for laboratory establishment and equipment acquisition.',
+      folderName: '9.a',
+    },
+    {
+      title: 'Instructional Laboratories',
+      shortDesc:
+        'Computer laboratories, plans, and inventory records supporting instructional delivery.',
+      folderName: '9.b Instructional Laboratories',
+    },
+    {
+      title: 'Facilities for Internet Access',
+      shortDesc: 'ISP contracts and bandwidth upgrades supporting reliable internet access.',
+      folderName: '9.c Facilities for Internet Access',
+    },
+    {
+      title: 'Software Subscriptions',
+      shortDesc:
+        'Subscription, procurement, and proof-of-access records for software and anti-plagiarism tools.',
+      folderName: '9.d Subscription to Various Software Program',
+    },
+  ];
+
+  useEffect(() => {
+    if (!preview) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPreview(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [preview]);
+
+  const safeIndex = Math.min(Math.max(0, activeTab), Math.max(0, sections.length - 1));
+  const section = sections[safeIndex];
+  const nodes = resolveLaboratorySectionNodes(section?.folderName);
+  const rootFiles = laboratoriesDocumentTree.children.filter(
+    (n): n is { type: 'file'; name: string; relPath: string } => n.type === 'file',
+  ) as EvidenceTreeNode[];
+
+  return (
+    <div className="relative flex h-full min-h-0 flex-col gap-4">
+      <div className="shrink-0 rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md md:p-6">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-500/25">
+            <Monitor className="h-7 w-7 text-slate-200" aria-hidden />
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-xl font-bold leading-tight text-white md:text-2xl">
+              {c.labsTitle ?? 'Laboratory and facilities evidence'}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-slate-100/95">
+              Browse laboratory plans, facility documentation, internet access evidence, software
+              subscription records, and equipment references from the Laboratories repository.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {rootFiles.length > 0 && (
+        <div className="shrink-0 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5">
+          <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-200">
+            General laboratory evidence
+          </h3>
+          <EvidenceFileTree
+            nodes={rootFiles}
+            fileUrl={(relPath) => laboratoriesFileUrl(relPath)}
+            onPreview={setPreview}
+          />
+        </div>
+      )}
+
+      <div className="flex shrink-0 flex-wrap gap-2" role="tablist" aria-label="Laboratory sections">
+        {sections.map((s, i) => {
+          const selected = i === safeIndex;
+          return (
+            <button
+              key={s.folderName}
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              onClick={() => setActiveTab(i)}
+              className={
+                selected
+                  ? 'inline-flex items-center gap-2 rounded-xl border border-slate-300/50 bg-slate-400/25 px-3 py-2 text-left text-xs font-semibold text-white shadow-sm sm:text-sm'
+                  : 'inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-left text-xs font-medium text-slate-200/90 hover:bg-white/10 sm:text-sm'
+              }
+            >
+              <span className="max-w-[10rem] truncate sm:max-w-[16rem]">{s.title}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {section && (
+        <div
+          className="min-h-0 flex-1 overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5"
+          role="tabpanel"
+        >
+          <h3 className="text-lg font-bold text-white md:text-xl">{section.title}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-slate-100/90">{section.shortDesc}</p>
+          <div className="mt-4 min-h-0 h-[calc(100%-4.5rem)] overflow-y-auto pr-2 custom-scrollbar">
+            {nodes.length === 0 ? (
+              <p className="text-sm text-slate-200/70">No files found for this section.</p>
+            ) : (
+              <EvidenceFileTree
+                nodes={nodes}
+                fileUrl={(relPath) => laboratoriesFileUrl(relPath)}
+                onPreview={setPreview}
+              />
+            )}
+          </div>
+        </div>
+      )}
+
+      <CredentialPreviewModal preview={preview} onClose={() => setPreview(null)} />
+    </div>
+  );
+}
+
 /** Horizontal / vertical step flow for enrollment (Section VI quick reference). */
 function EnrollmentFlowRow({
   title,
@@ -1332,6 +1472,186 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
   );
 }
 
+function Slide11IndustryContent({ data }: { data: PresentationSlideData }) {
+  const [activeTab, setActiveTab] = useState(0);
+  const [preview, setPreview] = useState<CredentialPreviewState>(null);
+
+  const c = data.content;
+
+  const countFiles = (nodes: EvidenceTreeNode[]): number => {
+    let n = 0;
+    for (const node of nodes) {
+      if (node.type === 'file') n += 1;
+      else n += countFiles(node.children);
+    }
+    return n;
+  };
+
+  const countFilesWhereName = (
+    nodes: EvidenceTreeNode[],
+    predicate: (fileName: string) => boolean,
+  ): number => {
+    let n = 0;
+    for (const node of nodes) {
+      if (node.type === 'file') {
+        if (predicate(node.name)) n += 1;
+      } else {
+        n += countFilesWhereName(node.children, predicate);
+      }
+    }
+    return n;
+  };
+
+  const resolveDirChildren = (dirName: string): EvidenceTreeNode[] => {
+    const hit = industryDocumentTree.children.find(
+      (n): n is IndustryNode & { type: 'dir'; children: EvidenceTreeNode[] } =>
+        n.type === 'dir' && n.name === dirName,
+    );
+    return hit?.children ?? [];
+  };
+
+  const isMoaDocument = (fileName: string) => {
+    // Treat “MOA documents” as those explicitly labeled MOA/Agreement/Memorandum.
+    // (This intentionally excludes “MOU ...” files from the MOA-docs count.)
+    return /(MOA|Agreement|Memorandum)/i.test(fileName);
+  };
+
+  const moaChildren = resolveDirChildren('MOA');
+  const immersionChildren = resolveDirChildren('Industry Immersion');
+  const rootFiles = (industryDocumentTree.children.filter(
+    (n): n is IndustryNode & { type: 'file' } => n.type === 'file',
+  ) as EvidenceTreeNode[]) as EvidenceTreeNode[];
+
+  const activeLinkagesCount = countFiles(moaChildren);
+  const moaCount = countFilesWhereName(moaChildren, isMoaDocument);
+  const immersionCount = countFiles(immersionChildren);
+  const totalIndustryFiles = countFiles(industryDocumentTree.children as unknown as EvidenceTreeNode[]);
+
+  const moaDocNodes = moaChildren.filter(
+    (n): n is EvidenceTreeNode & { type: 'file' } => n.type === 'file' && isMoaDocument(n.name),
+  );
+
+  const sections = [
+    {
+      title: 'Active Linkages',
+      shortDesc: 'MOA/MOU documents showing industry and partner engagement.',
+      nodes: moaChildren,
+    },
+    {
+      title: 'MOA documents',
+      shortDesc: 'Documents labeled as MOA/Agreement/Memorandum (excluding “MOU ...”).',
+      nodes: moaDocNodes,
+    },
+    {
+      title: 'Industry Immersion',
+      shortDesc: 'Evidence for immersion activities with partner institutions.',
+      nodes: immersionChildren,
+    },
+    {
+      title: 'International Affairs reports',
+      shortDesc: 'IZN initiatives and accomplishment reports (top-level documents).',
+      nodes: rootFiles,
+    },
+  ];
+
+  const safeIndex = Math.min(Math.max(0, activeTab), Math.max(0, sections.length - 1));
+  const section = sections[safeIndex];
+
+  useEffect(() => {
+    if (!preview) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPreview(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [preview]);
+
+  return (
+    <div className="flex flex-col h-full min-h-0 gap-6">
+      <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
+        <div className="flex items-start gap-4">
+          <Handshake className="w-14 h-14 text-indigo-300" aria-hidden />
+          <div className="min-w-0">
+            <h2 className="text-3xl font-bold text-white mb-2">{c.mainTitle}</h2>
+            <p className="text-indigo-100 max-w-2xl">{c.mainDesc}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
+            <div className="text-3xl font-extrabold text-white">{activeLinkagesCount}</div>
+            <div className="text-xs text-indigo-200 uppercase tracking-wider font-bold mt-1">
+              Active linkages
+            </div>
+          </div>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
+            <div className="text-3xl font-extrabold text-white">{moaCount}</div>
+            <div className="text-xs text-indigo-200 uppercase tracking-wider font-bold mt-1">
+              MOA documents
+            </div>
+          </div>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
+            <div className="text-3xl font-extrabold text-white">{immersionCount}</div>
+            <div className="text-xs text-indigo-200 uppercase tracking-wider font-bold mt-1">
+              Immersion evidence
+            </div>
+          </div>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
+            <div className="text-3xl font-extrabold text-white">{totalIndustryFiles}</div>
+            <div className="text-xs text-indigo-200 uppercase tracking-wider font-bold mt-1">
+              Total documents
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col min-h-0 flex-1">
+        <div className="flex shrink-0 flex-wrap gap-2" role="tablist" aria-label="Industry documents">
+          {sections.map((s, i) => {
+            const selected = i === safeIndex;
+            return (
+              <button
+                key={s.title}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                onClick={() => setActiveTab(i)}
+                className={
+                  selected
+                    ? 'inline-flex items-center gap-2 rounded-xl border border-indigo-400/50 bg-indigo-500/25 px-3 py-2 text-left text-xs font-semibold text-white shadow-sm sm:text-sm'
+                    : 'inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-left text-xs font-medium text-indigo-200/90 hover:bg-white/10 sm:text-sm'
+                }
+              >
+                {s.title}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="flex-1 min-h-0 overflow-y-auto pr-2 custom-scrollbar">
+          <div className="mt-4 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5">
+            <h3 className="text-lg font-bold text-white md:text-xl">{section.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-indigo-100/95">{section.shortDesc}</p>
+            <div className="mt-4">
+              {section.nodes.length === 0 ? (
+                <p className="text-sm text-indigo-200/70">No documents found for this category.</p>
+              ) : (
+                <EvidenceFileTree
+                  nodes={section.nodes}
+                  fileUrl={(relPath) => industryFileUrl(relPath)}
+                  onPreview={setPreview}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <CredentialPreviewModal preview={preview} onClose={() => setPreview(null)} />
+    </div>
+  );
+}
+
 const getSlides = (slidesData: PresentationSlideData[]) => {
   return slidesData.map(data => {
     const Icon = getIconComponent(data.icon);
@@ -1575,54 +1895,11 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
     } else if (data.id === 8) {
       content = <Slide8LibraryContent data={data} />;
     } else if (data.id === 9) {
-      content = (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 flex flex-col justify-center">
-            <h3 className="text-3xl font-bold text-white mb-6">{data.content.labsTitle}</h3>
-            <div className="space-y-4">
-              {data.content.labsList.map((item: any, i: number) => (
-                <div key={i} className="bg-black/20 p-4 rounded-xl border border-white/10">
-                  <h4 className="text-lg font-bold text-white">{item.title}</h4>
-                  <p className="text-slate-300 text-sm">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 flex flex-col justify-center">
-            <h3 className="text-2xl font-bold text-white mb-6">{data.content.softwareTitle}</h3>
-            <ul className="space-y-4">
-              {data.content.softwareList.map((item: string, i: number) => (
-                <li key={i} className="flex items-center gap-3 text-slate-200">
-                  <CheckCircle className="text-slate-400" /> {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      );
+      content = <Slide9LaboratoryContent data={data} />;
     } else if (data.id === 10) {
       content = <Slide10AdmissionPolicyContent data={data} />;
     } else if (data.id === 11) {
-      content = (
-        <div className="flex flex-col h-full gap-8">
-          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-center">
-            <Handshake className="w-16 h-16 text-indigo-300 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-white mb-2">{data.content.mainTitle}</h2>
-            <p className="text-indigo-100 max-w-2xl mx-auto">
-              {data.content.mainDesc}
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 flex-1">
-            {data.content.partners.map((partner: any, i: number) => (
-              <div key={i} className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 flex flex-col items-center justify-center text-center hover:bg-white/10 transition-colors">
-                <Building2 className="w-8 h-8 text-indigo-400 mb-3" />
-                <h4 className="text-white font-bold mb-1">{partner.name}</h4>
-                <p className="text-xs text-indigo-200">{partner.type}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
+      content = <Slide11IndustryContent data={data} />;
     }
 
     return {
