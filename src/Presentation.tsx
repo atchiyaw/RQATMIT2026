@@ -1348,11 +1348,10 @@ function Slide10AdmissionPolicyContent({ data }: { data: PresentationSlideData }
 
 /** Leadership Profile slide: dean + graduate program coordinator, plus Administration evidence PDFs. */
 function Slide5LeadershipContent({ data }: { data: PresentationSlideData }) {
-  type CarouselRole = 'dean' | 'gpc';
-  const [carousel, setCarousel] = useState<{
-    role: CarouselRole;
-    index: number;
-  } | null>(null);
+  type LeaderRole = 'dean' | 'gpc';
+
+  const [activeLeader, setActiveLeader] = useState<LeaderRole>('dean');
+  const [selectedEvidenceIndex, setSelectedEvidenceIndex] = useState(0);
 
   const deanEvidenceRelPaths = [
     'College Dean/Padayao - Credentials.pdf',
@@ -1372,134 +1371,237 @@ function Slide5LeadershipContent({ data }: { data: PresentationSlideData }) {
   ];
 
   const profiles: any[] = data.content?.profiles ?? [];
+  const deanProfile = profiles.find((p) => /dean/i.test(String(p.role ?? ''))) ?? profiles[0];
+  const gpcProfile =
+    profiles.find((p) => !/dean/i.test(String(p.role ?? ''))) ?? profiles.find((p) => p !== deanProfile) ?? profiles[1];
+
+  const activeProfile = activeLeader === 'dean' ? deanProfile : gpcProfile;
+  const activeEvidenceRelPaths = activeLeader === 'dean' ? deanEvidenceRelPaths : gpcEvidenceRelPaths;
+  const evidenceTitle = activeLeader === 'dean' ? 'College Dean evidences' : 'Graduate Program Coordinator evidences';
+
+  useEffect(() => {
+    setSelectedEvidenceIndex(0);
+  }, [activeLeader]);
+
+  const selectedRelPath = activeEvidenceRelPaths[selectedEvidenceIndex] ?? activeEvidenceRelPaths[0];
+  const selectedFileName = selectedRelPath.split('/').pop() ?? selectedRelPath;
+  const selectedUrl = administrationDocUrl(selectedRelPath);
+  const selectedKind = credentialPreviewKind(selectedFileName);
+
+  const secondaryLeader: LeaderRole = activeLeader === 'dean' ? 'gpc' : 'dean';
+  const secondaryProfile = secondaryLeader === 'dean' ? deanProfile : gpcProfile;
+  const secondaryCount = secondaryLeader === 'dean' ? deanEvidenceRelPaths.length : gpcEvidenceRelPaths.length;
+  const secondaryEvidenceTitle =
+    secondaryLeader === 'dean' ? 'College Dean evidences' : 'Graduate Program Coordinator evidences';
+
+  const SegButton = ({
+    leader,
+    label,
+  }: {
+    leader: LeaderRole;
+    label: string;
+  }) => (
+    <button
+      type="button"
+      onClick={() => setActiveLeader(leader)}
+      className={`px-4 py-2 text-sm font-semibold rounded-xl border transition-colors whitespace-nowrap ${
+        activeLeader === leader
+          ? 'bg-white/15 border-white/30 text-white'
+          : 'bg-white/5 border-white/10 text-white/70 hover:text-white hover:bg-white/10'
+      }`}
+    >
+      {label}
+    </button>
+  );
 
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full items-stretch overflow-y-auto pr-2 custom-scrollbar">
-        {profiles.map((profile, i) => {
-        const roleText = String(profile.role ?? '');
-        const isDean = /dean/i.test(roleText);
-        const role: CarouselRole = isDean ? 'dean' : 'gpc';
-        const evidenceRelPaths = isDean ? deanEvidenceRelPaths : gpcEvidenceRelPaths;
-        const evidenceTitle = isDean ? 'College Dean evidence' : 'Graduate Program Coordinator evidence';
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full min-h-0 pr-2 custom-scrollbar overflow-y-auto">
+      <div className="min-h-0 flex flex-col gap-6">
+        {/* Segmented control */}
+        <div className="shrink-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4">
+          <div className="flex items-center gap-3">
+            <SegButton leader="dean" label="College Dean" />
+            <SegButton leader="gpc" label="Graduate Program Coordinator" />
+            <div className="ml-auto text-xs text-white/60 font-semibold">
+              {activeEvidenceRelPaths.length} evidence{activeEvidenceRelPaths.length === 1 ? '' : 's'}
+            </div>
+          </div>
+        </div>
 
-        return (
-          <div
-            key={i}
-            className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-center relative overflow-hidden group h-full flex flex-col min-h-0"
-          >
-            <div className="w-32 h-32 bg-rose-200 rounded-full mx-auto mb-6 flex items-center justify-center overflow-hidden border-4 border-white/30 shrink-0">
-              {profile.image ? (
-                <img
-                  src={profile.image}
-                  alt=""
-                  className="h-full w-full min-h-0 min-w-0 object-cover object-[center_22%]"
-                />
+        {/* Focused leader card */}
+        <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-center relative overflow-hidden group h-full flex flex-col min-h-0">
+          <div className="w-32 h-32 bg-rose-200 rounded-full mx-auto mb-6 flex items-center justify-center overflow-hidden border-4 border-white/30 shrink-0">
+            {activeProfile?.image ? (
+              <img
+                src={activeProfile.image}
+                alt=""
+                className="h-full w-full min-h-0 min-w-0 object-cover object-[center_22%]"
+              />
+            ) : (
+              <User className="w-16 h-16 text-rose-600" />
+            )}
+          </div>
+
+          <h3 className="text-3xl font-bold text-white mb-2">{activeProfile?.name}</h3>
+          <p className="text-rose-200 text-xl mb-6 font-medium">{activeProfile?.role}</p>
+
+          <div className="space-y-4 text-rose-50 text-left bg-black/20 p-6 rounded-xl text-sm shrink-0">
+            <div>
+              <strong className="text-rose-200 block mb-1">Education:</strong>
+              {Array.isArray(activeProfile?.education) ? (
+                <ul className="list-disc pl-5 space-y-1">
+                  {activeProfile.education.map((e: string, j: number) => (
+                    <li key={j}>{e}</li>
+                  ))}
+                </ul>
               ) : (
-                <User className="w-16 h-16 text-rose-600" />
+                <p>{activeProfile?.education}</p>
               )}
             </div>
 
-            <h3 className="text-3xl font-bold text-white mb-2">{profile.name}</h3>
-            <p className="text-rose-200 text-xl mb-6 font-medium">{profile.role}</p>
+            <div>
+              <strong className="text-rose-200 block mb-1">Experience:</strong>
+              {Array.isArray(activeProfile?.experience) ? (
+                <ul className="list-disc pl-5 space-y-1">
+                  {activeProfile.experience.map((e: string, j: number) => (
+                    <li key={j}>{e}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{activeProfile?.experience}</p>
+              )}
+            </div>
 
-            <div className="space-y-4 text-rose-50 text-left bg-black/20 p-6 rounded-xl text-sm">
+            {activeProfile?.specialization && (
               <div>
-                <strong className="text-rose-200 block mb-1">Education:</strong>
-                {Array.isArray(profile.education) ? (
-                  <ul className="list-disc pl-5 space-y-1">
-                    {profile.education.map((e: string, j: number) => (
-                      <li key={j}>{e}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>{profile.education}</p>
-                )}
+                <strong className="text-rose-200 block mb-1">Specialization:</strong>
+                <p>{activeProfile.specialization}</p>
               </div>
+            )}
+          </div>
 
-              <div>
-                <strong className="text-rose-200 block mb-1">Experience:</strong>
-                {Array.isArray(profile.experience) ? (
-                  <ul className="list-disc pl-5 space-y-1">
-                    {profile.experience.map((e: string, j: number) => (
-                      <li key={j}>{e}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>{profile.experience}</p>
-                )}
+          {/* Evidence list + inline preview */}
+          <div className="mt-6 bg-black/20 border border-white/10 rounded-xl p-4 text-left flex flex-col min-h-0 flex-1">
+            <div className="flex items-center justify-between gap-3 mb-3 shrink-0">
+              <h4 className="flex items-center gap-2 text-sm font-bold text-white">
+                <FileText className="w-4 h-4 text-rose-300" />
+                {evidenceTitle}
+              </h4>
+              <div className="text-xs text-white/60 font-semibold">
+                Selected: {selectedFileName}
               </div>
+            </div>
 
-              {profile.specialization && (
-                <div>
-                  <strong className="text-rose-200 block mb-1">Specialization:</strong>
-                  <p>{profile.specialization}</p>
+            <div className="flex-1 min-h-0 flex gap-4 overflow-hidden">
+              <div className="w-full md:w-1/2 min-h-0 flex flex-col">
+                <div className="text-xs text-white/60 mb-2 font-semibold shrink-0 px-1">
+                  Evidence list
                 </div>
-              )}
-            </div>
-
-            <div className="mt-6 bg-black/20 border border-white/10 rounded-xl p-4 text-left flex flex-col min-h-0 flex-1 max-h-[45vh]">
-              <div className="flex items-center justify-between gap-3 mb-3 shrink-0">
-                <h4 className="flex items-center gap-2 text-sm font-bold text-white">
-                  <FileText className="w-4 h-4 text-rose-300" />
-                  {evidenceTitle}
-                </h4>
-                <button
-                  type="button"
-                  onClick={() => setCarousel({ role, index: 0 })}
-                  className="text-xs font-semibold text-rose-200/90 hover:text-white underline decoration-rose-400/40 hover:decoration-white whitespace-nowrap"
-                >
-                  Preview All
-                </button>
+                <div className="space-y-2 flex-1 min-h-0 overflow-y-auto pr-1 custom-scrollbar">
+                  {activeEvidenceRelPaths.map((relPath, idx) => {
+                    const fileName = relPath.split('/').pop() ?? relPath;
+                    const isSelected = idx === selectedEvidenceIndex;
+                    return (
+                      <button
+                        key={relPath}
+                        type="button"
+                        onClick={() => setSelectedEvidenceIndex(idx)}
+                        className={`w-full text-left px-2 py-2 rounded-lg border transition-colors ${
+                          isSelected
+                            ? 'bg-white/15 border-white/30 text-white'
+                            : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs font-semibold truncate">{fileName}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="space-y-3 flex-1 min-h-0 overflow-y-auto pr-2 custom-scrollbar max-h-[32vh]">
-                {evidenceRelPaths.map((relPath, evidenceIndex) => {
-                  const fileName = relPath.split('/').pop() ?? relPath;
-                  const url = administrationDocUrl(relPath);
-                  const kind = credentialPreviewKind(fileName);
 
-                  return (
-                    <div key={relPath} className="flex flex-wrap items-center gap-2 justify-between">
-                      <div className="min-w-0 flex items-center gap-2">
-                        <span className="text-xs text-white/90 truncate">{fileName}</span>
+              <div className="w-full md:w-1/2 min-h-0 flex flex-col">
+                <div className="text-xs text-white/60 mb-2 font-semibold shrink-0 px-1">
+                  Preview
+                </div>
+                <div className="flex-1 min-h-0 overflow-hidden rounded-lg border border-white/10 bg-white/5">
+                  {selectedKind === 'pdf' ? (
+                    <iframe title={selectedFileName} src={selectedUrl} className="w-full h-full bg-white" />
+                  ) : (
+                    <div className="h-full flex flex-col items-center justify-center text-center p-4 text-white/70 space-y-3">
+                      <FileText className="w-10 h-10 opacity-60" />
+                      <div className="text-sm">
+                        Inline preview is available for PDFs only. Use “Open” in a new tab to view.
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => setCarousel({ role, index: evidenceIndex })}
-                          className="text-xs font-semibold text-rose-300 underline decoration-rose-400/40 hover:text-white"
-                        >
-                          Preview
-                        </button>
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs font-semibold text-rose-200/90 hover:text-white inline-flex items-center gap-1"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-                          Open
-                        </a>
-                      </div>
+                      <a
+                        href={selectedUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-900/50 hover:bg-slate-900 text-white text-sm font-semibold"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Open document
+                      </a>
                     </div>
-                  );
-                })}
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        );
-        })}
+        </div>
       </div>
 
-      {carousel && (
-        <EvidenceCarouselModal
-          roleLabel={carousel.role === 'dean' ? 'College Dean' : 'Graduate Program Coordinator'}
-          evidenceRelPaths={carousel.role === 'dean' ? deanEvidenceRelPaths : gpcEvidenceRelPaths}
-          initialIndex={carousel.index}
-          onClose={() => setCarousel(null)}
-        />
-      )}
-    </>
+      {/* Secondary leader card (compact) */}
+      <div className="min-h-0 flex flex-col gap-6">
+        <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 flex flex-col min-h-0">
+          <div className="flex items-start justify-between gap-3 shrink-0 mb-4">
+            <div className="min-w-0">
+              <h3 className="text-2xl font-bold text-white truncate">
+                {secondaryProfile?.name}
+              </h3>
+              <p className="text-rose-200 text-base font-medium truncate">
+                {secondaryProfile?.role}
+              </p>
+            </div>
+            <div className="shrink-0 text-xs font-bold text-amber-200/90 bg-amber-500/20 border border-amber-400/30 px-3 py-1 rounded-lg">
+              {secondaryCount} evidences
+            </div>
+          </div>
+
+          <div className="flex-1 min-h-0 rounded-xl border border-white/10 bg-black/20 p-4 overflow-hidden flex flex-col">
+            <div className="text-xs text-white/60 font-semibold shrink-0 mb-3">
+              {secondaryEvidenceTitle}
+            </div>
+            <div className="flex-1 min-h-0 overflow-y-auto pr-2 custom-scrollbar space-y-2">
+              {(secondaryLeader === 'dean' ? deanEvidenceRelPaths : gpcEvidenceRelPaths).slice(0, 6).map((relPath) => {
+                const fileName = relPath.split('/').pop() ?? relPath;
+                return (
+                  <div key={relPath} className="flex items-center gap-2 text-xs text-white/80">
+                    <FileText className="w-4 h-4 text-rose-300 shrink-0 opacity-80" />
+                    <span className="truncate">{fileName}</span>
+                  </div>
+                );
+              })}
+              {secondaryCount > 6 && (
+                <div className="text-xs text-white/50">
+                  +{secondaryCount - 6} more…
+                </div>
+              )}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setActiveLeader(secondaryLeader)}
+            className="mt-4 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-semibold transition-colors"
+          >
+            Switch focus to this leader
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
