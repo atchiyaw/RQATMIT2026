@@ -242,6 +242,58 @@ function flexibleLearningMaterialsPlugin(): Plugin {
   };
 }
 
+/** Serve `Eligibility/` at `/Eligibility/*` and copy into `dist` on build. */
+function eligibilityMaterialsPlugin(): Plugin {
+  const eligibilityRoot = path.resolve(__dirname, 'Eligibility');
+  let outDir = 'dist';
+
+  return {
+    name: 'eligibility-materials-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(eligibilityRoot)) return;
+      server.middlewares.use(
+        '/Eligibility',
+        express.static(eligibilityRoot, {index: false, fallthrough: true}),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(eligibilityRoot)) return;
+      const dest = path.join(outDir, 'Eligibility');
+      fs.mkdirSync(path.dirname(dest), {recursive: true});
+      fs.cpSync(eligibilityRoot, dest, {recursive: true});
+    },
+  };
+}
+
+/** Serve `II. PROGRAM LEVELS, TYPES AND OUTCOMES/` at `/II-PROGRAM-LEVELS-TYPES-AND-OUTCOMES/*` and copy into `dist` on build. */
+function iiProgramLevelsMaterialsPlugin(): Plugin {
+  const iiProgramLevelsRoot = path.resolve(__dirname, 'II. PROGRAM LEVELS, TYPES AND OUTCOMES');
+  let outDir = 'dist';
+
+  return {
+    name: 'ii-program-levels-types-and-outcomes-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(iiProgramLevelsRoot)) return;
+      server.middlewares.use(
+        '/II-PROGRAM-LEVELS-TYPES-AND-OUTCOMES',
+        express.static(iiProgramLevelsRoot, { index: false, fallthrough: true }),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(iiProgramLevelsRoot)) return;
+      const dest = path.join(outDir, 'II-PROGRAM-LEVELS-TYPES-AND-OUTCOMES');
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.cpSync(iiProgramLevelsRoot, dest, { recursive: true });
+    },
+  };
+}
+
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
@@ -257,6 +309,8 @@ export default defineConfig(({mode}) => {
       researchMaterialsPlugin(),
       gpmoMaterialsPlugin(),
       flexibleLearningMaterialsPlugin(),
+      eligibilityMaterialsPlugin(),
+      iiProgramLevelsMaterialsPlugin(),
     ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),

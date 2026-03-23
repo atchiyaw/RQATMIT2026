@@ -1,3 +1,6 @@
+import { eligibilityDocUrl } from './eligibilityUrls';
+import { iiProgramLevelsDocUrl } from './iiProgramLevelsUrls';
+
 export interface EvidenceLink {
   label: string;
   url: string;
@@ -26,13 +29,39 @@ export const evaluationData: EvaluationArea[] = [
     items: [
       {
         standard: "Private HEIs, SUCs, and LUCs with CHED Institutional Recognition shall meet any of the following conditions:\n• With at least Level III program accreditation or equivalent from CHED recognized accrediting agency in the corresponding undergraduate degree program.",
-        requiredEvidence: "Certificate of Accreditation from the Accrediting Agency",
-        evidenceLinks: [{ 
-          label: "Certificate of Accreditation", 
-          url: "#", 
-          type: "drive",
-          description: "Google Drive folder containing the Level III program accreditation certificates."
-        }]
+        requiredEvidence: "• Certificate of Accreditation from International Accrediting Body\n• Certificate of Accreditation from the Accrediting Agency",
+        evidenceLinks: [
+          {
+            label: "COPC of BSIT Program",
+            url: eligibilityDocUrl("1 COPC of BSIT Program.pdf"),
+            type: "document",
+            description: "Certificate of Program Compliance for the BSIT program."
+          },
+          {
+            label: "BSIT Level IV Accreditation",
+            url: eligibilityDocUrl("2 BSIT Level IV Accreditation.pdf"),
+            type: "document",
+            description: "Level IV accreditation evidence for the BSIT program."
+          },
+          {
+            label: "Institutional Accreditation - AACCUP Technical Review and Recommended Board Action",
+            url: eligibilityDocUrl("3 Institutional Accreditation_AACCUP Technical Review and Recommended Board Action (2025) (C) copy.pdf"),
+            type: "document",
+            description: "Institutional accreditation technical review and board action record."
+          },
+          {
+            label: "PSU ISO 9001:2015 Certificate",
+            url: eligibilityDocUrl("4 PSU ISO 9001_2015 Certificate July 2024-July 2027 copy.pdf"),
+            type: "document",
+            description: "ISO 9001:2015 certificate for July 2024 to July 2027."
+          },
+          {
+            label: "Accreditation Status - BSIT Level III and Other Programs",
+            url: eligibilityDocUrl("5 Accreditation Status - BSIT Level III and Other Programs.pdf"),
+            type: "document",
+            description: "Accreditation status summary for BSIT Level III and other programs."
+          }
+        ]
       }
     ]
   },
@@ -45,7 +74,7 @@ export const evaluationData: EvaluationArea[] = [
         requiredEvidence: "The proposed Master of Information Technology (MIT) is a non-thesis, professional track graduate program. It is designed to cultivate advanced competencies in the application of technology in organizational and societal contexts. Students are required to complete a capstone project that includes original research work, oral defense, and publication in a refereed journal or Scopus-indexed conference proceedings. The program also mandates the passing of a comprehensive examination, alongside coursework and residency requirements.",
         evidenceLinks: [{ 
           label: "MIT Proposal Document", 
-          url: "#",
+          url: iiProgramLevelsDocUrl("MIT Proposal Document.pdf"),
           type: "document",
           description: "Full proposal document detailing the Master of Information Technology program structure."
         }]
@@ -55,8 +84,8 @@ export const evaluationData: EvaluationArea[] = [
         requiredEvidence: "The program requires the following major requirements:\n• Passing of a comprehensive examination (with an exemption clause for early research publication);\n• Completion and defense of a Graduate Project (Capstone);",
         evidenceLinks: [{ 
           label: "GPMO Guidelines", 
-          url: "#",
-          type: "drive",
+          url: iiProgramLevelsDocUrl("GPMO Guidelines.pdf"),
+          type: "document",
           description: "Graduate Program Manual of Operations detailing major requirements and student outputs."
         }]
       }
