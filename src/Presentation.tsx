@@ -32,6 +32,7 @@ import {researchDocumentTree, type ResearchDirNode} from './generated/researchMa
 import {gpmoDocumentTree} from './generated/gpmoManifest';
 import {flexibleLearningDocumentTree} from './generated/flexibleLearningManifest';
 import {flexibleLearningFileUrl} from './flexibleLearningUrls';
+import {administrationDocUrl} from './administrationUrls';
 
 type CredentialPreviewState = { url: string; title: string; kind: 'pdf' | 'image' | 'other' } | null;
 
@@ -489,6 +490,129 @@ function CredentialPreviewModal({
               </p>
               <a
                 href={preview.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Open file
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Leadership evidence carousel modal: browse all PDFs for a given role. */
+function EvidenceCarouselModal({
+  roleLabel,
+  evidenceRelPaths,
+  initialIndex,
+  onClose,
+}: {
+  roleLabel: string;
+  evidenceRelPaths: string[];
+  initialIndex: number;
+  onClose: () => void;
+}) {
+  const [index, setIndex] = useState(() => Math.min(Math.max(0, initialIndex), evidenceRelPaths.length - 1));
+
+  useEffect(() => {
+    setIndex(Math.min(Math.max(0, initialIndex), evidenceRelPaths.length - 1));
+  }, [initialIndex, evidenceRelPaths.length]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') setIndex((prev) => Math.max(0, prev - 1));
+      if (e.key === 'ArrowRight') setIndex((prev) => Math.min(evidenceRelPaths.length - 1, prev + 1));
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [evidenceRelPaths.length, onClose]);
+
+  if (evidenceRelPaths.length === 0) return null;
+  const relPath = evidenceRelPaths[index];
+  const fileName = relPath.split('/').pop() ?? relPath;
+  const url = administrationDocUrl(relPath);
+  const kind = credentialPreviewKind(fileName);
+
+  return (
+    <div
+      className="fixed inset-0 z-[220] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="evidence-carousel-title"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-5xl max-h-[90vh] flex flex-col rounded-2xl border border-white/20 bg-slate-950 shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/10 bg-black/40 shrink-0">
+          <div className="min-w-0">
+            <h2 id="evidence-carousel-title" className="text-sm font-bold text-white truncate pr-2">
+              {roleLabel}: {fileName}
+            </h2>
+            <div className="text-xs text-white/60">
+              {index + 1} / {evidenceRelPaths.length}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setIndex((prev) => Math.max(0, prev - 1))}
+              disabled={index === 0}
+              className="px-3 py-2 rounded-lg bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/20 text-white text-xs font-semibold transition-colors"
+              aria-label="Previous evidence"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onClick={() => setIndex((prev) => Math.min(evidenceRelPaths.length - 1, prev + 1))}
+              disabled={index === evidenceRelPaths.length - 1}
+              className="px-3 py-2 rounded-lg bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/20 text-white text-xs font-semibold transition-colors"
+              aria-label="Next evidence"
+            >
+              Next
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white"
+              aria-label="Close carousel"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex-1 min-h-0 overflow-auto p-3 bg-black/30">
+          {kind === 'pdf' && (
+            <iframe title={fileName} src={url} className="w-full h-[min(70vh,640px)] rounded-lg border border-white/10 bg-white" />
+          )}
+          {kind === 'image' && (
+            <div className="flex justify-center items-start">
+              <img
+                src={url}
+                alt=""
+                className="max-w-full max-h-[min(70vh,640px)] object-contain rounded-lg border border-white/10"
+              />
+            </div>
+          )}
+          {kind === 'other' && (
+            <div className="text-center py-12 px-4 space-y-4">
+              <FileText className="w-14 h-14 mx-auto text-cyan-500/50" />
+              <p className="text-sm text-cyan-100/90">
+                Inline preview is not available for this file type. Open it in a new tab to view or download.
+              </p>
+              <a
+                href={url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold"
@@ -1222,6 +1346,163 @@ function Slide10AdmissionPolicyContent({ data }: { data: PresentationSlideData }
   );
 }
 
+/** Leadership Profile slide: dean + graduate program coordinator, plus Administration evidence PDFs. */
+function Slide5LeadershipContent({ data }: { data: PresentationSlideData }) {
+  type CarouselRole = 'dean' | 'gpc';
+  const [carousel, setCarousel] = useState<{
+    role: CarouselRole;
+    index: number;
+  } | null>(null);
+
+  const deanEvidenceRelPaths = [
+    'College Dean/Padayao - Credentials.pdf',
+    'College Dean/2025 CEC College Dean.pdf',
+    'College Dean/2026 CEC College Dean.pdf',
+  ];
+
+  const gpcEvidenceRelPaths = [
+    'Graduate Program Coordinator/Designation/Designation-as-Graduate-Program-Coordinator-Doc-ken.pdf',
+    'Graduate Program Coordinator/Diploma and TOR/DIT Diploma.pdf',
+    'Graduate Program Coordinator/Diploma and TOR/MIT Diploma.pdf',
+    'Graduate Program Coordinator/Diploma and TOR/DIT TOR.pdf',
+    'Graduate Program Coordinator/Diploma and TOR/MIT TOR.pdf',
+    'Graduate Program Coordinator/Oath of Office/Oath to Office.pdf',
+    'Graduate Program Coordinator/Oath of Office/Cuya, Kennedy C._Appointment_Assistant Professor II.pdf',
+    'Graduate Program Coordinator/Oath of Office/Certification of Assumption to Duty.pdf',
+  ];
+
+  const profiles: any[] = data.content?.profiles ?? [];
+
+  return (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full items-stretch overflow-y-auto pr-2 custom-scrollbar">
+        {profiles.map((profile, i) => {
+        const roleText = String(profile.role ?? '');
+        const isDean = /dean/i.test(roleText);
+        const role: CarouselRole = isDean ? 'dean' : 'gpc';
+        const evidenceRelPaths = isDean ? deanEvidenceRelPaths : gpcEvidenceRelPaths;
+        const evidenceTitle = isDean ? 'College Dean evidence' : 'Graduate Program Coordinator evidence';
+
+        return (
+          <div
+            key={i}
+            className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-center relative overflow-hidden group h-full flex flex-col min-h-0"
+          >
+            <div className="w-32 h-32 bg-rose-200 rounded-full mx-auto mb-6 flex items-center justify-center overflow-hidden border-4 border-white/30 shrink-0">
+              {profile.image ? (
+                <img
+                  src={profile.image}
+                  alt=""
+                  className="h-full w-full min-h-0 min-w-0 object-cover object-[center_22%]"
+                />
+              ) : (
+                <User className="w-16 h-16 text-rose-600" />
+              )}
+            </div>
+
+            <h3 className="text-3xl font-bold text-white mb-2">{profile.name}</h3>
+            <p className="text-rose-200 text-xl mb-6 font-medium">{profile.role}</p>
+
+            <div className="space-y-4 text-rose-50 text-left bg-black/20 p-6 rounded-xl text-sm">
+              <div>
+                <strong className="text-rose-200 block mb-1">Education:</strong>
+                {Array.isArray(profile.education) ? (
+                  <ul className="list-disc pl-5 space-y-1">
+                    {profile.education.map((e: string, j: number) => (
+                      <li key={j}>{e}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>{profile.education}</p>
+                )}
+              </div>
+
+              <div>
+                <strong className="text-rose-200 block mb-1">Experience:</strong>
+                {Array.isArray(profile.experience) ? (
+                  <ul className="list-disc pl-5 space-y-1">
+                    {profile.experience.map((e: string, j: number) => (
+                      <li key={j}>{e}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>{profile.experience}</p>
+                )}
+              </div>
+
+              {profile.specialization && (
+                <div>
+                  <strong className="text-rose-200 block mb-1">Specialization:</strong>
+                  <p>{profile.specialization}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 bg-black/20 border border-white/10 rounded-xl p-4 text-left flex flex-col min-h-0 flex-1 max-h-[45vh]">
+              <div className="flex items-center justify-between gap-3 mb-3 shrink-0">
+                <h4 className="flex items-center gap-2 text-sm font-bold text-white">
+                  <FileText className="w-4 h-4 text-rose-300" />
+                  {evidenceTitle}
+                </h4>
+                <button
+                  type="button"
+                  onClick={() => setCarousel({ role, index: 0 })}
+                  className="text-xs font-semibold text-rose-200/90 hover:text-white underline decoration-rose-400/40 hover:decoration-white whitespace-nowrap"
+                >
+                  Preview All
+                </button>
+              </div>
+              <div className="space-y-3 flex-1 min-h-0 overflow-y-auto pr-2 custom-scrollbar max-h-[32vh]">
+                {evidenceRelPaths.map((relPath, evidenceIndex) => {
+                  const fileName = relPath.split('/').pop() ?? relPath;
+                  const url = administrationDocUrl(relPath);
+                  const kind = credentialPreviewKind(fileName);
+
+                  return (
+                    <div key={relPath} className="flex flex-wrap items-center gap-2 justify-between">
+                      <div className="min-w-0 flex items-center gap-2">
+                        <span className="text-xs text-white/90 truncate">{fileName}</span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => setCarousel({ role, index: evidenceIndex })}
+                          className="text-xs font-semibold text-rose-300 underline decoration-rose-400/40 hover:text-white"
+                        >
+                          Preview
+                        </button>
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-semibold text-rose-200/90 hover:text-white inline-flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                          Open
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        );
+        })}
+      </div>
+
+      {carousel && (
+        <EvidenceCarouselModal
+          roleLabel={carousel.role === 'dean' ? 'College Dean' : 'Graduate Program Coordinator'}
+          evidenceRelPaths={carousel.role === 'dean' ? deanEvidenceRelPaths : gpcEvidenceRelPaths}
+          initialIndex={carousel.index}
+          onClose={() => setCarousel(null)}
+        />
+      )}
+    </>
+  );
+}
+
 /** Faculty Profile slide: sidebar stats + research card; scrollable accordion list. */
 function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -1839,55 +2120,7 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
     } else if (data.id === 4) {
       content = <Slide4Content data={data.content} />;
     } else if (data.id === 5) {
-      content = (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full items-stretch">
-          {data.content.profiles.map((profile: any, i: number) => (
-            <div key={i} className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-center relative overflow-hidden group h-full flex flex-col">
-              <div className="w-32 h-32 bg-rose-200 rounded-full mx-auto mb-6 flex items-center justify-center overflow-hidden border-4 border-white/30 shrink-0">
-                {profile.image ? (
-                  <img
-                    src={profile.image}
-                    alt=""
-                    className="h-full w-full min-h-0 min-w-0 object-cover object-[center_22%]"
-                  />
-                ) : (
-                  <User className="w-16 h-16 text-rose-600" />
-                )}
-              </div>
-              <h3 className="text-3xl font-bold text-white mb-2">{profile.name}</h3>
-              <p className="text-rose-200 text-xl mb-6 font-medium">{profile.role}</p>
-              <div className="space-y-4 text-rose-50 text-left bg-black/20 p-6 rounded-xl text-sm flex-grow">
-                <div>
-                  <strong className="text-rose-200 block mb-1">Education:</strong>
-                  {Array.isArray(profile.education) ? (
-                    <ul className="list-disc pl-5 space-y-1">
-                      {profile.education.map((e: string, j: number) => <li key={j}>{e}</li>)}
-                    </ul>
-                  ) : (
-                    <p>{profile.education}</p>
-                  )}
-                </div>
-                <div>
-                  <strong className="text-rose-200 block mb-1">Experience:</strong>
-                  {Array.isArray(profile.experience) ? (
-                    <ul className="list-disc pl-5 space-y-1">
-                      {profile.experience.map((e: string, j: number) => <li key={j}>{e}</li>)}
-                    </ul>
-                  ) : (
-                    <p>{profile.experience}</p>
-                  )}
-                </div>
-                {profile.specialization && (
-                  <div>
-                    <strong className="text-rose-200 block mb-1">Specialization:</strong>
-                    <p>{profile.specialization}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      );
+      content = <Slide5LeadershipContent data={data} />;
     } else if (data.id === 6) {
       content = <Slide6FacultyContent data={data} />;
     } else if (data.id === 7) {

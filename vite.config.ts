@@ -294,6 +294,32 @@ function iiProgramLevelsMaterialsPlugin(): Plugin {
   };
 }
 
+/** Serve `Administration/` at `/Administration/*` and copy into `dist` on build. */
+function administrationMaterialsPlugin(): Plugin {
+  const administrationRoot = path.resolve(__dirname, 'Administration');
+  let outDir = 'dist';
+
+  return {
+    name: 'administration-materials-static',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    configureServer(server) {
+      if (!fs.existsSync(administrationRoot)) return;
+      server.middlewares.use(
+        '/Administration',
+        express.static(administrationRoot, { index: false, fallthrough: true }),
+      );
+    },
+    closeBundle() {
+      if (!fs.existsSync(administrationRoot)) return;
+      const dest = path.join(outDir, 'Administration');
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.cpSync(administrationRoot, dest, { recursive: true });
+    },
+  };
+}
+
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
@@ -311,6 +337,7 @@ export default defineConfig(({mode}) => {
       flexibleLearningMaterialsPlugin(),
       eligibilityMaterialsPlugin(),
       iiProgramLevelsMaterialsPlugin(),
+      administrationMaterialsPlugin(),
     ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
