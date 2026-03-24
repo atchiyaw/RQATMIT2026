@@ -65,50 +65,9 @@ function App() {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const filteredData = useMemo(() => {
-    if (!searchQuery.trim()) return null;
-    const query = searchQuery.toLowerCase();
-    
-    return evaluationData.map(area => {
-      const areaTitleMatches = area.title.toLowerCase().includes(query);
-      const matchingItems = area.items.filter(item => 
-        item.standard.toLowerCase().includes(query) ||
-        item.requiredEvidence.toLowerCase().includes(query) ||
-        item.evidenceLinks.some(link => 
-          link.label.toLowerCase().includes(query) || 
-          (link.description && link.description.toLowerCase().includes(query))
-        )
-      );
-
-      if (areaTitleMatches || matchingItems.length > 0) {
-        return {
-          ...area,
-          items: areaTitleMatches && matchingItems.length === 0 ? area.items : matchingItems
-        };
-      }
-      return null;
-    }).filter(Boolean) as EvaluationArea[];
-  }, [searchQuery]);
-
   const navItems = [
     { id: 'overview', label: 'Overview', icon: <Building2 className="w-5 h-5" /> },
-    ...evaluationData.map((area, index) => {
-      const icons = [
-        <CheckCircle className="w-5 h-5" />,
-        <GraduationCap className="w-5 h-5" />,
-        <BookOpen className="w-5 h-5" />,
-        <Building2 className="w-5 h-5" />,
-        <FileText className="w-5 h-5" />
-      ];
-      return {
-        id: area.id,
-        label: area.title,
-        icon: icons[index % icons.length]
-      };
-    })
   ];
-
-  const activeData = evaluationData.find(a => a.id === activeArea);
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans text-slate-900">
@@ -225,27 +184,6 @@ function App() {
 
       {/* Main Content */}
       <main className="flex-1 p-6 md:p-12 overflow-y-auto max-w-5xl mx-auto w-full relative">
-        <div className="mb-8">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search areas, standards, or evidence..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-12 py-3 bg-white border border-slate-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
-            />
-            {searchQuery && (
-              <button 
-                onClick={() => setSearchQuery('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-        </div>
-
         <AnimatePresence mode="wait">
           {isCMSOpen ? (
             <motion.div
@@ -301,56 +239,15 @@ function App() {
                 />
               )}
             </motion.div>
-          ) : searchQuery.trim() ? (
-            <motion.div
-              key="search-results"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="space-y-8 pb-12"
-            >
-              <header className="border-b border-slate-200 pb-6">
-                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Search Results</h2>
-                <p className="text-slate-500 mt-2">Found {filteredData?.reduce((acc, area) => acc + area.items.length, 0)} matching items for "{searchQuery}"</p>
-              </header>
-              
-              {filteredData?.length === 0 ? (
-                <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 border-dashed">
-                  <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                  <p className="text-slate-500 text-lg font-medium">No results found for "{searchQuery}"</p>
-                  <p className="text-slate-400 text-sm mt-1">Try adjusting your search terms</p>
-                </div>
-              ) : (
-                <div className="space-y-12">
-                  {filteredData?.map(area => (
-                    <div key={area.id} className="space-y-6">
-                      <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                        <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-lg text-sm">{area.title}</span>
-                      </h3>
-                      <div className="space-y-8">
-                        {area.items.map((item, index) => (
-                          <EvaluationItemCard key={index} item={item} onSelectEvidence={setSelectedEvidence} />
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </motion.div>
           ) : (
             <motion.div
-              key={activeArea}
+              key="overview"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              {activeArea === 'overview' ? (
-                <Overview onOpenPresentation={() => setShowPresentation(true)} />
-              ) : activeData ? (
-                <AreaView area={activeData} onSelectEvidence={setSelectedEvidence} />
-              ) : null}
+              <Overview onOpenPresentation={() => setShowPresentation(true)} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -428,7 +325,7 @@ function Overview({ onOpenPresentation }: { onOpenPresentation: () => void }) {
             This portal provides structured access to all required evidence and documentation based on CMO No. 15 s. 2019 "Policies, Standards and Guidelines for Graduate Education".
           </p>
           <div className="flex items-center gap-2 text-amber-400 text-sm font-medium">
-            <span>Select an area from the menu to begin</span>
+            <span>Overview-only mode is enabled</span>
             <ChevronRight className="w-4 h-4" />
           </div>
         </div>
