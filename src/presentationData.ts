@@ -607,6 +607,98 @@ export const initialPresentationData: PresentationSlideData[] = [
       },
       facultyList: [
         {
+          group: "Doctorate Degree Holders",
+          name: "ATOLE, Ronnel Rimando",
+          image: FACULTY_PHOTO_URLS["ATOLE, Ronnel Rimando"],
+          role: "Professor VI",
+          degrees: [
+            "PhD in Information Technology, Hannam University, South Korea",
+            "Master of Science in Information Technology, Hannam University, South Korea",
+            "Bachelor of Science in Computer Science, Ateneo de Naga University",
+            "Bachelor of Law, University of Northeastern Philippines"
+          ],
+          specialization: "Information Technology, Computer Science, Law",
+          papers: 13,
+          researchValidation: {
+            publishedCount: 13,
+            scopusIndexedCount: 3,
+            citations: 172,
+            links: [
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Ronnel-Atole" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57202837821" }
+            ]
+          }
+        },
+        {
+          group: "Doctorate Degree Holders",
+          name: "CAPUCAO, Joni Neil Borja",
+          image: FACULTY_PHOTO_URLS["CAPUCAO, Joni Neil Borja"],
+          role: "Associate Professor V",
+          degrees: [
+            "Doctor in Information Technology, University of the Cordilleras",
+            "Master of Information Technology, Ateneo de Naga University",
+            "Bachelor of Science in Mathematics, Ateneo de Naga University"
+          ],
+          specialization: "Information Technology, Multimedia and Object-Oriented Technology Applications, Mathematics",
+          papers: 5,
+          researchValidation: {
+            publishedCount: 5,
+            scopusIndexedCount: 3,
+            citations: 27,
+            links: [
+              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=Z-2_t-4AAAAJ" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57205364469" }
+            ]
+          }
+        },
+        {
+          group: "Doctorate Degree Holders",
+          name: "CUYA, Kennedy Centeno",
+          image: FACULTY_PHOTO_URLS["CUYA, Kennedy Centeno"],
+          role: "Assistant Professor II",
+          degrees: [
+            "Doctor in Information Technology, University of the Cordilleras",
+            "Master of Information Technology, Ateneo de Naga University",
+            "Bachelor of Science in Information Technology, Partido State University"
+          ],
+          specialization: "Information Technology, Systems Development",
+          papers: 4,
+          researchValidation: {
+            publishedCount: 4,
+            scopusIndexedCount: 4,
+            citations: 15,
+            links: [
+              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=fYAYF5wAAAAJ" },
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Kennedy-Cuya" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57217137218" }
+            ]
+          }
+        },
+        {
+          group: "Pursuing Doctorate Degree in IT",
+          name: "ARTIAGA, Rowell John Baterna",
+          image: FACULTY_PHOTO_URLS["ARTIAGA, Rowell John Baterna"],
+          role: "Assistant Professor II",
+          degrees: [
+            "Doctor in Information Technology (CAR), University of the Cordilleras",
+            "Master of Information Technology, Ateneo de Naga University",
+            "Bachelor of Science in Information Technology, Partido State University"
+          ],
+          specialization: "Information Technology, Systems Development",
+          papers: 10,
+          researchValidation: {
+            publishedCount: 10,
+            scopusIndexedCount: 2,
+            citations: 27,
+            links: [
+              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=hji5ef8AAAAJ" },
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Rowell-John-Artiaga" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57226867468" }
+            ]
+          }
+        },
+        {
+          group: "Pursuing Doctorate Degree in IT",
           name: "BRIONES, Salvador II V.",
           image: FACULTY_PHOTO_URLS["BRIONES, Salvador II V."],
           role: "Associate Professor",
@@ -630,93 +722,7 @@ export const initialPresentationData: PresentationSlideData[] = [
           }
         },
         {
-          name: "ATOLE, Ronnel Rimando",
-          image: FACULTY_PHOTO_URLS["ATOLE, Ronnel Rimando"],
-          role: "Professor VI",
-          degrees: [
-            "PhD in Information Technology, Hannam University, South Korea",
-            "Master of Science in Information Technology, Hannam University, South Korea",
-            "Bachelor of Science in Computer Science, Ateneo de Naga University",
-            "Bachelor of Law, University of Northeastern Philippines"
-          ],
-          specialization: "Information Technology, Computer Science, Law",
-          papers: 13,
-          researchValidation: {
-            publishedCount: 13,
-            scopusIndexedCount: 3,
-            citations: 172,
-            links: [
-              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Ronnel-Atole" },
-              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57202837821" }
-            ]
-          }
-        },
-        {
-          name: "CAPUCAO, Joni Neil Borja",
-          image: FACULTY_PHOTO_URLS["CAPUCAO, Joni Neil Borja"],
-          role: "Associate Professor V",
-          degrees: [
-            "Doctor in Information Technology, University of the Cordilleras",
-            "Master of Information Technology, Ateneo de Naga University",
-            "Bachelor of Science in Mathematics, Ateneo de Naga University"
-          ],
-          specialization: "Information Technology, Multimedia and Object-Oriented Technology Applications, Mathematics",
-          papers: 5,
-          researchValidation: {
-            publishedCount: 5,
-            scopusIndexedCount: 3,
-            citations: 27,
-            links: [
-              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=Z-2_t-4AAAAJ" },
-              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57205364469" }
-            ]
-          }
-        },
-        {
-          name: "CUYA, Kennedy Centeno",
-          image: FACULTY_PHOTO_URLS["CUYA, Kennedy Centeno"],
-          role: "Assistant Professor II",
-          degrees: [
-            "Doctor in Information Technology, University of the Cordilleras",
-            "Master of Information Technology, Ateneo de Naga University",
-            "Bachelor of Science in Information Technology, Partido State University"
-          ],
-          specialization: "Information Technology, Systems Development",
-          papers: 4,
-          researchValidation: {
-            publishedCount: 4,
-            scopusIndexedCount: 4,
-            citations: 15,
-            links: [
-              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=fYAYF5wAAAAJ" },
-              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Kennedy-Cuya" },
-              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57217137218" }
-            ]
-          }
-        },
-        {
-          name: "ARTIAGA, Rowell John Baterna",
-          image: FACULTY_PHOTO_URLS["ARTIAGA, Rowell John Baterna"],
-          role: "Assistant Professor II",
-          degrees: [
-            "Doctor in Information Technology (CAR), University of the Cordilleras",
-            "Master of Information Technology, Ateneo de Naga University",
-            "Bachelor of Science in Information Technology, Partido State University"
-          ],
-          specialization: "Information Technology, Systems Development",
-          papers: 10,
-          researchValidation: {
-            publishedCount: 10,
-            scopusIndexedCount: 2,
-            citations: 27,
-            links: [
-              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=hji5ef8AAAAJ" },
-              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Rowell-John-Artiaga" },
-              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57226867468" }
-            ]
-          }
-        },
-        {
+          group: "Pursuing Doctorate Degree in IT",
           name: "BRIONES, Shane C.",
           image: FACULTY_PHOTO_URLS["BRIONES, Shane C."],
           role: "Assistant Professor II",
@@ -739,6 +745,20 @@ export const initialPresentationData: PresentationSlideData[] = [
           }
         },
         {
+          group: "Pursuing Doctorate Degree in IT",
+          name: "PAGA, Jonathan",
+          image: FACULTY_PHOTO_URLS["PAGA, Jonathan"],
+          role: "Instructor III",
+          degrees: [
+            "Doctor in Information Technology (with units), University of the East - Manila",
+            "Master of Information Technology, Aemillianum College",
+            "Bachelor of Science in Computer Science, University of Nueva Caceres"
+          ],
+          specialization: "Information Technology, Computer Science",
+          papers: 2
+        },
+        {
+          group: "Master Degree Holder in IT and Allied Programs",
           name: "ABIO, Arjay Formalejo",
           image: FACULTY_PHOTO_URLS["ABIO, Arjay Formalejo"],
           role: "Assistant Professor II",
@@ -750,35 +770,28 @@ export const initialPresentationData: PresentationSlideData[] = [
           papers: 1
         },
         {
-          name: "PAGA, Jonathan",
-          image: FACULTY_PHOTO_URLS["PAGA, Jonathan"],
-          role: "Instructor III",
+          group: "Master Degree Holder in IT and Allied Programs",
+          name: "BELLO, Leo Constantine S.",
+          image: FACULTY_PHOTO_URLS["BELLO, Leo Constantine S."],
+          role: "Information Technology Officer I",
           degrees: [
-            "Doctor in Information Technology (with units), Polytechnic University of the Philippines",
-            "Master of Information Technology, Aemillianum College",
-            "Bachelor of Science in Computer Science, University of Nueva Caceres"
+            "Master of Science in Computer Science, Ateneo de Naga University",
+            "Bachelor of Science in Information Technology, AMA Computer College"
           ],
-          specialization: "Information Technology, Computer Science",
-          papers: 2
-        },
-        {
-          name: "PESINO, Hazel Jean C.",
-          image: FACULTY_PHOTO_URLS["PESINO, Hazel Jean C."],
-          role: "Assistant Professor III",
-          degrees: [
-            "PhD in Development Management (CAR), Bicol University",
-            "Master of Information Technology, Aemillianum College",
-            "Bachelor of Science in Computer Science, Lower Isarog Foundation Exponent, Inc."
-          ],
-          specialization: "Development Management, Information Technology, Computer Science",
-          papers: 3,
+          specialization: "Graphics and Computer Vision, Information Technology",
+          papers: 8,
           researchValidation: {
-            publishedCount: 3,
-            citations: 4,
-            links: [{ label: "ResearchGate", url: "https://www.researchgate.net/profile/Hazel-Jean-Pesino-2" }]
+            publishedCount: 8,
+            scopusIndexedCount: 2,
+            citations: 18,
+            links: [
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Leo-Constantine-Bello" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57226863870" }
+            ]
           }
         },
         {
+          group: "Master Degree Holder in IT and Allied Programs",
           name: "INDICO, Michael H",
           image: FACULTY_PHOTO_URLS["INDICO, Michael H"],
           role: "Assistant Professor III",
@@ -799,23 +812,21 @@ export const initialPresentationData: PresentationSlideData[] = [
           }
         },
         {
-          name: "BELLO, Leo Constantine S.",
-          image: FACULTY_PHOTO_URLS["BELLO, Leo Constantine S."],
-          role: "Information Technology Officer I",
+          group: "Master Degree Holder in IT and Allied Programs",
+          name: "PESINO, Hazel Jean C.",
+          image: FACULTY_PHOTO_URLS["PESINO, Hazel Jean C."],
+          role: "Assistant Professor III",
           degrees: [
-            "Master of Science in Computer Science, Ateneo de Naga University",
-            "Bachelor of Science in Information Technology, AMA Computer College"
+            "PhD in Development Management (CAR), Bicol University",
+            "Master of Information Technology, Aemillianum College",
+            "Bachelor of Science in Computer Science, Lower Isarog Foundation Exponent, Inc."
           ],
-          specialization: "Graphics and Computer Vision, Information Technology",
-          papers: 8,
+          specialization: "Development Management, Information Technology, Computer Science",
+          papers: 3,
           researchValidation: {
-            publishedCount: 8,
-            scopusIndexedCount: 2,
-            citations: 18,
-            links: [
-              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Leo-Constantine-Bello" },
-              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57226863870" }
-            ]
+            publishedCount: 3,
+            citations: 4,
+            links: [{ label: "ResearchGate", url: "https://www.researchgate.net/profile/Hazel-Jean-Pesino-2" }]
           }
         }
       ]

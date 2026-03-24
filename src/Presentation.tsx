@@ -1683,9 +1683,19 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
             const panelId = `faculty-panel-${i}`;
             const credTree = facultyCredentialsManifest[faculty.name as string];
             const credCount = facultyCredentialsFileCounts[faculty.name as string] ?? 0;
+            const showGroupHeader =
+              faculty.group &&
+              (i === 0 || (facultyList[i - 1] as { group?: string }).group !== faculty.group);
             return (
+              <React.Fragment key={faculty.name}>
+                {showGroupHeader && (
+                  <div className="sticky top-0 z-10 -mx-0 mb-1 rounded-xl border border-cyan-400/25 bg-cyan-950/60 px-4 py-2 backdrop-blur-md">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-200">
+                      {faculty.group}
+                    </h3>
+                  </div>
+                )}
               <div
-                key={i}
                 className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden"
               >
                 <button
@@ -1850,6 +1860,7 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
                   </div>
                 )}
               </div>
+              </React.Fragment>
             );
           })}
         </div>
