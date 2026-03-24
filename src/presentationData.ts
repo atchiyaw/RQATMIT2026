@@ -607,6 +607,29 @@ export const initialPresentationData: PresentationSlideData[] = [
       },
       facultyList: [
         {
+          name: "BRIONES, Salvador II V.",
+          image: FACULTY_PHOTO_URLS["BRIONES, Salvador II V."],
+          role: "Associate Professor",
+          degrees: [
+            "Doctor in Information Technology (CAR), AMA University and Colleges",
+            "Master of Science in Web Design and Development, UNICAF University",
+            "Master of Arts in Education major in Mathematics, Camarines Sur",
+            "Bachelor of Science in Information Technology, Partido State University"
+          ],
+          specialization: "Information Technology, Web Design and Development, Mathematics Education",
+          papers: 11,
+          researchValidation: {
+            publishedCount: 11,
+            scopusIndexedCount: 2,
+            citations: 12,
+            links: [
+              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=duE-_EIAAAAJ" },
+              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Salvador-Briones-Ii" },
+              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57543025000" }
+            ]
+          }
+        },
+        {
           name: "ATOLE, Ronnel Rimando",
           image: FACULTY_PHOTO_URLS["ATOLE, Ronnel Rimando"],
           role: "Professor VI",
@@ -690,29 +713,6 @@ export const initialPresentationData: PresentationSlideData[] = [
               { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=hji5ef8AAAAJ" },
               { label: "ResearchGate", url: "https://www.researchgate.net/profile/Rowell-John-Artiaga" },
               { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57226867468" }
-            ]
-          }
-        },
-        {
-          name: "BRIONES, Salvador II V.",
-          image: FACULTY_PHOTO_URLS["BRIONES, Salvador II V."],
-          role: "Associate Professor",
-          degrees: [
-            "Doctor in Information Technology (CAR), AMA University and Colleges",
-            "Master of Science in Web Design and Development, UNICAF University",
-            "Master of Arts in Education major in Mathematics, Camarines Sur",
-            "Bachelor of Science in Information Technology, Partido State University"
-          ],
-          specialization: "Information Technology, Web Design and Development, Mathematics Education",
-          papers: 11,
-          researchValidation: {
-            publishedCount: 11,
-            scopusIndexedCount: 2,
-            citations: 12,
-            links: [
-              { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=duE-_EIAAAAJ" },
-              { label: "ResearchGate", url: "https://www.researchgate.net/profile/Salvador-Briones-Ii" },
-              { label: "Scopus", url: "https://www.scopus.com/authid/detail.uri?authorId=57543025000" }
             ]
           }
         },

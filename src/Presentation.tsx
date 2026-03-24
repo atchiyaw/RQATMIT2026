@@ -1607,10 +1607,14 @@ function Slide5LeadershipContent({ data }: { data: PresentationSlideData }) {
 
 /** Faculty Profile slide: sidebar stats + research card; scrollable accordion list. */
 function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [credentialPreview, setCredentialPreview] = useState<CredentialPreviewState>(null);
   const c = data.content;
   const facultyList = c.facultyList ?? [];
+  /** Default open: BRIONES, Salvador II V. (credentials from `Faculty Credentials/BRIONES, Salvador II V./`). */
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(() => {
+    const idx = facultyList.findIndex((f: { name?: string }) => f.name === 'BRIONES, Salvador II V.');
+    return idx >= 0 ? idx : null;
+  });
+  const [credentialPreview, setCredentialPreview] = useState<CredentialPreviewState>(null);
 
   useEffect(() => {
     if (!credentialPreview) return;
