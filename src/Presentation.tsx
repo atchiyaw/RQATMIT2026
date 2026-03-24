@@ -1394,6 +1394,9 @@ function Slide5LeadershipContent({ data }: { data: PresentationSlideData }) {
   const secondaryEvidenceTitle =
     secondaryLeader === 'dean' ? 'College Dean evidences' : 'Graduate Program Coordinator evidences';
 
+  const univOrgChartPdfUrl = '/organizational-chart/revised-univ-org-structure.pdf';
+  const collegeOrgChartPngUrl = '/organizational-chart/rqat-mit-avp.png';
+
   const SegButton = ({
     leader,
     label,
@@ -1415,21 +1418,88 @@ function Slide5LeadershipContent({ data }: { data: PresentationSlideData }) {
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full min-h-0 pr-2 custom-scrollbar overflow-y-auto">
-      <div className="min-h-0 flex flex-col gap-6">
-        {/* Segmented control */}
-        <div className="shrink-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4">
-          <div className="flex items-center gap-3">
-            <SegButton leader="dean" label="College Dean" />
-            <SegButton leader="gpc" label="Graduate Program Coordinator" />
-            <div className="ml-auto text-xs text-white/60 font-semibold">
-              {activeEvidenceRelPaths.length} evidence{activeEvidenceRelPaths.length === 1 ? '' : 's'}
+    <div className="flex h-full min-h-0 flex-col gap-4 overflow-hidden">
+      <section
+        className="shrink-0 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5"
+        aria-labelledby="leadership-org-heading"
+      >
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <Layout className="h-5 w-5 shrink-0 text-rose-300" aria-hidden />
+          <h3 id="leadership-org-heading" className="text-lg font-bold text-white">
+            Organizational structure
+          </h3>
+          <span className="text-xs font-semibold uppercase tracking-wider text-white/50">
+            University &amp; college (MIT)
+          </span>
+        </div>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-4">
+          {/* Preview styling aligned with evidence “Preview” panes below */}
+          <div className="flex min-h-0 flex-col gap-2 rounded-xl border border-white/10 bg-black/20 p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h4 className="text-sm font-bold uppercase tracking-wider text-rose-200">
+                University organizational chart
+              </h4>
+              <a
+                href={univOrgChartPdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-200/90 hover:text-white"
+              >
+                <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                Open PDF
+              </a>
+            </div>
+            <div className="px-1 text-xs font-semibold text-white/60">Preview</div>
+            <div className="h-[min(22vh,260px)] min-h-[176px] overflow-hidden rounded-lg border border-white/10 bg-white/5">
+              <iframe
+                title="University organizational chart (PDF)"
+                src={univOrgChartPdfUrl}
+                className="h-full w-full bg-white"
+              />
+            </div>
+          </div>
+          <div className="flex min-h-0 flex-col gap-2 rounded-xl border border-white/10 bg-black/20 p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h4 className="text-sm font-bold uppercase tracking-wider text-rose-200">
+                College-based organizational chart (MIT)
+              </h4>
+              <a
+                href={collegeOrgChartPngUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-200/90 hover:text-white"
+              >
+                <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                Open image
+              </a>
+            </div>
+            <div className="px-1 text-xs font-semibold text-white/60">Preview</div>
+            <div className="h-[min(22vh,260px)] min-h-[176px] overflow-auto rounded-lg border border-white/10 bg-white/5 custom-scrollbar">
+              <img
+                src={collegeOrgChartPngUrl}
+                alt="College-based organizational chart for Master of Information Technology: reporting from university leadership through the College of Engineering and Computational Sciences to MIT-related roles."
+                className="mx-auto w-full max-w-full object-contain object-top"
+              />
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Focused leader card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-center relative overflow-hidden group h-full flex flex-col min-h-0">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-8 overflow-y-auto pr-2 custom-scrollbar md:grid-cols-2 md:gap-8">
+        <div className="min-h-0 flex flex-col gap-6">
+          {/* Segmented control */}
+          <div className="shrink-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4">
+            <div className="flex items-center gap-3">
+              <SegButton leader="dean" label="College Dean" />
+              <SegButton leader="gpc" label="Graduate Program Coordinator" />
+              <div className="ml-auto text-xs text-white/60 font-semibold">
+                {activeEvidenceRelPaths.length} evidence{activeEvidenceRelPaths.length === 1 ? '' : 's'}
+              </div>
+            </div>
+          </div>
+
+          {/* Focused leader card */}
+          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-center relative overflow-hidden group h-full flex flex-col min-h-0">
           <div className="w-32 h-32 bg-rose-200 rounded-full mx-auto mb-6 flex items-center justify-center overflow-hidden border-4 border-white/30 shrink-0">
             {activeProfile?.image ? (
               <img
@@ -1600,6 +1670,7 @@ function Slide5LeadershipContent({ data }: { data: PresentationSlideData }) {
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

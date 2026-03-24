@@ -550,7 +550,7 @@ export const initialPresentationData: PresentationSlideData[] = [
   {
     id: 5,
     title: "Leadership Profile",
-    subtitle: "Dean and Graduate Program Coordinator",
+    subtitle: "Organizational charts, dean, and graduate program coordinator",
     icon: "User",
     color: "from-rose-600 to-red-900",
     content: {
