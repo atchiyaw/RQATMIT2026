@@ -33,10 +33,7 @@ const getEmbedUrl = (url: string) => {
 };
 
 function App() {
-  const [activeArea, setActiveArea] = useState<string>('overview');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedEvidence, setSelectedEvidence] = useState<EvidenceLink | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
   const [showPresentation, setShowPresentation] = useState(false);
   const [evaluationData, setEvaluationData] = useState<EvaluationArea[]>(initialData);
   const [presentationSlides, setPresentationSlides] = useState<PresentationSlideData[]>(initialPresentationData);
@@ -63,127 +60,46 @@ function App() {
     setIsCMSOpen(false);
   };
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-
-  const navItems = [
-    { id: 'overview', label: 'Overview', icon: <Building2 className="w-5 h-5" /> },
-  ];
-
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans text-slate-900">
-      {/* Mobile Header */}
-      <div className="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
-        <div className="flex items-center gap-2">
-          <GraduationCap className="w-6 h-6 text-amber-500" />
-          <span className="font-semibold truncate">MIT Evaluation</span>
-        </div>
-        <button onClick={toggleSidebar} className="p-1 hover:bg-slate-800 rounded">
-          {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
-      </div>
-
-      {/* Sidebar */}
-      <AnimatePresence>
-        {(isSidebarOpen || window.innerWidth >= 768) && (
-          <motion.aside 
-            initial={{ x: -300 }}
-            animate={{ x: 0 }}
-            exit={{ x: -300 }}
-            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-            className={`
-              fixed md:sticky top-0 left-0 h-screen w-72 bg-slate-900 text-slate-300 flex flex-col z-40
-              shadow-2xl md:shadow-none overflow-y-auto
-              ${isSidebarOpen ? 'block' : 'hidden md:flex'}
-            `}
-          >
-            <div className="p-6 border-b border-slate-800">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-amber-500 p-2 rounded-lg text-slate-900">
-                  <GraduationCap className="w-6 h-6" />
-                </div>
-                <div>
-                  <h1 className="text-white font-bold leading-tight">Partido State<br/>University</h1>
-                </div>
-              </div>
-              <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
-                Master of Information Technology
-              </p>
-            </div>
-
-            <nav className="flex-1 p-4 space-y-1">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveArea(item.id);
-                    if (window.innerWidth < 768) setIsSidebarOpen(false);
-                  }}
-                  className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200
-                    ${activeArea === item.id 
-                      ? 'bg-amber-500/10 text-amber-500 font-medium' 
-                      : 'hover:bg-slate-800 hover:text-white'}
-                  `}
-                >
-                  {item.icon}
-                  <span className="text-sm">{item.label}</span>
-                </button>
-              ))}
-            </nav>
-
-            <div className="p-6 border-t border-slate-800 text-xs text-slate-500">
-              <p>RQAT Evaluation for MIT Program</p>
-              <p className="mt-1">© {new Date().getFullYear()} ParSU</p>
-              
-              <div className="mt-6 pt-4 border-t border-slate-800/50">
-                {isAdminLoggedIn ? (
-                  <div className="flex flex-col gap-2">
-                    <button 
-                      onClick={() => {
-                        setIsCMSOpen(true);
-                        if (window.innerWidth < 768) setIsSidebarOpen(false);
-                      }}
-                      className="flex items-center gap-2 px-3 py-2 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 rounded-lg transition-colors text-sm font-medium w-full"
-                    >
-                      <Settings className="w-4 h-4" />
-                      Manage Content
-                    </button>
-                    <button 
-                      onClick={handleLogout}
-                      className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:text-slate-300 hover:bg-slate-800 rounded-lg transition-colors text-sm font-medium w-full"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Logout
-                    </button>
-                  </div>
-                ) : (
-                  <button 
-                    onClick={() => {
-                      setIsCMSOpen(true);
-                      if (window.innerWidth < 768) setIsSidebarOpen(false);
-                    }}
-                    className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:text-slate-300 hover:bg-slate-800 rounded-lg transition-colors text-sm font-medium w-full"
-                  >
-                    <Settings className="w-4 h-4" />
-                    Admin Login
-                  </button>
-                )}
-              </div>
-            </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
-
-      {/* Overlay for mobile */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-slate-900/50 z-30 md:hidden backdrop-blur-sm"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
       {/* Main Content */}
-      <main className="flex-1 p-6 md:p-12 overflow-y-auto max-w-5xl mx-auto w-full relative">
+      <main className="mx-auto w-full max-w-6xl p-6 md:p-12 relative">
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-slate-700">
+            <GraduationCap className="w-6 h-6 text-amber-500" />
+            <div>
+              <h1 className="text-sm font-bold leading-tight">Partido State University</h1>
+              <p className="text-xs text-slate-500">Master of Information Technology</p>
+            </div>
+          </div>
+          {isAdminLoggedIn ? (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsCMSOpen(true)}
+                className="flex items-center gap-2 px-3 py-2 bg-amber-500/10 text-amber-700 hover:bg-amber-500/20 rounded-lg transition-colors text-sm font-medium"
+              >
+                <Settings className="w-4 h-4" />
+                Manage Content
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-3 py-2 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors text-sm font-medium"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsCMSOpen(true)}
+              className="flex items-center gap-2 px-3 py-2 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors text-sm font-medium"
+            >
+              <Settings className="w-4 h-4" />
+              Admin Login
+            </button>
+          )}
+        </div>
+
         <AnimatePresence mode="wait">
           {isCMSOpen ? (
             <motion.div
@@ -275,7 +191,7 @@ function App() {
 
 function Overview({ onOpenPresentation }: { onOpenPresentation: () => void }) {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-10">
       <header className="mb-12">
         <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight mb-4">
           Program Evaluation <br/>
@@ -285,6 +201,14 @@ function Overview({ onOpenPresentation }: { onOpenPresentation: () => void }) {
           Welcome to the digital presentation of documents and profiles for the Master of Information Technology program at Partido State University.
         </p>
       </header>
+
+      <div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-200">
+        <img
+          src="/cover.png"
+          alt="CHED Regional Quality Assessment Team welcome cover for MIT program evaluation"
+          className="w-full h-auto rounded-xl object-cover"
+        />
+      </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
@@ -330,6 +254,38 @@ function Overview({ onOpenPresentation }: { onOpenPresentation: () => void }) {
           </div>
         </div>
       </div>
+
+      <footer className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 space-y-7">
+        <section>
+          <h3 className="text-lg font-bold text-slate-900 mb-2">University Vision</h3>
+          <p className="text-slate-700 leading-relaxed">
+            A university of science and technology advancing geology and bio-resource science to promote sustainable and resilient communities.
+          </p>
+        </section>
+
+        <section>
+          <h3 className="text-lg font-bold text-slate-900 mb-2">University Mission</h3>
+          <p className="text-slate-700 leading-relaxed">
+            To provide a high-quality, global educational experience to educate individuals in leadership, innovation, critical thinking, cultural appreciation and civic responsibility so that graduates are competent, informed and environmentally and culturally proactive and productive citizens.
+          </p>
+        </section>
+
+        <section>
+          <h3 className="text-lg font-bold text-slate-900 mb-2">Core Values</h3>
+          <ul className="space-y-1 text-slate-700">
+            <li>P - Passion for Excellence</li>
+            <li>S - Service</li>
+            <li>U - Unity and Inclusiveness</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3 className="text-lg font-bold text-slate-900 mb-2">Quality Policy</h3>
+          <p className="text-slate-700 leading-relaxed">
+            The Partido State University commits to provide quality instruction, responsive research and needs-based extension services for global competitiveness and satisfaction of its clients, stakeholders, regulatory bodies, and other service providers through continual improvement of the quality management system.
+          </p>
+        </section>
+      </footer>
     </div>
   );
 }
