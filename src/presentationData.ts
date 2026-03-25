@@ -557,6 +557,7 @@ export const initialPresentationData: PresentationSlideData[] = [
       profiles: [
         {
           name: "Engr. Emelina R. Padayao",
+          image: "/leadership/emelina-padayao.jpg",
           role: "Dean, College of Engineering and Computational Sciences",
           education: [
             "Master of Engineering major in Civil Engineering, MAPUA Institute of Technology",
