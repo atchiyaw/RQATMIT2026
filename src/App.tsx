@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   BookOpen, 
   GraduationCap, 
+  Users,
   Building2, 
   FileText, 
   CheckCircle,
@@ -24,6 +25,11 @@ import { evaluationData as initialData, EvaluationArea, EvidenceLink, Evaluation
 import { initialPresentationData, PresentationSlideData } from './presentationData';
 import { PresentationViewer } from './Presentation';
 import { CMSAdmin } from './CMSAdmin';
+import {
+  facultyPresentationProfiles,
+  institutionLogoByKey,
+  type FacultyPresentationProfile,
+} from './facultyPresentationData';
 
 const getEmbedUrl = (url: string) => {
   if (url.includes('drive.google.com/file/d/')) {
@@ -33,6 +39,7 @@ const getEmbedUrl = (url: string) => {
 };
 
 function App() {
+  const [activePage, setActivePage] = useState<'overview' | 'faculty'>('overview');
   const [selectedEvidence, setSelectedEvidence] = useState<EvidenceLink | null>(null);
   const [showPresentation, setShowPresentation] = useState(false);
   const [evaluationData, setEvaluationData] = useState<EvaluationArea[]>(initialData);
@@ -157,13 +164,20 @@ function App() {
             </motion.div>
           ) : (
             <motion.div
-              key="overview"
+              key={activePage}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <Overview onOpenPresentation={() => setShowPresentation(true)} />
+              {activePage === 'overview' ? (
+                <Overview
+                  onOpenPresentation={() => setShowPresentation(true)}
+                  onOpenFacultyPresentation={() => setActivePage('faculty')}
+                />
+              ) : (
+                <FacultyPresentationPage onBack={() => setActivePage('overview')} />
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -189,7 +203,13 @@ function App() {
   );
 }
 
-function Overview({ onOpenPresentation }: { onOpenPresentation: () => void }) {
+function Overview({
+  onOpenPresentation,
+  onOpenFacultyPresentation,
+}: {
+  onOpenPresentation: () => void;
+  onOpenFacultyPresentation: () => void;
+}) {
   return (
     <div className="space-y-8 pb-10">
       <header className="mb-12">
@@ -214,13 +234,22 @@ function Overview({ onOpenPresentation }: { onOpenPresentation: () => void }) {
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Institutional Profile</h3>
-            <button 
-              onClick={onOpenPresentation}
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
-            >
-              <Maximize2 className="w-4 h-4" />
-              View Presentation at a Glance
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={onOpenFacultyPresentation}
+                className="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+              >
+                <Users className="w-4 h-4" />
+                Open Faculty Presentation
+              </button>
+              <button
+                onClick={onOpenPresentation}
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+              >
+                <Maximize2 className="w-4 h-4" />
+                View Presentation at a Glance
+              </button>
+            </div>
           </div>
           <dl className="space-y-4">
             <div>
@@ -286,6 +315,111 @@ function Overview({ onOpenPresentation }: { onOpenPresentation: () => void }) {
           </p>
         </section>
       </footer>
+    </div>
+  );
+}
+
+function FacultyPresentationPage({ onBack }: { onBack: () => void }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const total = facultyPresentationProfiles.length;
+  const current = facultyPresentationProfiles[currentIndex] as FacultyPresentationProfile;
+
+  const goPrev = () => setCurrentIndex((prev) => (prev === 0 ? total - 1 : prev - 1));
+  const goNext = () => setCurrentIndex((prev) => (prev === total - 1 ? 0 : prev + 1));
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') setCurrentIndex((prev) => (prev === 0 ? total - 1 : prev - 1));
+      if (e.key === 'ArrowRight') setCurrentIndex((prev) => (prev === total - 1 ? 0 : prev + 1));
+      if (e.key === 'Escape') onBack();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onBack, total]);
+
+  return (
+    <div className="space-y-5 pb-8">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+        >
+          <ChevronRight className="w-4 h-4 rotate-180" />
+          Back to Overview
+        </button>
+        <div className="text-sm font-semibold text-slate-600">
+          Faculty {currentIndex + 1} of {total}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-1">
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+              <img src={current.photoUrl} alt={current.name} className="h-full w-full object-cover" />
+            </div>
+            <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <h3 className="text-lg font-bold text-slate-900">{current.name}</h3>
+              <p className="text-sm font-semibold text-amber-700">{current.rank}</p>
+              {current.currentDesignation && (
+                <p className="mt-2 text-sm text-slate-700">
+                  <span className="font-semibold">Current designation:</span> {current.currentDesignation}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="lg:col-span-2 space-y-5">
+            <section className="rounded-xl border border-slate-200 bg-slate-50 p-4 md:p-5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Comprehensive Profile</h4>
+              <p className="mt-2 text-sm leading-relaxed text-slate-800">{current.profile}</p>
+            </section>
+
+            <section className="rounded-xl border border-slate-200 bg-slate-50 p-4 md:p-5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Educational Attainment</h4>
+              <div className="mt-3 space-y-3">
+                {current.attainments.map((att, idx) => {
+                  const logoUrl = att.logoKey ? institutionLogoByKey[att.logoKey] : undefined;
+                  return (
+                    <div key={`${att.institution}-${idx}`} className="flex items-start gap-3 rounded-lg border border-slate-200 bg-white p-3">
+                      {logoUrl ? (
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-md border border-slate-200 bg-white p-1">
+                          <img src={logoUrl} alt={att.institution} className="max-h-full max-w-full object-contain" />
+                        </div>
+                      ) : (
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-slate-100 text-xs text-slate-500">
+                          N/A
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900">{att.degree}</p>
+                        <p className="text-xs text-slate-600">{att.institution}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div className="mt-6 flex items-center justify-between gap-3 border-t border-slate-200 pt-4">
+          <button
+            onClick={goPrev}
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+          >
+            <ChevronRight className="w-4 h-4 rotate-180" />
+            Previous Faculty
+          </button>
+          <button
+            onClick={goNext}
+            className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+          >
+            Next Faculty
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
