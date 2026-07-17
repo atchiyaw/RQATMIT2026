@@ -14,19 +14,34 @@ const curriculum = [
     id: 'core', label: 'Core foundation', units: '12 units', icon: Layers3,
     title: 'Think in systems, lead with evidence.',
     copy: 'Build the strategic and technical foundation to design information systems that solve real organizational and community challenges.',
-    courses: ['Advanced Information Technology', 'IT Project Management', 'Research Methods in IT', 'Information Systems Strategy'],
+    courses: [
+      'MIT 101 — Advanced Database Systems',
+      'MIT 102 — Advanced Operating Systems and Networking',
+      'MIT 103 — Advanced System Design and Implementation',
+      'MIT 104 — IT Research Methods (Methods of Research)',
+    ],
   },
   {
-    id: 'major', label: 'Specialization', units: '15 units', icon: BrainCircuit,
+    id: 'major', label: 'Specialization', units: '18 units', icon: BrainCircuit,
     title: 'Go deeper into modern computing.',
-    copy: 'Develop advanced capability across data, software, infrastructure, and emerging technology through practice-centered coursework.',
-    courses: ['Data Engineering & Analytics', 'Enterprise Systems', 'Advanced Software Development', 'Cybersecurity & Governance'],
+    copy: 'Develop advanced capability across project management, web systems, security, and analytics through practice-centered coursework.',
+    courses: [
+      'MIT 201 — Technology and Project Management',
+      'MIT 202 — Web Engineering',
+      'MIT 203 — ICT Information Security Administration',
+      'MIT 204 — Management Information Systems',
+      'MIT 301 — Human-Computer Interaction',
+      'MIT 302 — Introduction to Data Analytics',
+    ],
   },
   {
     id: 'capstone', label: 'Graduate project', units: '6 units', icon: Code2,
     title: 'Turn insight into working impact.',
     copy: 'Create, defend, and publish a substantial technology solution grounded in original research and a real-world need.',
-    courses: ['Graduate Project I', 'Graduate Project II', 'Oral Defense', 'Research Publication'],
+    courses: [
+      'MIT 401 — Graduate Project 1',
+      'MIT 402 — Graduate Project 2',
+    ],
   },
 ];
 
