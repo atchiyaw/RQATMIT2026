@@ -75,14 +75,14 @@ export const facultyPresentationProfiles: FacultyPresentationProfile[] = [
       'Graduate Program Coordinator (MIT), CHED SIKAP University Scholarship Administrator',
   },
   {
-    name: 'Asst. Prof. Rowell John Baterna Artiaga',
+    name: 'Dr. Rowell John Baterna Artiaga',
     rank: 'Assistant Professor II',
     photoUrl: '/faculty-presentation/photos/artiaga.png',
     profile:
-      'He is a candidate for Doctor in Information Technology (CAR) and focuses on Systems Development.',
+      'He is a graduate of Doctor in Information Technology and focuses on Systems Development.',
     attainments: [
       {
-        degree: 'Doctor in Information Technology (Completed Academic Requirements)',
+        degree: 'Doctor in Information Technology',
         institution: 'University of the Cordilleras',
         logoKey: 'uc',
       },

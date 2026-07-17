@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import {
   ArrowRight, BookOpen, BrainCircuit, BriefcaseBusiness, Check,
   ChevronLeft, ChevronRight, Code2, Database, ExternalLink, GraduationCap,
-  Layers3, Menu, Network, Play, Quote, ShieldCheck, Sparkles, X,
+  Layers3, Mail, MapPin, Menu, Network, Phone, Play, Quote, ShieldCheck, Sparkles, X,
 } from 'lucide-react';
 import { PresentationViewer } from './Presentation';
 import { initialPresentationData } from './presentationData';
@@ -60,7 +60,7 @@ function App() {
       <header className="nav-wrap">
         <nav className="nav container" aria-label="Primary navigation">
           <button className="brand" onClick={() => scrollTo('home')} aria-label="MIT program home">
-            <span className="brand-mark"><span>MIT</span></span>
+            <img className="university-logo" src="/psu-logo-hd-transparent.png" alt="Partido State University seal" />
             <span className="brand-copy"><strong>Master of Information Technology</strong><small>Partido State University</small></span>
           </button>
           <div className="nav-links">
@@ -83,8 +83,9 @@ function App() {
           <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" />
           <div className="container hero-content">
             <motion.div className="hero-copy" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7 }}>
+              <img className="hero-seal" src="/psu-logo-hd-transparent.png" alt="Partido State University" />
               <div className="eyebrow"><Sparkles size={15} /> Graduate education for the digital age</div>
-              <h1>Master technology.<br /><em>Move society forward.</em></h1>
+              <h1><span className="headline-lead">Not the first in Bicol.</span><br /><em>Just the one you’ve been waiting for.</em></h1>
               <p>A practice-driven graduate program for professionals ready to design better systems, lead digital change, and build technology with purpose.</p>
               <div className="hero-actions">
                 <button className="button-primary" onClick={() => scrollTo('curriculum')}>Discover the program <ArrowRight size={18} /></button>
@@ -141,11 +142,40 @@ function App() {
 
         <section id="admissions" className="admissions section">
           <div className="admission-grid" aria-hidden="true"/>
-          <div className="container admissions-inner"><div><span className="kicker">04 / Your next chapter</span><h2>Bring your ambition.<br /><em>Build what comes next.</em></h2><p>Join a graduate community committed to useful research, responsible innovation, and technology that matters.</p></div><div className="apply-card"><span className="apply-badge"><BookOpen size={18}/> Admissions</span><h3>Ready to take the next step?</h3><p>Review the official admission and retention policy, then connect with Partido State University for current application schedules and requirements.</p><a href="/docs/mit-admission-retention-policy.pdf" target="_blank" rel="noreferrer">View admission policy <ExternalLink size={17}/></a><small>College of Engineering and Computational Sciences<br/>Goa, Camarines Sur</small></div></div>
+          <div className="container admissions-inner"><div><span className="kicker">04 / Your next chapter</span><h2>Bring your ambition.<br /><em>Build what comes next.</em></h2><p>Join a graduate community committed to useful research, responsible innovation, and technology that matters.</p></div><div className="apply-card"><span className="apply-badge"><BookOpen size={18}/> Admissions</span><h3>Ready to take the next step?</h3><p>Download the official MIT admission forms, complete your requirements, and submit them to the Computational Sciences Department for evaluation.</p><a href="https://drive.google.com/drive/folders/1eySRdpYu_bFXxb8rFiQKlWhBtyAxPO-6?usp=sharing" target="_blank" rel="noreferrer">Download Admission Forms <ExternalLink size={17}/></a><small>College of Engineering and Computational Sciences<br/>Goa, Camarines Sur</small></div></div>
+        </section>
+
+        <section id="contact" className="contact-section">
+          <div className="container">
+            <motion.aside
+              className="page-contact"
+              aria-label="Program contact"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: .35 }}
+              transition={{ duration: .55 }}
+            >
+              <div className="page-contact-rail" aria-hidden="true" />
+              <div className="page-contact-body">
+                <span className="page-contact-label">Direct line · Admissions &amp; inquiry</span>
+                <h2 className="page-contact-name">Kennedy C. Cuya, DIT</h2>
+                <ul className="page-contact-roles">
+                  <li>Graduate Program Coordinator, MIT Program</li>
+                  <li>Department Chair, Department of Computational Sciences</li>
+                  <li>College of Engineering and Computational Sciences</li>
+                </ul>
+                <div className="page-contact-actions">
+                  <a className="page-contact-link" href="tel:+639608835187"><Phone size={16} aria-hidden="true" /><span>09608835187</span></a>
+                  <a className="page-contact-link" href="mailto:dcs@parsu.edu.ph"><Mail size={16} aria-hidden="true" /><span>dcs@parsu.edu.ph</span></a>
+                </div>
+                <p className="page-contact-visit"><MapPin size={16} aria-hidden="true" /><span>Visit the Computational Sciences Department Office, beside the ParSU Admin Building, for inquiry and submission of application.</span></p>
+              </div>
+            </motion.aside>
+          </div>
         </section>
       </main>
 
-      <footer><div className="container footer-inner"><div className="brand footer-brand"><span className="brand-mark"><span>MIT</span></span><span className="brand-copy"><strong>Master of Information Technology</strong><small>Partido State University</small></span></div><p>Advanced knowledge. Responsible innovation. Resilient communities.</p><span>© 2026 Partido State University</span></div></footer>
+      <footer><div className="container footer-inner"><div className="brand footer-brand"><img className="university-logo" src="/psu-logo-hd-transparent.png" alt="Partido State University seal" /><span className="brand-copy"><strong>Master of Information Technology</strong><small>Partido State University</small></span></div><p>Advanced knowledge. Responsible innovation. Resilient communities.</p><span>© 2026 Partido State University</span></div></footer>
 
       <AnimatePresence>{showPresentation && <PresentationViewer slidesData={initialPresentationData} onClose={() => setShowPresentation(false)} />}</AnimatePresence>
     </div>

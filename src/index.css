@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,500&family=Poppins:wght@600;700;800&display=swap');
 @import "tailwindcss";
 
 :root{--ink:#10231d;--green:#123f34;--mint:#b8f05b;--cream:#f3f1e9;--paper:#faf9f4;--line:#d8dbd2;--muted:#647069;--white:#fff;--mono:'DM Mono',monospace;--sans:'Manrope',sans-serif;--serif:'Newsreader',serif}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}button,a{font:inherit}.site-shell{overflow:hidden}.container{width:min(1180px,calc(100% - 48px));margin:0 auto}.nav-wrap{position:fixed;z-index:40;top:0;left:0;right:0;background:rgba(250,249,244,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(16,35,29,.1)}.nav{height:82px;display:flex;align-items:center;gap:34px}.brand{display:flex;align-items:center;gap:12px;border:0;background:none;color:var(--ink);padding:0;text-align:left;cursor:pointer}.brand-mark{width:44px;height:44px;display:grid;place-items:center;background:var(--green);color:var(--mint);position:relative;clip-path:polygon(0 0,100% 0,100% 76%,76% 100%,0 100%)}.brand-mark span{font-weight:700;font-size:14px;letter-spacing:-.5px}.brand-copy{display:flex;flex-direction:column}.brand-copy strong{font-size:12px;line-height:1.25}.brand-copy small{font-size:10px;color:var(--muted);margin-top:3px}.nav-links{display:flex;gap:28px;margin-left:auto}.nav-links button,.mobile-menu button{border:0;background:none;color:#3d4d47;font-size:13px;cursor:pointer}.nav-links button:hover{color:#0c7a5b}.nav-cta{display:flex;align-items:center;gap:10px;border:0;background:var(--ink);color:white;padding:13px 17px;cursor:pointer;font-weight:600;font-size:12px}.menu-button{display:none;border:0;background:none;color:var(--ink)}.mobile-menu{position:absolute;top:82px;left:0;right:0;background:var(--paper);padding:16px 24px 24px;box-shadow:0 20px 40px #10231d15;display:flex;flex-direction:column;align-items:stretch}.mobile-menu button{padding:14px;text-align:left;border-bottom:1px solid var(--line)}
@@ -9,3 +9,252 @@
 .admissions{position:relative;background:#ddebca}.admission-grid{opacity:.55;mask-image:linear-gradient(90deg,black,transparent)}.admissions-inner{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:110px;align-items:center}.admissions h2 em{color:#126e53}.admissions p{font-size:15px;line-height:1.8;color:#52645d;max-width:600px}.apply-card{background:#103b31;color:white;padding:44px;box-shadow:13px 13px 0 #b8f05b}.apply-badge{display:inline-flex;gap:8px;align-items:center;color:var(--mint);font:10px var(--mono);text-transform:uppercase}.apply-card h3{font-size:25px;margin:30px 0 12px}.apply-card p{color:#aac1ba;font-size:13px}.apply-card a{margin:24px 0 30px;background:var(--mint);color:#123f34;text-decoration:none;padding:15px 18px;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:space-between}.apply-card small{font:9px/1.7 var(--mono);color:#77998f;text-transform:uppercase}footer{background:#0a211b;color:white;padding:37px 0}.footer-inner{display:flex;align-items:center;gap:45px}.footer-brand .brand-mark{background:var(--mint);color:var(--green)}.footer-brand .brand-copy small{color:#819c94}.footer-inner p{font-size:11px;color:#87a099;margin-left:auto}.footer-inner>span{font:9px var(--mono);color:#6d8980}
 @media(max-width:900px){.container{width:min(100% - 32px,1180px)}.nav-links,.nav-cta{display:none}.menu-button{display:block;margin-left:auto}.hero{padding-top:135px;min-height:auto}.hero-content,.section-heading.split,.faculty-layout,.admissions-inner{grid-template-columns:1fr;gap:55px}.hero-visual{max-width:600px}.hero-meta{flex-wrap:wrap}.outcome-grid{grid-template-columns:1fr 1fr}.curriculum-layout{grid-template-columns:1fr;gap:40px}.faculty-intro{max-width:650px}.faculty-card{max-width:720px}.section{padding:85px 0}.scroll-cue{display:none}}@media(max-width:620px){.brand-copy{display:none}.hero h1{font-size:48px}.hero-actions{align-items:stretch;flex-direction:column}.button-primary,.button-ghost{justify-content:center}.hero-meta{gap:20px}.tech-window{height:400px}.code-field{height:295px}.r3{width:285px;height:285px}.r2{width:210px;height:210px}.floating-note{right:8px}.outcome-grid{grid-template-columns:1fr}.outcome-card{min-height:270px}.outcome-card>svg{margin-top:28px}.curriculum-layout{margin-top:45px}.track-panel{padding:36px 28px}.course-list{grid-template-columns:1fr}.faculty-card{grid-template-columns:1fr}.faculty-photo{min-height:400px;height:400px}.faculty-info{min-height:400px;padding:34px 26px}.footer-inner{align-items:flex-start;flex-wrap:wrap}.footer-inner p{margin:0}.section-heading h2,.faculty-intro h2,.admissions h2{font-size:41px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Partido State University — navy, gold, and white */
+html,body,.site-shell{background:#fff;color:#102a43}
+.nav-wrap{background:rgba(255,255,255,.94);border-bottom-color:#d9e2ec}
+.brand,.menu-button,.button-ghost,.hero-meta strong{color:#102a43}
+.brand-mark{background:#0b2d52;color:#f5b82e}
+.brand-copy small,.hero-copy>p,.section-heading.split>p,.faculty-intro>p,.outcome-card p,.faculty-info small{color:#627d98}
+.nav-links button,.mobile-menu button{color:#334e68}
+.nav-links button:hover{color:#b77b00}
+.nav-cta{background:#0b2d52;color:#fff}
+.mobile-menu{background:#fff;box-shadow:0 20px 40px rgba(16,42,67,.12)}
+.hero,.program,.faculty{background:#fff}
+.hero-grid,.admission-grid{background-image:linear-gradient(rgba(11,45,82,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(11,45,82,.055) 1px,transparent 1px)}
+.eyebrow{color:#0b2d52;background:#fff4ce;border:1px solid #f1d271}
+.hero h1 em,.admissions h2 em,.kicker{color:#b77b00}
+.button-primary{background:#0b2d52;color:#fff;box-shadow:7px 7px 0 #f5b82e}
+.button-primary:hover{box-shadow:10px 10px 0 #f5b82e}
+.hero-meta{border-top-color:#d9e2ec;color:#627d98}
+.tech-window{background:#071d35;border-color:#315a80;box-shadow:24px 26px 0 #f5b82e}
+.core-node{background:#f5b82e;color:#0b2d52;box-shadow:0 0 50px rgba(245,184,46,.3)}
+.data-chip{background:#0e365f;border-color:#426f98;color:#d9eaf7}
+.terminal-line strong,.terminal-line i{color:#f5b82e}
+.floating-note{background:#fff;color:#102a43;border:1px solid #d9e2ec;box-shadow:0 12px 40px rgba(16,42,67,.14)}
+.note-icon{background:#fff4ce;color:#0b2d52}
+.orb-one{background:#d9eaf7;opacity:.75}.orb-two{background:#f5b82e;opacity:.65}
+.outcome-grid{border-color:#d9e2ec}
+.outcome-card{background:#fff;border-color:#d9e2ec}
+.outcome-card>svg{color:#0b2d52}.card-line{background:#f5b82e}
+.curriculum{background:#0b2d52}
+.section-heading.light .kicker,.track-tabs button.active .track-index{color:#f5b82e}
+.track-tabs,.track-tabs button{border-color:#315a80}
+.track-tabs button{color:#b8cce0}.track-tabs button.active{background:#123f6d;color:#fff}
+.track-panel{background:#fff;color:#102a43;border:1px solid #d9e2ec}
+.panel-icon{background:#fff4ce;color:#0b2d52}
+.panel-units,.track-panel>p{color:#627d98}
+.course-list{border-top-color:#d9e2ec}.course-list svg{color:#b77b00}
+.faculty-controls button{border-color:#bcccdc;color:#102a43}
+.faculty-controls button:hover{background:#0b2d52;color:#fff}
+.faculty-card{background:#fff;box-shadow:0 20px 60px rgba(16,42,67,.13)}
+.faculty-photo{background:#e9f0f7}.faculty-photo span{background:#f5b82e;color:#0b2d52}
+.faculty-info>p{color:#486581}.faculty-info>div{border-top-color:#d9e2ec}.faculty-info span{color:#b77b00}
+.admissions{background:#f5f8fb}
+.admissions h2 em{color:#b77b00}.admissions p{color:#486581}
+.apply-card{background:#0b2d52;color:#fff;border:1px solid #315a80;box-shadow:13px 13px 0 #f5b82e}
+.apply-badge{color:#f5b82e}.apply-card a{background:#f5b82e;color:#0b2d52}
+.apply-card p{color:#fff;font-size:15px;line-height:1.75}
+.apply-card small{color:#fff;font-size:10px}
+footer{background:#071d35;color:#fff;border-top:4px solid #f5b82e}
+.footer-brand,.footer-brand .brand-copy,.footer-brand .brand-copy strong,.footer-brand .brand-copy small{color:#fff}
+.footer-brand .brand-copy strong{font-size:14px}
+.footer-brand .brand-copy small{font-size:12px}
+.footer-brand .brand-mark{background:#f5b82e;color:#0b2d52}
+.footer-inner p{color:#fff;font-size:13px}
+.footer-inner>span{color:#fff;font-size:11px}
+
+/* University artwork as the primary visual */
+.hero{
+  min-height:920px;
+  background-image:linear-gradient(90deg,rgba(3,18,36,.08) 0%,rgba(3,18,36,.2) 43%,rgba(3,18,36,.82) 69%,rgba(3,18,36,.94) 100%),url('/partido-university-background.png');
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+}
+.hero-grid,.hero .orb{display:none}
+.hero-content{grid-template-columns:1fr;min-height:660px}
+.hero-copy{width:min(610px,52%);margin-left:auto;padding-top:30px}
+.hero h1{color:#fff;text-shadow:0 3px 25px rgba(0,0,0,.28)}
+.hero h1 em{color:#f5b82e}
+.hero-copy>p{color:#e6edf5}
+.hero .eyebrow{color:#0b2d52;background:#f5b82e;border-color:#f5b82e}
+.hero .button-primary{background:#f5b82e;color:#0b2d52;box-shadow:7px 7px 0 #fff}
+.hero .button-primary:hover{box-shadow:10px 10px 0 #fff}
+.hero .button-ghost{color:#fff}
+.hero .button-ghost span{border-color:rgba(255,255,255,.65)}
+.hero-meta{border-top-color:rgba(255,255,255,.35);color:#c6d4e2}
+.hero-meta strong{color:#fff}
+.hero-visual{display:none}
+.scroll-cue{color:#dce6ef}.scroll-cue span{background:#f5b82e}
+
+@media(max-width:900px){
+  .hero{min-height:860px;background-position:38% center;background-image:linear-gradient(90deg,rgba(3,18,36,.35),rgba(3,18,36,.85)),url('/partido-university-background.png')}
+  .hero-copy{width:min(620px,100%);margin-left:0;padding-top:150px}
+}
+@media(max-width:620px){
+  .hero{min-height:820px;background-position:32% center}
+  .hero-copy{padding-top:125px}
+}
+
+/* Headline composition for the logo-free architectural background */
+.hero{
+  background-image:linear-gradient(180deg,rgba(3,18,36,.14) 0%,rgba(3,18,36,.12) 48%,rgba(3,18,36,.35) 100%),url('/partido-university-background.png');
+}
+.hero-content{align-items:start}
+.hero-copy{width:min(880px,82%);margin:0 auto;text-align:center;padding-top:5px}
+.hero-copy>p{margin-left:auto;margin-right:auto}
+.hero-actions,.hero-meta{justify-content:center}
+.hero h1{font-size:clamp(50px,5.7vw,82px)}
+
+@media(max-width:900px){
+  .hero{background-position:center center;background-image:linear-gradient(180deg,rgba(3,18,36,.25),rgba(3,18,36,.5)),url('/partido-university-background.png')}
+  .hero-copy{width:100%;padding-top:40px}
+}
+@media(max-width:620px){
+  .hero{background-position:center center}
+  .hero-copy{text-align:left;padding-top:28px}
+  .hero-actions,.hero-meta{justify-content:flex-start}
+  .hero h1{font-size:45px}
+}
+
+.university-logo{width:52px;height:52px;flex:0 0 52px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(11,45,82,.14))}
+.footer-brand .university-logo{width:58px;height:58px;flex-basis:58px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.25))}
+.hero-seal{display:block;width:118px;height:118px;object-fit:contain;margin:0 auto 18px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.28))}
+.headline-lead{display:inline-block;font-family:'Poppins',var(--sans);font-size:1.12em;font-weight:700;letter-spacing:-.055em;line-height:.96}
+.hero-meta{gap:42px;font-size:11px}
+.hero-meta strong{font-size:18px;letter-spacing:-.02em}
+
+/* Page contact — high-contrast, scannable, action-forward */
+.contact-section{
+  background:#071d35;
+  padding:56px 0 64px;
+  border-top:1px solid rgba(245,184,46,.35);
+  background-image:
+    linear-gradient(180deg,rgba(7,29,53,.92),rgba(7,29,53,.96)),
+    linear-gradient(rgba(49,90,128,.18) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(49,90,128,.18) 1px,transparent 1px);
+  background-size:auto,28px 28px,28px 28px;
+  background-position:center,center bottom,center bottom;
+}
+.page-contact{
+  position:relative;
+  display:grid;
+  grid-template-columns:4px 1fr;
+  gap:0;
+  max-width:820px;
+  margin:0 auto;
+  overflow:hidden;
+  background:linear-gradient(135deg,rgba(11,45,82,.95) 0%,rgba(7,29,53,.98) 55%,rgba(11,45,82,.95) 100%);
+  border:1px solid rgba(245,184,46,.55);
+  box-shadow:0 18px 50px rgba(3,18,36,.35), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.page-contact-rail{
+  background:linear-gradient(180deg,#f5b82e 0%,#f7d06a 45%,#f5b82e 100%);
+  box-shadow:0 0 18px rgba(245,184,46,.55);
+  animation:contact-pulse 2.8s ease-in-out infinite;
+}
+@keyframes contact-pulse{
+  0%,100%{opacity:.75;filter:brightness(1)}
+  50%{opacity:1;filter:brightness(1.15)}
+}
+.page-contact-body{padding:26px 30px 28px}
+.page-contact-label{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font:500 10px var(--mono);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#f5b82e;
+}
+.page-contact-label::before{
+  content:"";
+  width:7px;height:7px;border-radius:50%;
+  background:#f5b82e;
+  box-shadow:0 0 0 4px rgba(245,184,46,.22);
+  animation:contact-dot 1.8s ease-in-out infinite;
+}
+@keyframes contact-dot{
+  0%,100%{box-shadow:0 0 0 3px rgba(245,184,46,.2)}
+  50%{box-shadow:0 0 0 6px rgba(245,184,46,.08)}
+}
+.page-contact-name{
+  margin:10px 0 8px;
+  font-family:'Poppins',var(--sans);
+  font-size:clamp(24px,2.6vw,30px);
+  font-weight:700;
+  letter-spacing:-.03em;
+  line-height:1.15;
+  color:#fff;
+}
+.page-contact-roles{
+  margin:0 0 18px;
+  padding:0;
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.page-contact-roles li{
+  font-size:14px;
+  line-height:1.45;
+  color:#d7e4f2;
+}
+.page-contact-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:16px;
+}
+.page-contact-link{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:12px 16px;
+  background:#f5b82e;
+  color:#0b2d52;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:-.01em;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  box-shadow:3px 3px 0 #fff;
+}
+.page-contact-link:hover{
+  transform:translate(-1px,-1px);
+  box-shadow:5px 5px 0 #fff;
+  background:#ffd56a;
+}
+.page-contact-link:focus-visible{
+  outline:2px solid #fff;
+  outline-offset:3px;
+}
+.page-contact-visit{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin:0;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.18);
+  font-size:14px;
+  line-height:1.55;
+  color:#e8eef6;
+}
+.page-contact-visit svg{
+  flex:0 0 auto;
+  margin-top:2px;
+  color:#f5b82e;
+}
+
+@media(max-width:620px){
+  .hero-seal{width:92px;height:92px;margin-left:0}
+  .headline-lead{font-size:1.04em;letter-spacing:-.045em}
+  .hero-meta{gap:24px}
+  .hero-meta strong{font-size:16px}
+  .contact-section{padding:40px 0 48px}
+  .page-contact-body{padding:20px 18px 22px}
+  .page-contact-name{font-size:22px}
+  .page-contact-actions{flex-direction:column}
+  .page-contact-link{justify-content:center}
+}

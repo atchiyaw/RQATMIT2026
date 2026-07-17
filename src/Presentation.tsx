@@ -1942,9 +1942,6 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
 }
 
 function Slide11IndustryContent({ data }: { data: PresentationSlideData }) {
-  const [activeTab, setActiveTab] = useState(0);
-  const [preview, setPreview] = useState<CredentialPreviewState>(null);
-
   const c = data.content;
 
   const countFiles = (nodes: EvidenceTreeNode[]): number => {
@@ -1987,57 +1984,14 @@ function Slide11IndustryContent({ data }: { data: PresentationSlideData }) {
 
   const moaChildren = resolveDirChildren('MOA');
   const immersionChildren = resolveDirChildren('Industry Immersion');
-  const rootFiles = (industryDocumentTree.children.filter(
-    (n): n is IndustryNode & { type: 'file' } => n.type === 'file',
-  ) as EvidenceTreeNode[]) as EvidenceTreeNode[];
-
   const activeLinkagesCount = countFiles(moaChildren);
   const moaCount = countFilesWhereName(moaChildren, isMoaDocument);
   const immersionCount = countFiles(immersionChildren);
   const totalIndustryFiles = countFiles(industryDocumentTree.children as unknown as EvidenceTreeNode[]);
 
-  const moaDocNodes = moaChildren.filter(
-    (n): n is EvidenceTreeNode & { type: 'file' } => n.type === 'file' && isMoaDocument(n.name),
-  );
-
-  const sections = [
-    {
-      title: 'Active Linkages',
-      shortDesc: 'MOA/MOU documents showing industry and partner engagement.',
-      nodes: moaChildren,
-    },
-    {
-      title: 'MOA documents',
-      shortDesc: 'Documents labeled as MOA/Agreement/Memorandum (excluding “MOU ...”).',
-      nodes: moaDocNodes,
-    },
-    {
-      title: 'Industry Immersion',
-      shortDesc: 'Evidence for immersion activities with partner institutions.',
-      nodes: immersionChildren,
-    },
-    {
-      title: 'International Affairs reports',
-      shortDesc: 'IZN initiatives and accomplishment reports (top-level documents).',
-      nodes: rootFiles,
-    },
-  ];
-
-  const safeIndex = Math.min(Math.max(0, activeTab), Math.max(0, sections.length - 1));
-  const section = sections[safeIndex];
-
-  useEffect(() => {
-    if (!preview) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setPreview(null);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [preview]);
-
   return (
-    <div className="flex flex-col h-full min-h-0 gap-6">
-      <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
+    <div className="flex h-full items-center justify-center">
+      <div className="w-full bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
         <div className="flex items-start gap-4">
           <Handshake className="w-14 h-14 text-indigo-300" aria-hidden />
           <div className="min-w-0">
@@ -2073,56 +2027,12 @@ function Slide11IndustryContent({ data }: { data: PresentationSlideData }) {
           </div>
         </div>
       </div>
-
-      <div className="flex flex-col min-h-0 flex-1">
-        <div className="flex shrink-0 flex-wrap gap-2" role="tablist" aria-label="Industry documents">
-          {sections.map((s, i) => {
-            const selected = i === safeIndex;
-            return (
-              <button
-                key={s.title}
-                type="button"
-                role="tab"
-                aria-selected={selected}
-                onClick={() => setActiveTab(i)}
-                className={
-                  selected
-                    ? 'inline-flex items-center gap-2 rounded-xl border border-indigo-400/50 bg-indigo-500/25 px-3 py-2 text-left text-xs font-semibold text-white shadow-sm sm:text-sm'
-                    : 'inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-left text-xs font-medium text-indigo-200/90 hover:bg-white/10 sm:text-sm'
-                }
-              >
-                {s.title}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="flex-1 min-h-0 overflow-y-auto pr-2 custom-scrollbar">
-          <div className="mt-4 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md md:p-5">
-            <h3 className="text-lg font-bold text-white md:text-xl">{section.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-indigo-100/95">{section.shortDesc}</p>
-            <div className="mt-4">
-              {section.nodes.length === 0 ? (
-                <p className="text-sm text-indigo-200/70">No documents found for this category.</p>
-              ) : (
-                <EvidenceFileTree
-                  nodes={section.nodes}
-                  fileUrl={(relPath) => industryFileUrl(relPath)}
-                  onPreview={setPreview}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <CredentialPreviewModal preview={preview} onClose={() => setPreview(null)} />
     </div>
   );
 }
 
 const getSlides = (slidesData: PresentationSlideData[]) => {
-  return slidesData.map(data => {
+  return slidesData.filter(data => ![7, 8, 9].includes(data.id)).map(data => {
     const Icon = getIconComponent(data.icon);
     let content = null;
 

@@ -676,12 +676,12 @@ export const initialPresentationData: PresentationSlideData[] = [
           }
         },
         {
-          group: "Pursuing Doctorate Degree in IT",
+          group: "Doctorate Degree Holder in IT",
           name: "ARTIAGA, Rowell John Baterna",
           image: FACULTY_PHOTO_URLS["ARTIAGA, Rowell John Baterna"],
           role: "Assistant Professor II",
           degrees: [
-            "Doctor in Information Technology (CAR), University of the Cordilleras",
+            "Doctor in Information Technology, University of the Cordilleras",
             "Master of Information Technology, Ateneo de Naga University",
             "Bachelor of Science in Information Technology, Partido State University"
           ],
