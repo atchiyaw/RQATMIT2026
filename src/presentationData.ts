@@ -19,7 +19,7 @@ export const initialPresentationData: PresentationSlideData[] = [
     content: {
       leftTitle: "Master in Information Technology",
       leftDesc: "The Master in Information Technology program prepares students for leadership roles in information technology by providing them with the necessary expertise and knowledge. The program establishes a strong foundation in information technology, allowing students to develop highly specialized, marketable skills in the areas of information technology that are most relevant to their careers and professional interests, as well as the needs of society.",
-      leftBadge: "Program type: Master in Information Technology (Academic Track)",
+      leftBadge: "Program type: Master in Information Technology (Professional Track)",
       rightTitle: "Program Outcomes",
       rightList: [
         "Apply advanced IT concepts, methodologies, and tools to develop innovative solutions that address complex problems in industry and society",
@@ -66,8 +66,8 @@ export const initialPresentationData: PresentationSlideData[] = [
           units: 9,
           courses: [
             { code: "MITB01", title: "Object-Oriented Programming" },
-            { code: "MITB02", title: "Data Structure" },
-            { code: "MITB03", title: "Trends in IT" }
+            { code: "MITB02", title: "Data Structures" },
+            { code: "MITB03", title: "Trends in Information Technology" }
           ]
         },
         {
@@ -77,7 +77,7 @@ export const initialPresentationData: PresentationSlideData[] = [
             { code: "MIT101", title: "Advanced Database Systems" },
             { code: "MIT102", title: "Advanced Operating Systems and Networking" },
             { code: "MIT103", title: "Advanced System Design and Implementation" },
-            { code: "MIT104", title: "IT Research Methods" }
+            { code: "MIT104", title: "IT Research Methods (Methods of Research)" }
           ]
         },
         {
@@ -85,17 +85,17 @@ export const initialPresentationData: PresentationSlideData[] = [
           units: 12,
           courses: [
             { code: "MIT201", title: "Technology and Project Management" },
+            { code: "MIT202", title: "Web Engineering" },
             { code: "MIT203", title: "ICT Information Security Administration" },
-            { code: "MIT204", title: "Management Information Systems" },
-            { code: "MIT205", title: "Web Engineering" }
+            { code: "MIT204", title: "Management Information Systems" }
           ]
         },
         {
           category: "Cognates",
           units: 6,
           courses: [
-            { code: "MIT202", title: "Human Computer Interaction" },
-            { code: "MIT301", title: "Introduction to Data Analytics" }
+            { code: "MIT301", title: "Human-Computer Interaction" },
+            { code: "MIT302", title: "Introduction to Data Analytics" }
           ]
         },
         {
@@ -112,25 +112,25 @@ export const initialPresentationData: PresentationSlideData[] = [
           code: "MITB01",
           name: "Object-Oriented Programming",
           description:
-            "This bridging course develops proficiency in object-oriented analysis, design, and programming. Topics include classes, objects, encapsulation, inheritance, polymorphism, and common design patterns applied to software problem solving. Laboratory work reinforces concepts through implementation exercises.",
+            "This course provides a comprehensive study of Object-Oriented Programming (OOP) principles, focusing on the design, development, and implementation of object-oriented applications. Students will learn fundamental concepts such as encapsulation, inheritance, polymorphism, and abstraction using an industry-relevant programming language (e.g., Java, C++, Python). The course emphasizes software design patterns, reusable code structures, and best practices in software engineering. Hands-on activities, case studies, and a final project will provide students with the ability to apply OOP methodologies to real-world applications.",
           credit: "3 units",
           hours: "3 Lecture Hours / Week",
           prerequisite: "None"
         },
         {
           code: "MITB02",
-          name: "Data Structure",
+          name: "Data Structures",
           description:
-            "This bridging course covers fundamental and intermediate data structures and their algorithms, including lists, stacks, queues, trees, graphs, and hashing. Emphasis is placed on complexity analysis, selection of appropriate structures for problem domains, and implementation considerations for IT applications.",
+            "This course explores fundamental and advanced data structures essential for efficient algorithm design and software development. Topics include arrays, linked lists, stacks, queues, trees, graphs, hash tables, heaps, and their associated algorithms. The course emphasizes memory management, algorithmic efficiency (Big-O notation), and best practices in data manipulation. Through hands-on programming exercises, case studies, and a final project, students will develop the ability to design, implement, and optimize data structures in real-world applications.",
           credit: "3 units",
           hours: "3 Lecture Hours / Week",
           prerequisite: "None"
         },
         {
           code: "MITB03",
-          name: "Trends in IT",
+          name: "Trends in Information Technology",
           description:
-            "This bridging course surveys contemporary developments in information technology, including emerging tools, platforms, and practices across computing, networking, data, and security. Students explore how current trends shape organizations and graduate-level study in IT.",
+            "This course explores the latest trends and emerging technologies in Information Technology (IT), focusing on innovations that drive industry and society. Topics include cloud computing, artificial intelligence, big data analytics, cybersecurity advancements, blockchain technology, quantum computing, edge computing, and the impact of IT on business and society. The course will examine ethical considerations, regulatory challenges, and IT's role in achieving sustainability. Through case studies, research, and hands-on exploration, students will gain insights into IT's evolving landscape and its future directions.",
           credit: "3 units",
           hours: "3 Lecture Hours / Week",
           prerequisite: "None"
@@ -161,7 +161,7 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           code: "MIT104",
-          name: "IT Research Methods",
+          name: "IT Research Methods (Methods of Research)",
           description: "This course provides students with a comprehensive introduction to research methodologies within the field of information technology. It covers a broad range of research-related topics, including major research paradigms, research design principles, research ethics, and data collection and analysis techniques. Students will explore various research methods applicable to IT and its sub-disciplines, such as quantitative, qualitative, and mixed-method approaches. The course emphasizes the development of critical thinking and problem-solving skills, enabling students to design, conduct, and evaluate research projects effectively. By the end of the course, students will be equipped with the knowledge and tools to undertake rigorous IT research, contributing to advancements in the field while adhering to ethical standards and best practices.",
           credit: "3 units",
           hours: "3 Lecture Hours / Week",
@@ -177,8 +177,8 @@ export const initialPresentationData: PresentationSlideData[] = [
         },
         {
           code: "MIT202",
-          name: "Human Computer Interaction",
-          description: "This course introduces students to the interdisciplinary field of Human-Computer Interaction (HCI), which integrates principles from computer science, cognitive psychology, design, and other related disciplines. Students will explore the fundamental aspects of human perception, cognition, and learning as they apply to the design, implementation, and evaluation of user interfaces. The course emphasizes both theoretical knowledge and hands-on experience, enabling students to create intuitive, user-friendly, and accessible interfaces. Topics include usability testing, user-centered design, interaction design, and evaluation techniques. Through practical projects and case studies, students will develop the skills to design and evaluate effective interfaces that enhance user experience and meet the needs of diverse user groups. By the end of the course, students will be equipped to apply HCI principles to real-world challenges in technology design and development.",
+          name: "Web Engineering",
+          description: "This course introduces a structured methodology for Web development projects, drawing parallels to principles used in software engineering. Students will learn the fundamental concepts, methods, technologies, and techniques essential for designing, developing, and maintaining effective websites and web applications. The course covers key topics such as web architecture, information organization, user interface design, database integration, and web security. Emphasis is placed on creating websites that efficiently collect, organize, and expose information resources while ensuring usability, scalability, and maintainability. Through hands-on projects and case studies, students will gain practical experience in applying web engineering principles to real-world scenarios. By the end of the course, students will be equipped with the skills to systematically plan, develop, and manage web-based systems that meet user and organizational needs.",
           credit: "3 units",
           hours: "3 Lecture Hours / Week",
           prerequisite: "None"
@@ -194,21 +194,21 @@ export const initialPresentationData: PresentationSlideData[] = [
         {
           code: "MIT204",
           name: "Management Information Systems",
-          description: "This course focuses on the strategic role of information technology (IT) in modern organizations, teaching students to evaluate he opportunities and challenges managers face when leveraging IT to add value to their organizations. Students will explore how management information systems (MIS) support decision-making, operational efficiency, and competitive advantage. The course also examines the transformational changes driven by IT within and across industries, including the impact of emerging technologies such as big data, cloud computing, and artificial intelligence. Through case studies and real-world examples, students will develop the skills to analyze, design, and implement IT solutions that align with organizational goals. By the end of the course, students will be equipped to understand and manage the dynamic interplay between technology, business processes, and organizational strategy.",
-          credit: "3 units",
-          hours: "3 Lecture Hours / Week",
-          prerequisite: "None"
-        },
-        {
-          code: "MIT205",
-          name: "Web Engineering",
-          description: "This course introduces a structured methodology for Web development projects, drawing parallels to principles used in software engineering. Students will learn the fundamental concepts, methods, technologies, and techniques essential for designing, developing, and maintaining effective websites and web applications. The course covers key topics such as web architecture, information organization, user interface design, database integration, and web security. Emphasis is placed on creating websites that efficiently collect, organize, and expose information resources while ensuring usability, scalability, and maintainability. Through hands-on projects and case studies, students will gain practical experience in applying web engineering principles to real-world scenarios. By the end of the course, students will be equipped with the skills to systematically plan, develop, and manage web-based systems that meet user and organizational needs.",
+          description: "This course focuses on the strategic role of information technology (IT) in modern organizations, teaching students to evaluate the opportunities and challenges managers face when leveraging IT to add value to their organizations. Students will explore how management information systems (MIS) support decision-making, operational efficiency, and competitive advantage. The course also examines the transformational changes driven by IT within and across industries, including the impact of emerging technologies such as big data, cloud computing, and artificial intelligence. Through case studies and real-world examples, students will develop the skills to analyze, design, and implement IT solutions that align with organizational goals. By the end of the course, students will be equipped to understand and manage the dynamic interplay between technology, business processes, and organizational strategy.",
           credit: "3 units",
           hours: "3 Lecture Hours / Week",
           prerequisite: "None"
         },
         {
           code: "MIT301",
+          name: "Human-Computer Interaction",
+          description: "This course introduces students to the interdisciplinary field of Human-Computer Interaction (HCI), which integrates principles from computer science, cognitive psychology, design, and other related disciplines. Students will explore the fundamental aspects of human perception, cognition, and learning as they apply to the design, implementation, and evaluation of user interfaces. The course emphasizes both theoretical knowledge and hands-on experience, enabling students to create intuitive, user-friendly, and accessible interfaces. Topics include usability testing, user-centered design, interaction design, and evaluation techniques. Through practical projects and case studies, students will develop the skills to design and evaluate effective interfaces that enhance user experience and meet the needs of diverse user groups. By the end of the course, students will be equipped to apply HCI principles to real-world challenges in technology design and development.",
+          credit: "3 units",
+          hours: "3 Lecture Hours / Week",
+          prerequisite: "None"
+        },
+        {
+          code: "MIT302",
           name: "Introduction to Data Analytics",
           description: "This course provides a comprehensive introduction to data analytics and visualization, equipping students with the skills to extract, process, analyze, and interpret data effectively. Students will learn how to access data from diverse sources, including web APIs and repository servers, and how to clean and organize data for analysis. The course covers the application of analytical techniques to solve real-world problems and emphasizes the creation of data visualizations to communicate insights clearly. Hands-on instruction will be provided in relevant programming languages (e.g., Python, R) and popular data analytics and visualization tools (e.g., Tableau, Power BI). By the end of the course, students will be able to perform end-to-end data analysis, from data acquisition to visualization, and apply these skills to practical, data-driven decision-making scenarios.",
           credit: "3 units",
@@ -221,7 +221,7 @@ export const initialPresentationData: PresentationSlideData[] = [
           description: "This is the first course in a two-part sequence. Students complete unique capstone projects that synthesize and integrate concepts and principles taught throughout the MIT program. This course applies IT project management practices by having students define and design projects in the areas of information technology management, such as database management, networking, and security.",
           credit: "3 units",
           hours: "3 Lecture Hours / Week",
-          prerequisite: "None"
+          prerequisite: "Comprehensive Exam"
         },
         {
           code: "MIT402",
@@ -229,7 +229,7 @@ export const initialPresentationData: PresentationSlideData[] = [
           description: "This course is a continuation of MIT 401, in which students complete the project defined and designed in MIT 401. Students should implement, code, test, and document their projects prior to actually presenting them in front of a review panel for final evaluation and approval.",
           credit: "3 units",
           hours: "3 Lecture Hours / Week",
-          prerequisite: "None"
+          prerequisite: "MIT401"
         }
       ],
       description: "The MIT curriculum is based on the Commission on Higher Education's (CHED) Policies and Standards for Graduate Programs in Information Technology Education and is benchmarked against the curriculum of leading international academic institutions offering this program."
@@ -338,15 +338,15 @@ export const initialPresentationData: PresentationSlideData[] = [
           { code: "MIT 101", title: "Advanced Database Systems", mapped: "a.2, a.6, b.3, b.4, c.1, c.2, c.3" },
           { code: "MIT 102", title: "Advanced Operating Systems and Networking", mapped: "a.2, a.3, a.6, b.1, b.3, c.1, c.2, c.3, d.1, d.3" },
           { code: "MIT 103", title: "Advanced System Design and Implementation", mapped: "a.1, a.3, a.4, a.5, a.6, c.1, c.2, c.3, d.1" },
-          { code: "MIT 104", title: "IT Research Methods", mapped: "b.1, b.2, b.3, b.4, c.4, d.2, d.3, e.2" },
+          { code: "MIT 104", title: "IT Research Methods (Methods of Research)", mapped: "b.1, b.2, b.3, b.4, c.4, d.2, d.3, e.2" },
           { code: "MIT 201", title: "Technology and Project Management", mapped: "a.4, a.5, c.1, c.2, c.3, d.1, d.2, d.3, e.1" },
           { code: "MIT 202", title: "Web Engineering", mapped: "a.1, a.3, a.4, a.5, a.6, b.3, c.1, c.2, c.3, d.1, e.3" },
           { code: "MIT 203", title: "ICT Information Security Administration", mapped: "a.3, a.6, b.3, c.2, c.3, d.1, d.2" },
           { code: "MIT 204", title: "Management Information Systems", mapped: "a.2, a.4, a.5, a.6, b.3, c.1, c.2, c.3, c.4, d.2" },
           { code: "MIT 301", title: "Human-Computer Interaction", mapped: "a.4, c.1, c.3, c.4, d.3" },
           { code: "MIT 302", title: "Introduction to Data Analytics", mapped: "a.2, a.6, b.3, b.4, c.4, e.1, e.2" },
-          { code: "MIT 401", title: "MIT Capstone Project 1", mapped: "a.1, a.6, b.1, b.2, b.3, b.4, c.1, c.3, c.4, d.2, d.3" },
-          { code: "MIT 402", title: "MIT Capstone Project 2", mapped: "a.3, a.5, a.6, d.1, d.2, d.3, d.4, e.3" }
+          { code: "MIT 401", title: "Graduate Project 1", mapped: "a.1, a.6, b.1, b.2, b.3, b.4, c.1, c.3, c.4, d.2, d.3" },
+          { code: "MIT 402", title: "Graduate Project 2", mapped: "a.3, a.5, a.6, d.1, d.2, d.3, d.4, e.3" }
         ]
       },
       syllabusPlan: {
@@ -505,8 +505,8 @@ export const initialPresentationData: PresentationSlideData[] = [
           },
           {
             code: "MIT202",
-            title: "Human-Computer Interaction",
-            po: ["I", "R", "", "I", "", "", "I", "R", "R"]
+            title: "Web Engineering",
+            po: ["R", "R", "", "", "", "I", "R", "I", "R"]
           },
           {
             code: "MIT203",
@@ -519,12 +519,12 @@ export const initialPresentationData: PresentationSlideData[] = [
             po: ["I", "R", "", "R", "", "", "R", "I", ""]
           },
           {
-            code: "MIT205",
-            title: "Web Engineering",
-            po: ["R", "R", "", "", "", "I", "R", "I", "R"]
+            code: "MIT301",
+            title: "Human-Computer Interaction",
+            po: ["I", "R", "", "I", "", "", "I", "R", "R"]
           },
           {
-            code: "MIT301",
+            code: "MIT302",
             title: "Introduction to Data Analytics",
             po: ["I", "R", "", "", "", "", "R", "", "I"]
           },

@@ -134,7 +134,7 @@ function App() {
           <div className="container faculty-layout">
             <div className="faculty-intro"><span className="kicker">03 / Faculty</span><h2>Learn from people<br />who build, research,<br />and lead.</h2><p>Our multidisciplinary faculty brings advanced academic training and grounded professional experience into every graduate learning experience.</p><div className="faculty-controls"><button aria-label="Previous faculty" onClick={() => setFacultyIndex(i => (i - 1 + facultyPresentationProfiles.length) % facultyPresentationProfiles.length)}><ChevronLeft/></button><span>{String(facultyIndex + 1).padStart(2,'0')} / {String(facultyPresentationProfiles.length).padStart(2,'0')}</span><button aria-label="Next faculty" onClick={() => setFacultyIndex(i => (i + 1) % facultyPresentationProfiles.length)}><ChevronRight/></button></div></div>
             <AnimatePresence mode="wait"><motion.article key={faculty.name} className="faculty-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <div className="faculty-photo"><img src={faculty.photoUrl} alt={faculty.name}/><span>MIT FACULTY</span></div>
+              <div className="faculty-photo"><img src="/psu-logo-hd-transparent.png" alt={faculty.name}/><span>MIT FACULTY</span></div>
               <div className="faculty-info"><Quote size={28}/><p>{faculty.profile}</p><div><h3>{faculty.name}</h3><span>{faculty.rank}</span>{faculty.currentDesignation && <small>{faculty.currentDesignation}</small>}</div></div>
             </motion.article></AnimatePresence>
           </div>

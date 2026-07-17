@@ -48,7 +48,7 @@ html,body,.site-shell{background:#fff;color:#102a43}
 .faculty-controls button{border-color:#bcccdc;color:#102a43}
 .faculty-controls button:hover{background:#0b2d52;color:#fff}
 .faculty-card{background:#fff;box-shadow:0 20px 60px rgba(16,42,67,.13)}
-.faculty-photo{background:#e9f0f7}.faculty-photo span{background:#f5b82e;color:#0b2d52}
+.faculty-photo{background:#e9f0f7;display:flex;align-items:center;justify-content:center;padding:48px}.faculty-photo img{object-fit:contain;object-position:center;width:70%;height:70%}.faculty-photo span{background:#f5b82e;color:#0b2d52}
 .faculty-info>p{color:#486581}.faculty-info>div{border-top-color:#d9e2ec}.faculty-info span{color:#b77b00}
 .admissions{background:#f5f8fb}
 .admissions h2 em{color:#b77b00}.admissions p{color:#486581}

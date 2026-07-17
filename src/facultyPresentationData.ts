@@ -75,7 +75,7 @@ export const facultyPresentationProfiles: FacultyPresentationProfile[] = [
       'Graduate Program Coordinator (MIT), CHED SIKAP University Scholarship Administrator',
   },
   {
-    name: 'Dr. Rowell John Baterna Artiaga',
+    name: 'Asst. Prof. Rowell John Baterna Artiaga',
     rank: 'Assistant Professor II',
     photoUrl: '/faculty-presentation/photos/artiaga.png',
     profile:

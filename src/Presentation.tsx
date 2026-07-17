@@ -8,12 +8,7 @@ import {
   Cpu, Globe, BookMarked, UsersRound, Building2, ExternalLink, FolderOpen
 } from 'lucide-react';
 import { PresentationSlideData } from './presentationData';
-import {
-  facultyCredentialsManifest,
-  facultyCredentialsFileCounts,
-  type CredentialNode,
-} from './generated/facultyCredentialsManifest';
-import {credentialFileUrl, credentialPreviewKind} from './facultyCredentialUrls';
+import {credentialPreviewKind} from './facultyCredentialUrls';
 import {accreditationDocUrl} from './accreditationUrls';
 import {
   libraryDocumentTree,
@@ -62,8 +57,8 @@ function PqfMapBadge({ code }: { code: string }) {
 
 const Slide4Content = ({ data }: { data: any }) => {
   const [activeTab, setActiveTab] = useState<
-    'outcomes' | 'pqf' | 'map' | 'pqmap' | 'syllabus' | 'flexible'
-  >('outcomes');
+    'pqf' | 'pqmap' | 'syllabus' | 'flexible'
+  >('pqf');
   const [flexiblePreview, setFlexiblePreview] = useState<CredentialPreviewState>(null);
 
   useEffect(() => {
@@ -81,22 +76,10 @@ const Slide4Content = ({ data }: { data: any }) => {
     <div className="flex flex-col h-full gap-4">
       <div className="flex flex-wrap gap-2 border-b border-white/20 pb-2">
         <button
-          onClick={() => setActiveTab('outcomes')}
-          className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'outcomes' ? 'bg-white/20 text-white' : 'text-purple-200 hover:bg-white/10'}`}
-        >
-          Learning Outcomes
-        </button>
-        <button
           onClick={() => setActiveTab('pqf')}
           className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'pqf' ? 'bg-white/20 text-white' : 'text-purple-200 hover:bg-white/10'}`}
         >
           PQF Learning Outcomes
-        </button>
-        <button
-          onClick={() => setActiveTab('map')}
-          className={`px-4 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'map' ? 'bg-white/20 text-white' : 'text-purple-200 hover:bg-white/10'}`}
-        >
-          Curriculum Map
         </button>
         <button
           onClick={() => setActiveTab('pqmap')}
@@ -119,32 +102,6 @@ const Slide4Content = ({ data }: { data: any }) => {
       </div>
 
       <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-        {activeTab === 'outcomes' && (
-          <div className="space-y-6">
-            {data.learningOutcomes?.map((outcome: any, i: number) => (
-              <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-purple-500/30 flex items-center justify-center text-xl font-bold text-white shrink-0 border border-purple-400/30">
-                    {outcome.id.toUpperCase()}
-                  </div>
-                  <p className="text-lg text-purple-50 font-medium leading-relaxed">
-                    {outcome.description}
-                  </p>
-                </div>
-                <div className="pl-14 space-y-2">
-                  <h5 className="text-sm font-bold text-purple-300 uppercase tracking-wider mb-2">Performance Indicators</h5>
-                  {outcome.indicators?.map((indicator: string, j: number) => (
-                    <div key={j} className="flex items-start gap-2 text-sm text-purple-100">
-                      <CheckCircle className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
-                      <span>{indicator}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
         {activeTab === 'pqf' && (
           <div className="space-y-8">
             {data.pqLearningOutcomes?.intro && (
@@ -191,42 +148,6 @@ const Slide4Content = ({ data }: { data: any }) => {
                 </div>
               </div>
             ))}
-          </div>
-        )}
-
-        {activeTab === 'map' && (
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-            <h3 className="text-2xl font-bold text-white mb-2">{data.curriculumMap?.title}</h3>
-            <p className="text-purple-200 mb-6">{data.curriculumMap?.description}</p>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-white/20">
-                    <th className="py-3 px-4 text-purple-300 font-bold w-32">Course Code</th>
-                    <th className="py-3 px-4 text-purple-300 font-bold">Course Title</th>
-                    <th className="py-3 px-4 text-purple-300 font-bold">Mapped Outcomes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.curriculumMap?.courses?.map((course: any, i: number) => (
-                    <tr key={i} className="border-b border-white/10 hover:bg-white/5 transition-colors">
-                      <td className="py-3 px-4 font-mono text-white font-bold">{course.code}</td>
-                      <td className="py-3 px-4 text-purple-50">{course.title}</td>
-                      <td className="py-3 px-4">
-                        <div className="flex flex-wrap gap-1">
-                          {course.mapped.split(',').map((m: string, j: number) => (
-                            <span key={j} className="px-2 py-0.5 bg-purple-500/20 border border-purple-400/30 rounded text-xs font-mono text-purple-200">
-                              {m.trim()}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </div>
         )}
 
@@ -364,67 +285,6 @@ const Slide4Content = ({ data }: { data: any }) => {
     </div>
   );
 };
-
-function FacultyCredentialTree({
-  nodes,
-  facultyName,
-  onPreview,
-  depth = 0,
-}: {
-  nodes: CredentialNode[];
-  facultyName: string;
-  onPreview: (s: NonNullable<CredentialPreviewState>) => void;
-  depth?: number;
-}) {
-  return (
-    <ul className={depth > 0 ? 'ml-2 sm:ml-3 border-l border-white/10 pl-2 sm:pl-3 space-y-0.5 mt-1' : 'space-y-0.5'}>
-      {nodes.map((node, idx) => (
-        <li key={`${depth}-${idx}-${node.name}`}>
-          {node.type === 'dir' ? (
-            <details className="group min-w-0">
-              <summary className="cursor-pointer list-none flex items-center gap-2 py-1 text-sm text-cyan-200 hover:text-white [&::-webkit-details-marker]:hidden">
-                <FolderOpen className="w-4 h-4 shrink-0 text-cyan-400/90" aria-hidden />
-                <span className="font-medium truncate">{node.name}</span>
-              </summary>
-              <FacultyCredentialTree
-                nodes={node.children}
-                facultyName={facultyName}
-                onPreview={onPreview}
-                depth={depth + 1}
-              />
-            </details>
-          ) : (
-            <div className="flex flex-wrap items-start gap-x-2 gap-y-1 py-1 pl-0.5">
-              <FileText className="w-3.5 h-3.5 text-cyan-400/80 shrink-0 mt-0.5" aria-hidden />
-              <span className="text-xs text-cyan-50/95 flex-1 min-w-[8rem] break-words">{node.name}</span>
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const url = credentialFileUrl(facultyName, node.relPath);
-                    const kind = credentialPreviewKind(node.name);
-                    onPreview({ url, title: node.name, kind });
-                  }}
-                  className="text-xs font-semibold text-cyan-300 hover:text-white underline decoration-cyan-500/40"
-                >
-                  Preview
-                </button>
-                <a
-                  href={credentialFileUrl(facultyName, node.relPath)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-semibold text-cyan-200/90 hover:text-white"
-                >
-                  Open
-                </a>
-              </div>
-            </div>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 function CredentialPreviewModal({
   preview,
@@ -1680,21 +1540,11 @@ function Slide5LeadershipContent({ data }: { data: PresentationSlideData }) {
 function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
   const c = data.content;
   const facultyList = c.facultyList ?? [];
-  /** Default open: BRIONES, Salvador II V. (credentials from `Faculty Credentials/BRIONES, Salvador II V./`). */
+  const facultyPhotoPlaceholder = '/psu-logo-hd-transparent.png';
   const [expandedIndex, setExpandedIndex] = useState<number | null>(() => {
     const idx = facultyList.findIndex((f: { name?: string }) => f.name === 'BRIONES, Salvador II V.');
     return idx >= 0 ? idx : null;
   });
-  const [credentialPreview, setCredentialPreview] = useState<CredentialPreviewState>(null);
-
-  useEffect(() => {
-    if (!credentialPreview) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setCredentialPreview(null);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [credentialPreview]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-full min-h-0">
@@ -1752,8 +1602,6 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
           {facultyList.map((faculty: any, i: number) => {
             const open = expandedIndex === i;
             const panelId = `faculty-panel-${i}`;
-            const credTree = facultyCredentialsManifest[faculty.name as string];
-            const credCount = facultyCredentialsFileCounts[faculty.name as string] ?? 0;
             const showGroupHeader =
               faculty.group &&
               (i === 0 || (facultyList[i - 1] as { group?: string }).group !== faculty.group);
@@ -1777,32 +1625,19 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
                   onClick={() => setExpandedIndex(open ? null : i)}
                   className="w-full flex items-center gap-3 p-4 text-left hover:bg-white/5 transition-colors"
                 >
-                  {faculty.image ? (
-                    <span className="relative block w-12 h-12 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/30">
-                      <img
-                        src={faculty.image}
-                        alt=""
-                        className="h-full w-full object-cover object-center"
-                        loading={i > 4 ? "lazy" : "eager"}
-                      />
-                    </span>
-                  ) : (
-                    <div className="w-12 h-12 rounded-lg bg-cyan-900/50 border border-white/10 flex items-center justify-center shrink-0">
-                      <User className="w-6 h-6 text-cyan-300" />
-                    </div>
-                  )}
+                  <span className="relative flex w-12 h-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/95 p-1.5">
+                    <img
+                      src={facultyPhotoPlaceholder}
+                      alt=""
+                      className="h-full w-full object-contain"
+                      loading={i > 4 ? "lazy" : "eager"}
+                    />
+                  </span>
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-white text-sm sm:text-base truncate">{faculty.name}</div>
                     <div className="text-cyan-300 text-xs truncate">{faculty.role}</div>
-                    <div className="text-cyan-100/80 text-xs mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-                      <span>
-                        Published papers: <span className="font-mono font-bold text-white">{faculty.papers}</span>
-                      </span>
-                      {credCount > 0 && (
-                        <span className="inline-flex items-center rounded-md border border-cyan-400/35 bg-cyan-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-cyan-100">
-                          {credCount} credential{credCount === 1 ? '' : 's'}
-                        </span>
-                      )}
+                    <div className="text-cyan-100/80 text-xs mt-0.5">
+                      Published papers: <span className="font-mono font-bold text-white">{faculty.papers}</span>
                     </div>
                   </div>
                   <ChevronDown
@@ -1819,16 +1654,16 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
                   >
                     <div className="flex flex-col md:flex-row gap-6">
                       <div className="md:w-1/3 shrink-0 md:border-r border-white/10 md:pr-6">
-                        {faculty.image && (
-                          <div className="mb-4 flex w-full max-w-[280px] justify-center md:justify-start mx-auto md:mx-0">
+                        <div className="mb-4 flex w-full max-w-[220px] justify-center md:justify-start mx-auto md:mx-0">
+                          <div className="flex aspect-square w-full items-center justify-center rounded-lg border border-white/10 bg-white/95 p-6">
                             <img
-                              src={faculty.image}
+                              src={facultyPhotoPlaceholder}
                               alt={faculty.name}
-                              className="max-h-[min(22rem,52vh)] w-auto max-w-full rounded-lg border border-white/10 bg-black/35 object-contain object-center"
+                              className="max-h-full max-w-full object-contain"
                               loading="eager"
                             />
                           </div>
-                        )}
+                        </div>
                         <h3 className="text-xl font-bold text-white mb-1">{faculty.name}</h3>
                         <p className="text-cyan-300 font-medium text-sm mb-4">{faculty.role}</p>
                         <div className="bg-black/20 rounded-lg p-3 border border-white/5 inline-block w-full md:w-auto">
@@ -1862,7 +1697,7 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
                             <div className="rounded-xl border border-cyan-500/20 bg-black/25 p-4">
                               <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-3 flex items-center gap-2">
                                 <BarChart className="w-4 h-4 text-cyan-400 shrink-0" />
-                                Published research validation
+                                Publications
                               </h4>
                               {faculty.researchValidation.links?.length > 0 && (
                                 <ul className="space-y-2 mb-4">
@@ -1905,27 +1740,6 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
                               </div>
                             </div>
                           )}
-                        <div className="rounded-xl border border-white/15 bg-black/25 p-4">
-                          <h4 className="text-sm font-bold text-cyan-200 uppercase tracking-wider mb-2 flex items-center gap-2">
-                            <FolderOpen className="w-4 h-4 text-cyan-400 shrink-0" />
-                            Credential portfolio
-                          </h4>
-                          {credTree && credTree.children.length > 0 ? (
-                            <div className="max-h-64 overflow-y-auto pr-1 custom-scrollbar text-left">
-                              <FacultyCredentialTree
-                                nodes={credTree.children}
-                                facultyName={faculty.name}
-                                onPreview={setCredentialPreview}
-                              />
-                            </div>
-                          ) : (
-                            <p className="text-xs text-cyan-100/75 leading-relaxed">
-                              No credential files in the repository for this faculty yet. Add a folder under{" "}
-                              <span className="font-mono text-cyan-200">Faculty Credentials/{faculty.name}/</span>{" "}
-                              and run <span className="font-mono text-cyan-200">npm run generate:credentials</span>.
-                            </p>
-                          )}
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -1936,7 +1750,6 @@ function Slide6FacultyContent({ data }: { data: PresentationSlideData }) {
           })}
         </div>
       </div>
-      <CredentialPreviewModal preview={credentialPreview} onClose={() => setCredentialPreview(null)} />
     </div>
   );
 }
@@ -2166,8 +1979,8 @@ const getSlides = (slidesData: PresentationSlideData[]) => {
                 const groups: { category: string; codes: string[] }[] = [
                   { category: "Bridging Courses", codes: ["MITB01", "MITB02", "MITB03"] },
                   { category: "Core Courses", codes: ["MIT101", "MIT102", "MIT103", "MIT104"] },
-                  { category: "Major Courses", codes: ["MIT201", "MIT203", "MIT204", "MIT205"] },
-                  { category: "Cognate Course", codes: ["MIT202", "MIT301"] },
+                  { category: "Major Courses", codes: ["MIT201", "MIT202", "MIT203", "MIT204"] },
+                  { category: "Cognate Courses", codes: ["MIT301", "MIT302"] },
                   { category: "Graduate Project (Capstone)", codes: ["MIT401", "MIT402"] },
                 ];
                 return groups.map((group, gi) => (
