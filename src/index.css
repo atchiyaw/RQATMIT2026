@@ -16,8 +16,9 @@ html,body,.site-shell{background:#fff;color:#102a43}
 .brand,.menu-button,.button-ghost,.hero-meta strong{color:#102a43}
 .brand-mark{background:#0b2d52;color:#f5b82e}
 .brand-copy small,.hero-copy>p,.section-heading.split>p,.faculty-intro>p,.outcome-card p,.faculty-info small{color:#627d98}
-.nav-links button,.mobile-menu button{color:#334e68}
-.nav-links button:hover{color:#b77b00}
+.nav-links button,.nav-links a,.mobile-menu button,.mobile-menu a{color:#334e68}
+.nav-links button:hover,.nav-links a:hover{color:#b77b00}
+.nav-links a,.mobile-menu a{text-decoration:none;display:block}
 .nav-cta{background:#0b2d52;color:#fff}
 .mobile-menu{background:#fff;box-shadow:0 20px 40px rgba(16,42,67,.12)}
 .hero,.program,.faculty{background:#fff}
